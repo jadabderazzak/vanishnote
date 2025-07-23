@@ -1,0 +1,40 @@
+/* Tailwind CSS base, components, and utilities imports */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom font-face declaration for 'jakarta' font */
+@font-face {
+  font-family: 'jakarta';
+  src: url('../../public/template/fonts/jakarta.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Set the default font for the entire HTML document */
+html {
+  font-family: 'jakarta', sans-serif;
+}
+
+/* Toast notification styles */
+
+/* Success toast: light blue background */
+.toast-success {
+  background-color: #4baddb !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Error toast: bright red background */
+.toast-error {
+  background-color: #e74c3c !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Warning toast: orange background */
+.toast-warning {
+  background-color: #f39c12 !important;
+  opacity: 1 !important;
+  filter: none !important;
+}

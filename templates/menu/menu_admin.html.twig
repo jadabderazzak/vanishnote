@@ -1,0 +1,207 @@
+<nav class="bg-white dark:bg-gray-900 fixed w-full z-40 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+	<div class="w-full flex flex-wrap items-center justify-between mx-auto p-4">
+		<a href="{{ path('app_home')}}" class="flex items-center space-x-3 rtl:space-x-reverse">
+			<img src="{{ asset('template/logo/logo.png')}}" class="w-[160px]" alt="Trash Phone"/>
+		</a>
+		<button data-collapse-toggle="mega-menu-full-image" type="button" class="inline-flex items-center p-2  justify-center text-sm text-gray-500 rounded-lg md:hidden focus:outline-none " aria-controls="mega-menu-full-image" aria-expanded="false">
+			<span class="sr-only">Open main menu</span>
+			<img src="{{ asset('template/logo/menub.svg')}}" class="w-6 text-gray-900"/>
+		</button>
+		<div id="mega-menu-full-image" class="items-center justify-between hidden  w-full md:flex md:w-auto md:order-1">
+			<ul class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
+				<li class="py-0 lg:py-2 border-b-2 border-transparent hover:border-blue-400 transition-all duration-700 ">
+					<a href="{{ path('app_home')}}" class="block py-2 px-3 text-gray-900 text-md  md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-900 md:dark:hover:text-green-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700" aria-current="page">
+						{{"Dashboard" | trans}}
+					</a>
+
+				</li>
+
+				<li class="py-0 lg:py-2 border-b-2 border-transparent hover:border-blue-400 transition-all duration-700 ">
+					<a href="{{ path('app_home')}}" class="block py-2 px-3 text-gray-900 text-md  md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-900 md:dark:hover:text-green-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700" aria-current="page">
+						{{"Client Management" | trans}}
+					</a>
+
+				</li>
+
+				<li class="py-0 lg:py-2 border-b-2 border-transparent hover:border-blue-400 transition-all duration-700 ">
+					<a href="{{ path('app_home')}}" class="block py-2 px-3 text-gray-900 text-md  md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-900 md:dark:hover:text-green-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700" aria-current="page">
+						{{"Telephony Plans" | trans}}
+					</a>
+
+				</li>
+
+				
+				<li class="py-0 lg:py-2 border-b-2 border-transparent hover:border-blue-400 transition-all duration-700 ">
+					<button id="mega-menu-dropdown-button" data-dropdown-toggle="currency" class="flex items-center justify-between w-full py-2 px-3   text-gray-800 rounded bg-transparent md:border-0  md:p-0 md:w-auto ">
+						{{"Currency" | trans}}
+						<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 10 6">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+						</svg>
+					</button>
+					<div id="currency" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+						<ul class="py-2 text-sm text-gray-900 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
+							<li>
+								<a href="{{ path('app_home')}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-gray-800">
+									{{"New Currency" | trans}}
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_home')}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-gray-800">
+									{{"All Currencies" | trans}}
+								</a>
+							</li>
+
+
+						</ul>
+
+					</div>
+				</li>
+				<li class="py-0 lg:py-2 border-b-2 border-transparent hover:border-blue-400 transition-all duration-700 ">
+					<button id="mega-menu-dropdown-button" data-dropdown-toggle="parameters" class="flex items-center justify-between w-full py-2 px-3   text-gray-800 rounded bg-transparent md:border-0  md:p-0 md:w-auto ">
+						{{"API & Payments" | trans}}
+						<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 10 6">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+						</svg>
+					</button>
+					<div id="parameters" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+						<ul class="py-2 text-sm text-gray-900 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
+							<li>
+								<a href="{{ path('app_home')}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-gray-800">
+									{{"API Management" | trans}}
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_home')}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-gray-800">
+									{{"Payment Configuration" | trans}}
+								</a>
+							</li>
+
+
+						</ul>
+
+					</div>
+				</li>
+				
+				<li class="py-0 lg:py-2 border-b-2 border-transparent hover:border-blue-400 transition-all duration-700 ">
+					{% set language = "English" %}
+
+					{% if app.request.locale == "fr" %}
+						{% set language = "Français" %}
+					{% elseif app.request.locale == "en" %}
+						{% set language = "English" %}
+					{% elseif app.request.locale == "de" %}
+						{% set language = "Deutsch" %}
+					{% elseif app.request.locale == "es" %}
+						{% set language = "Espagnole" %}
+					{% else %}
+						{% set language = "English" %}
+
+					{% endif %}
+					<div class="flex items-center md:order-2 space-x-1 md:space-x-0 rtl:space-x-reverse  ">
+						<button type="button" data-dropdown-toggle="language-dropdown-menu" class="inline-flex block  px-3 text-gray-900 text-md items-center  md:hover:bg-transparent md:border-0  md:p-0  ">
+
+							{% if app.request.locale == 'fr' %}
+								{# Drapeau France #}
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 rounded-full me-2" viewbox="0 0 32 32">
+									<path fill="#fff" d="M10 4H22V28H10z"></path>
+									<path d="M5,4h6V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#092050"></path>
+									<path d="M25,4h6V28h-6c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 26 16)" fill="#be2a2c"></path>
+								</svg>
+							{% elseif app.request.locale == 'en' %}
+								{# Drapeau USA #}
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rounded-full me-2" viewbox="0 0 512 512">
+									<path fill="#bd3d44" d="M0 0h247v10H0zM0 20h247v10H0zM0 40h247v10H0zM0 60h247v10H0zM0 80h247v10H0zM0 100h247v10H0zM0 120h247v10H0z" transform="scale(3.9385)"/>
+									<path fill="#fff" d="M0 10h247v10H0zM0 30h247v10H0zM0 50h247v10H0zM0 70h247v10H0zM0 90h247v10H0zM0 110h247v10H0z" transform="scale(3.9385)"/>
+									<path fill="#192f5d" d="M0 0h98.8v70H0z" transform="scale(3.9385)"/>
+								</svg>
+						
+							{% elseif app.request.locale == 'de' %}
+								{# Drapeau Maroc (ou tout pays arabe selon besoin) #}
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rounded-full me-2" viewbox="0 0 5 3">
+									<rect width="5" height="1" y="0" fill="#000"/>
+									<rect width="5" height="1" y="1" fill="#DD0000"/>
+									<rect width="5" height="1" y="2" fill="#FFCE00"/>
+								</svg>
+							{% elseif app.request.locale == 'es' %}
+								{# Drapeau Maroc (ou tout pays arabe selon besoin) #}
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-sm me-2" viewbox="0 0 3 2">
+									<rect width="3" height="2" y="0" fill="#AA151B"/>
+									<rect width="3" height="1" y="0.5" fill="#F1BF00"/>
+								</svg>
+
+							
+
+
+							{% else %}
+								{# SVG par défaut #}
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rounded-full me-2" viewbox="0 0 512 512">
+									<path fill="#bd3d44" d="M0 0h247v10H0zM0 20h247v10H0zM0 40h247v10H0zM0 60h247v10H0zM0 80h247v10H0zM0 100h247v10H0zM0 120h247v10H0z" transform="scale(3.9385)"/>
+									<path fill="#fff" d="M0 10h247v10H0zM0 30h247v10H0zM0 50h247v10H0zM0 70h247v10H0zM0 90h247v10H0zM0 110h247v10H0z" transform="scale(3.9385)"/>
+									<path fill="#192f5d" d="M0 0h98.8v70H0z" transform="scale(3.9385)"/>
+								</svg>
+							{% endif %}
+
+							{{language|trim |trans }}
+						</button>
+						<!-- Dropdown -->
+						<div class="z-50 hidden my-4 text-base list-none bg-white/95 divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700" id="language-dropdown-menu">
+							<ul class="py-2 font-medium" role="none">
+								<li>
+									<a href="javascript:;" onclick="onChangeLanguage('fr')" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-500/20 " role="menuitem">
+										<div class="inline-flex items-center">
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-full me-3" viewbox="0 0 32 32">
+												<path fill="#fff" d="M10 4H22V28H10z"></path>
+												<path d="M5,4h6V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#092050"></path>
+												<path d="M25,4h6V28h-6c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 26 16)" fill="#be2a2c"></path>
+												<path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path>
+												<path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path>
+											</svg>
+
+											{{"French" |trans}}
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="javascript:;" onclick="onChangeLanguage('en')" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-500/20 " role="menuitem">
+										<div class="inline-flex items-center">
+											<svg aria-hidden="true" class="h-3.5 w-3.5 rounded-full me-2" xmlns="http://www.w3.org/2000/svg" id="flag-icon-css-us" viewbox="0 0 512 512">
+												<g fill-rule="evenodd">
+													<g stroke-width="1pt"><path fill="#bd3d44" d="M0 0h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)"/><path fill="#fff" d="M0 10h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)"/></g><path fill="#192f5d" d="M0 0h98.8v70H0z" transform="scale(3.9385)"/><path fill="#fff" d="M8.2 3l1 2.8H12L9.7 7.5l.9 2.7-2.4-1.7L6 10.2l.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7L74 8.5l-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 7.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 24.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 21.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 38.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 35.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 52.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 49.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 66.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 63.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9z" transform="scale(3.9385)"/></g>
+											</svg>
+
+											{{"English" |trans}}
+										</div>
+									</a>
+								</li>
+								
+								<li>
+									<a href="javascript:;" onclick="onChangeLanguage('es')" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-500/20 " role="menuitem">
+										<div class="inline-flex items-center">
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-sm me-2" viewbox="0 0 3 2">
+												<rect width="3" height="2" y="0" fill="#AA151B"/>
+												<rect width="3" height="1" y="0.5" fill="#F1BF00"/>
+											</svg>
+											{{"Spanish" | trans}}
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="javascript:;" onclick="onChangeLanguage('de')" class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-500/20 " role="menuitem">
+										<div class="inline-flex items-center">
+
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-full me-2" viewbox="0 0 5 3">
+												<rect width="5" height="1" y="0" fill="#000"/>
+												<rect width="5" height="1" y="1" fill="#DD0000"/>
+												<rect width="5" height="1" y="2" fill="#FFCE00"/>
+											</svg>
+											{{"German" |trans}}
+										</div>
+									</a>
+								</li>
+
+
+							</ul>
+						</div>
+					</div>
+				</li>
+			</nav>
