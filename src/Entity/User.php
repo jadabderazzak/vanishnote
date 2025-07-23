@@ -42,10 +42,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $name = null;
 
     #[ORM\Column]
-    private ?int $phoneSlots = null;
+    private ?\DateTime $createdAt = null;
 
     #[ORM\Column]
-    private ?\DateTime $createdAt = null;
+    private ?bool $hasAccess = null;
+
+    #[ORM\Column(length: 46)]
+    private ?string $ip = null;
 
     public function getId(): ?int
     {
@@ -140,18 +143,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPhoneSlots(): ?int
-    {
-        return $this->phoneSlots;
-    }
-
-    public function setPhoneSlots(int $phoneSlots): static
-    {
-        $this->phoneSlots = $phoneSlots;
-
-        return $this;
-    }
-
+  
     public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
@@ -160,6 +152,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreatedAt(\DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function hasAccess(): ?bool
+    {
+        return $this->hasAccess;
+    }
+
+    public function setHasAccess(bool $hasAccess): static
+    {
+        $this->hasAccess = $hasAccess;
+
+        return $this;
+    }
+
+    public function getIp(): ?string
+    {
+        return $this->ip;
+    }
+
+    public function setIp(string $ip): static
+    {
+        $this->ip = $ip;
 
         return $this;
     }

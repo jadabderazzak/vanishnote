@@ -3,25 +3,26 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<meta name="author" content="Trash Phone">
-		<meta name="description" content="Trash Phone lets users create temporary and disposable phone numbers instantly, with real-time SMS reception and secure payment integration. Protect your privacy and manage your communications effortlessly.">
-		<meta name="keywords" content="temporary phone numbers, disposable phone numbers, volatile numbers, SMS verification, real-time SMS, anonymous phone numbers, SMS platform, secure payments, Stripe, PayPal">
+		<meta name="author" content="VanishNote">
+		<meta name="description" content="VanishNote lets you create and share secure notes with one-time access that automatically delete after being read. Enjoy maximum privacy with client-side encryption and secure link sharing.">
+		<meta name="keywords" content="secure notes, temporary notes, one-time access, automatic deletion, encryption, privacy, GDPR compliant, professional notes">
 		<meta name="robots" content="index, follow">
 		<meta name="language" content="en">
 
-		<meta property="og:title" content="Trash Phone – Create Temporary & Disposable Phone Numbers">
-		<meta property="og:description" content="Instantly create temporary phone numbers for SMS verification, privacy protection, and more. Real-time SMS and secure payments with Stripe and PayPal integration.">
+		<meta property="og:title" content="VanishNote – Secure Notes with One-Time Access">
+		<meta property="og:description" content="Create and share confidential notes that automatically delete after being viewed once. VanishNote offers client-side encryption and secure sharing via URL.">
 		<meta property="og:image" content="{{ asset('template/logos/logo.png') }}">
 		<meta property="og:url" content="{{ app.request.uri }}">
 		<meta property="og:type" content="website">
-		<meta property="og:site_name" content="Trash Phone">
+		<meta property="og:site_name" content="VanishNote">
 
 		<meta name="twitter:card" content="summary_large_image">
-		<meta name="twitter:site" content="@TrashPhoneApp">
-		<meta name="twitter:title" content="Trash Phone – Create Temporary & Disposable Phone Numbers">
-		<meta name="twitter:description" content="Protect your privacy with disposable, temporary phone numbers and real-time SMS reception. Secure payments via Stripe and PayPal integrated.">
+		<meta name="twitter:site" content="@VanishNoteApp">
+		<meta name="twitter:title" content="VanishNote – Secure Notes with One-Time Access">
+		<meta name="twitter:description" content="Protect your sensitive information with notes that are accessible only once and then automatically deleted. Secure client-side encryption and easy link sharing.">
 		<meta name="twitter:image" content="{{ asset('template/logo/logo.png') }}">
-        <title>{{"Trash Phone – Your Platform for Temporary, Disposable Phone Numbers" | trans}}</title>
+		<title>{{ "VanishNote – Your platform for secure and temporary notes" | trans }}</title>
+
 
 		<link rel="icon" href="{{ asset('template/logo/favicon.ico')}}">
 		{% block stylesheets %}
@@ -30,43 +31,40 @@
 
 		{% block javascripts %}
 			{{ encore_entry_script_tags('app') }}
-            <script>
-				function onChangeLanguage(value)
-				{
-					if (value === "en") {
-							window.location.href = "/change/locales/en";
-							} else if (value === "fr") {
-							window.location.href = "/change/locales/fr";
-							} else if (value === "de") {
-							window.location.href = "/change/locales/de";
-							}else if (value === "es") {
-							window.location.href = "/change/locales/es";
-							}
+			<script>
+				function onChangeLanguage(value) {
+				if (value === "en") {
+					
+					window.location.href = "/change/locales/en";
+					} else if (value === "fr") {
+					window.location.href = "/change/locales/fr";
+					} else if (value === "de") {
+					window.location.href = "/change/locales/de";
+					} else if (value === "es") {
+					window.location.href = "/change/locales/es";
+					}
 
 				}
 			</script>
 		{% endblock %}
 	</head>
 	<body class="bg-gray-50 sm:mx-0 md:mx-6 mt-6">
-        {% if app.user %}
+		{% if app.user %}
 			{{ render(controller('App\\Controller\\MenuController::authenticated')) }}
 		{% else %}
 			{{ render(controller('App\\Controller\\MenuController::index')) }}
 		{% endif %}
-        
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                {% for message in app.flashes('success') %}
-                    toastr.success({{ message|json_encode|raw }});
-                {% endfor %}
-                {% for message in app.flashes('danger') %}
-                    toastr.error({{ message|json_encode|raw }});
-                {% endfor %}
-                {% for message in app.flashes('warning') %}
-                    toastr.warning({{ message|json_encode|raw }});
-                {% endfor %}
-            });
-        </script>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+{% for message in app.flashes('success') %}
+toastr.success({{ message|json_encode|raw }});{% endfor %}
+{% for message in app.flashes('danger') %}
+toastr.error({{ message|json_encode|raw }});{% endfor %}
+{% for message in app.flashes('warning') %}
+toastr.warning({{ message|json_encode|raw }});{% endfor %}
+});
+		</script>
 		{% block body %}{% endblock %}
 	</body>
 </html>

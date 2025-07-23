@@ -77,7 +77,8 @@ class SecurityController extends AbstractController
 
                 $user = $form->getData();
                 $user->setName($cleanName);
-                $user->setphoneSlots(0);
+                $user->setIp($request->getClientIp());
+                $user->setHasAccess(true);
                 $user->setCreatedAt(new DateTime());
                 $user->setEmail($cleanEmail);
 
