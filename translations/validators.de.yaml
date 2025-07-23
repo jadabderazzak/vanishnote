@@ -158,3 +158,15 @@ Phone slot count is required: "Anzahl verfügbarer Telefonnummern ist erforderli
 Phone slot must be zero or a positive number: "Anzahl verfügbarer Telefonnummern muss null oder positiv sein"
 Creation date is required: "Erstellungsdatum ist erforderlich"
 This value should be of type DateTime.: "Dieser Wert muss vom Typ DateTime sein."
+Symbol is required: "Symbol ist erforderlich."
+Code is required: "Code ist erforderlich."
+'API key is required': "Der API-Schlüssel ist erforderlich."
+'The API key is too short (minimum {{ limit }} characters).': "Der API-Schlüssel ist zu kurz (mindestens {{ limit }} Zeichen)."
+'The API key is too long (maximum {{ limit }} characters).': "Der API-Schlüssel ist zu lang (höchstens {{ limit }} Zeichen)."
+'The API key contains invalid characters.': "Der API-Schlüssel enthält ungültige Zeichen."
+
+'The public key is too short (minimum {{ limit }} characters).': "Der öffentliche Schlüssel ist zu kurz (mindestens {{ limit }} Zeichen)."
+'The public key is too long (maximum {{ limit }} characters).': "Der öffentliche Schlüssel ist zu lang (höchstens {{ limit }} Zeichen)."
+'The public key contains invalid characters.': "Der öffentliche Schlüssel enthält ungültige Zeichen."
+
+'Service name is required': "Der Dienstname ist erforderlich."

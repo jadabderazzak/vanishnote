@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -19,6 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  * Provides actions for listing, adding, and updating currencies.
  * Utilizes HTML sanitization to clean user input and ensures only one currency is set as primary.
  */
+#[IsGranted("ROLE_ADMIN")]
 final class CurrencyController extends AbstractController
 {
     /**

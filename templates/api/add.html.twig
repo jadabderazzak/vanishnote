@@ -1,0 +1,70 @@
+{# templates/api_credential/add.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ (update ? 'Edit API Credentials' : 'Add New API Credentials') | trans }}{% endblock %}
+
+{% block body %}
+<div class="max-w-md mx-auto p-8 bg-white rounded-lg shadow-xl mt-12 border border-gray-100 mt-24">
+    <div class="text-center mb-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+        </svg>
+        <h1 class="text-2xl font-bold text-gray-800 mt-4">{{ (update ? 'Edit API Credentials' : 'Add New API Credentials') | trans }}</h1>
+        <p class="text-gray-500 mt-2">{{ (update ? 'Update API credentials' : 'Fill in the details to add new API credentials') | trans }}</p>
+    </div>
+
+    {{ form_start(form) }}
+        <div class="space-y-6">
+            <div>
+                {{ form_label(form.service, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                {{ form_widget(form.service, {'attr': {
+                    'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+                }}) }}
+                <span class="text-sm text-red-700">{{ form_errors(form.service) }}</span>
+            </div>
+
+            <div>
+                {{ form_label(form.secretKeyEncrypted, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                {{ form_widget(form.secretKeyEncrypted, {'attr': {
+                    'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+                    'placeholder': '••••••••••••',
+                    'autocomplete': 'new-password'
+                }}) }}
+                <p class="mt-1 text-sm text-gray-500">{{ 'The secret key will be encrypted on save' | trans }}</p>
+                <span class="text-sm text-red-700">{{ form_errors(form.secretKeyEncrypted) }}</span>
+            </div>
+
+            <div>
+                {{ form_label(form.publicKeyEncrypted, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                {{ form_widget(form.publicKeyEncrypted, {'attr': {
+                    'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+                    'placeholder': '••••••••••••',
+                    'autocomplete': 'new-password'
+                }}) }}
+                <p class="mt-1 text-sm text-gray-500">{{ 'Optional public key, will be encrypted' | trans }}</p>
+                <span class="text-sm text-red-700">{{ form_errors(form.publicKeyEncrypted) }}</span>
+            </div>
+
+            <div class="flex items-start">
+                <div class="flex items-center h-5">
+                    {{ form_widget(form.isActive, {'attr': {'class': 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'}}) }}
+                </div>
+                <div class="ml-3 text-sm">
+                    {{ form_label(form.isActive, null, {'label_attr': {'class': 'font-medium text-gray-700'}}) }}
+                    <p class="text-gray-500">{{ 'Activate this API service' | trans }}</p>
+                </div>
+                <span class="text-sm text-red-700">{{ form_errors(form.isActive) }}</span>
+            </div>
+
+            <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                <a href="{{ path('app_api_credential') }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    {{ 'Cancel' | trans }}
+                </a>
+                <button type="submit" class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg shadow-sm hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                    {{ (update ? 'Update Credentials' : 'Save Credentials') | trans }}
+                </button>
+            </div>
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
