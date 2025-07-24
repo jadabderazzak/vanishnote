@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Client;
 use App\Form\ClientsType;
-use App\Service\HtmlSanitizer;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;

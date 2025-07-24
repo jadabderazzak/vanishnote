@@ -87,7 +87,10 @@ class ClientsType extends AbstractType
             ])
             ->add('country', EntityType::class, [
                 'class' => Country::class,
-                'choice_label' => 'name',            // Display country name in the dropdown
+                'choice_label' => function (Country $country) {
+                        return $this->translator->trans($country->getName());
+                    },
+              
                 'label' => $this->translator->trans('Country'),
                 'placeholder' => $this->translator->trans('Select a country'),
                 'required' => true,                  // Make the field mandatory in the HTML form

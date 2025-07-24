@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
-use App\Entity\Client;
-use App\Entity\User;
-use App\Form\RegisterType;
-use App\Service\HtmlSanitizer;
 use DateTime;
+use App\Entity\User;
+use App\Entity\Client;
+use Stripe\Subscription;
+use App\Form\RegisterType;
+use App\Entity\Subscriptions;
+use App\Service\HtmlSanitizer;
 use Symfony\Component\Form\FormError;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use App\Repository\SubscriptionPlanRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -43,7 +46,7 @@ class SecurityController extends AbstractController
     }
     
      #[Route(path: '/register', name: 'app_register', methods: ['GET', 'POST'])]
-      public function register(HtmlSanitizer $sanitizer,Request $request, EntityManagerInterface $manager): Response
+      public function register(HtmlSanitizer $sanitizer,Request $request, EntityManagerInterface $manager, SubscriptionPlanRepository $repoSubscription): Response
     {
         $user = new User();
         $form = $this->createForm(RegisterType::class, $user);
@@ -103,11 +106,24 @@ class SecurityController extends AbstractController
                         // Link this Client to the associated User entity.
                         ->setUser($user);
 
-                    // Persist and save the Client entity to the database.
+              
                     // This stores the client data and the relationship to the User.
                     $manager->persist($client);
-                    $manager->flush();
-                    
+                    /************************* Adding Free subscription  */
+                    $subscriptionPlan = $repoSubscription->findOneBy([
+                        'id' => 1
+                    ]);
+                    $subscription = new Subscriptions();
+                    $subscription->setUser($user)
+                                ->setStatus(true)
+                                ->setStartedAt(new DateTime())
+                                ->setNotesCreated(0)
+                                ->setCreatedAt(new DateTime())
+                                ->setSubscriptionPlan($subscriptionPlan);
+                    // Persist and save the Client subscription to the database.
+                    $manager->persist($subscription);
+   
+                    // Persist and save the Client entity  to the database
                     $manager->persist($client);
                     $manager->flush();    
 

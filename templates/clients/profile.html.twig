@@ -48,7 +48,8 @@
                        
                         <div>
                             <p class="text-sm font-medium text-gray-500 mb-1">{{ 'Country'|trans }}</p>
-                            <p class="text-gray-900">{{ client.country is null and client.country is not defined ? ('Not provided'|trans)  : client.country.name | capitalize | trans }}</p>
+                            <p class="text-gray-900">{{ client.country == null ? ('Not provided'|trans) : (client.country.name|capitalize|trans) }}
+</p>
                         </div>
                     </div>
                 </div>

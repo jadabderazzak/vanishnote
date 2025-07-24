@@ -37,6 +37,10 @@ class Subscriptions
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?SubscriptionPlan $SubscriptionPlan = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -129,4 +133,16 @@ class Subscriptions
     {
         $this->slug = Uuid::v4()->toRfc4122(); 
     }
+
+     public function getSubscriptionPlan(): ?SubscriptionPlan
+     {
+         return $this->SubscriptionPlan;
+     }
+
+     public function setSubscriptionPlan(?SubscriptionPlan $SubscriptionPlan): static
+     {
+         $this->SubscriptionPlan = $SubscriptionPlan;
+
+         return $this;
+     }
 }
