@@ -45,7 +45,9 @@ final class ClientSubscriptionController extends AbstractController
             'status' => true
         ]);
         
-        $subscriptionPlans = $repoSubPlans->findBy([]);
+        $subscriptionPlans = $repoSubPlans->findBy([
+            'isActive' => true
+        ]);
        
         $currency = $repoCurrency->findOneBy([
             'isPrimary' => true

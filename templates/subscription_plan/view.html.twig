@@ -65,8 +65,8 @@
 																{{ 'Automatically deletes after viewing' | trans }}
 															{% elseif feature == 'custom_expiration' %}
 																{{ 'Customizable expiration timeframe' | trans }}
-															{% elseif feature == 'ip_logging' %}
-																{{ 'Logs IP addresses of viewers' | trans }}
+															{% elseif feature == 'unlimited_notes' %}
+																{{ 'Create unlimited notes without restrictions' | trans }}
 
 															{% elseif feature == 'attachment_support' %}
 																{{ 'Support for attachments (files, images)' | trans }}
@@ -113,6 +113,19 @@
 								<div class="sm:col-span-1">
 									<dt class="text-xs font-medium text-gray-500">{{ 'Slug' | trans }}</dt>
 									<dd class="mt-1 text-sm text-gray-900">{{ plan.slug }}</dd>
+								</div>
+								<div class="sm:col-span-1">
+									<dt class="text-xs font-medium text-gray-500">{{ 'Number of Notes' | trans }}</dt>
+									<dd class="mt-1 text-sm text-gray-900 font-mono">
+										{% if plan.numberNotes is not null and plan.numberNotes == 0 %}
+											<div class="flex items-center space-x-2">
+												<span class="text-2xl font-thin">∞</span>
+												<span>{{ 'Unlimited' | trans }}</span>
+											</div>
+										{% else %}
+											{{ plan.numberNotes }}
+										{% endif %}
+									</dd>
 								</div>
 							</dl>
 						</div>

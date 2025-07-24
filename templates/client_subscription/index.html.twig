@@ -1,122 +1,143 @@
 {# templates/client_subscription/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'Subscription Plans'|trans }}{% endblock %}
+{% block title %}
+	{{ 'Subscription Plans'|trans }}
+{% endblock %}
 
 {% block body %}
-<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 mt-16">
-    <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 tracking-tight ">
-                {{ 'Choose Your Plan'|trans }}
-            </h1>
-            <p class="mt-4 text-md text-gray-600 max-w-3xl mx-auto">
-                {{ 'Select the perfect plan for your needs'|trans }}
-            </p>
-        </div>
+	<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 mt-16">
+		<div
+			class="max-w-7xl mx-auto">
+			<!-- Header -->
+			<div class="text-center mb-8">
+				<h1 class="text-3xl font-bold text-gray-900 tracking-tight ">
+					{{ 'Choose Your Plan'|trans }}
+				</h1>
+				<p class="mt-4 text-md text-gray-600 max-w-3xl mx-auto">
+					{{ 'Select the perfect plan for your needs'|trans }}
+				</p>
+			</div>
 
-        <!-- Current Plan Status -->
-        {% if currentPlan %}
-        <div class="mb-12 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-5 bg-gray-50 border-b border-gray-200">
-                <h2 class="text-lg font-medium text-gray-900">
-                    {{ 'Your Current Plan'|trans }}
-                </h2>
-            </div>
-            <div class="p-6">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                    <div class="flex items-center">
-                        <div class="mr-4 p-3 rounded-lg bg-cyan-50">
-                            <svg class="h-8 w-8 text-trash_bold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-gray-900">{{ currentPlan.subscriptionPlan.name | trans }}</h3>
-                            <p class="text-gray-600">{{ 'Active until'|trans }} {{ currentPlan.endsAt|date('F j, Y') }}</p>
-                        </div>
-                    </div>
-                    <div class="mt-4 md:mt-0">
-                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                            {{ 'Active'|trans }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
+			<!-- Current Plan Status -->
+			{% if currentPlan %}
+				<div class="mb-12 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+					<div class="px-6 py-5 bg-gray-50 border-b border-gray-200">
+						<h2 class="text-lg font-medium text-gray-900">
+							{{ 'Your Current Plan'|trans }}
+						</h2>
+					</div>
+					<div class="p-6">
+						<div class="flex flex-col md:flex-row md:items-center md:justify-between">
+							<div class="flex items-center">
+								<div class="mr-4 p-3 rounded-lg bg-cyan-50">
+									<svg class="h-8 w-8 text-trash_bold" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+									</svg>
+								</div>
+								<div>
+									<h3 class="text-xl font-bold text-gray-900">{{ currentPlan.subscriptionPlan.name | trans }}</h3>
+									<p class="text-gray-600">{{ 'Active until'|trans }}
+										{{ currentPlan.endsAt|date('F j, Y') }}</p>
+								</div>
+							</div>
+							<div class="mt-4 md:mt-0">
+								<span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800">
+									{{ 'Active'|trans }}
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
 
-        <!-- Pricing Plans -->
-        <div class="grid gap-8 md:grid-cols-3 lg:gap-12">
-            {% for plan in subscriptionPlans %}
-            <div class="relative flex flex-col rounded-2xl border border-gray-200 bg-white overflow-hidden transition-all hover:shadow-lg hover:border-trash
-                {% if currentPlan and plan.id == currentPlan.subscriptionPlan.id %}ring-2 ring-trash border-trash{% endif %}">
-                
-                <!-- Popular Badge -->
-                {% if loop.index == 2 %}
-                <div class="absolute top-2 right-2 bg-trash_bold text-white text-xs font-bold px-3 py-1 transform translate-x-2 -translate-y-2 shadow-xl rounded-bl-xl">
-                    {{ 'Popular'|trans }}
-                </div>
-                {% endif %}
-                
-                <div class="p-8 flex-1">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ plan.name | trans }}</h3>
-                    <p class="text-gray-600 mb-6">{{ plan.description|default('') }}</p>
-                    
-                    <div class="mb-8">
-                        <span class="text-4xl font-bold text-gray-900">{{ currency.symbol }}{{ plan.price|number_format(2) }}</span>
-                        <span class="text-base font-medium text-gray-500">/{{ 'month'|trans }}</span>
-                    </div>
-                    
-                    <ul class="space-y-3">
-                        {% for feature, value in plan.features %}
-                        <li class="flex items-start">
-                            <svg class="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span class="text-gray-700">
+			<!-- Pricing Plans -->
+			<div class="grid gap-8 md:grid-cols-3 lg:gap-12">
+				{% for plan in subscriptionPlans %}
+					<div
+						class="relative flex flex-col rounded-2xl border border-gray-200 bg-white overflow-hidden transition-all hover:shadow-lg hover:border-trash
+							                {% if currentPlan and plan.id == currentPlan.subscriptionPlan.id %}ring-2 ring-trash border-trash{% endif %}">
 
-                                <span class="font-medium">
-                                 {{ (value|replace({'_': ' '})|title) |capitalize|trans }}
-                                </span>
-                            </span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                
-                <div class="p-8 bg-gray-50 border-t border-gray-200">
-                    {% if currentPlan and plan.id == currentPlan.subscriptionPlan.id %}
-                        <button class="w-full bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium cursor-not-allowed" disabled>
-                            {{ 'Current Plan'|trans }}
-                        </button>
-                    {% else %}
-                        <a href="#" 
-                           class="block w-full bg-trash hover:bg-trash_bold text-white py-3 px-4 rounded-lg font-medium text-center transition-colors duration-200">
-                            {{ 'Get Started'|trans }}
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+						<!-- Popular Badge -->
+						{% if loop.index == 2 %}
+							<div class="absolute top-2 right-2 bg-trash_bold text-white text-xs font-bold px-3 py-1 transform translate-x-2 -translate-y-2 shadow-xl rounded-bl-xl">
+								{{ 'Popular'|trans }}
+							</div>
+						{% endif %}
 
-        <!-- Additional Info -->
-        <div class="mt-16 text-center">
-            <h3 class="text-lg font-medium text-gray-900">{{ 'Need help choosing?'|trans }}</h3>
-            <p class="mt-2 text-gray-600 max-w-2xl mx-auto">
-                {{ 'Contact our sales team to find the best solution for your business needs.'|trans }}
-            </p>
-            <div class="mt-6">
-                <a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-500 font-medium">
-                    {{ 'Contact Sales'|trans }}
-                    <svg class="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
+						<div class="p-8 flex-1">
+							<h3 class="text-2xl font-bold text-gray-900 mb-2">{{ plan.name | trans }}</h3>
+							<p class="text-gray-600 mb-2">{{ plan.description|default('') }}</p>
+							<div class="flex justify-between items-center mb-6 border-b border-gray-300 pb-2">
+								<dt class="text-md font-thin text-trash_bold">{{ 'Number of Notes' | trans }}</dt>
+								<dd class="flex items-center space-x-2 text-md font-light text-gray-900">
+                                    {% if plan.numberNotes is not null and plan.numberNotes == 0 %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-trash_bold text-white text-sm font-thin shadow-xl">
+                                            <span class="mr-1 text-md leading-none">∞</span>
+                                            <span>{{ 'Unlimited' | trans }}</span>
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-block px-3 py-1 rounded-full bg-trash_bold text-white text-sm font-thin shadow-xl">
+                                            {{ plan.numberNotes }}
+                                        </span>
+                                    {% endif %}
+                                </dd>
+
+							</div>
+
+
+							<div class="mb-8">
+								<span class="text-4xl font-bold text-gray-900">{{ currency.symbol }}{{ plan.price|number_format(2) }}</span>
+								<span class="text-base font-medium text-gray-500">/{{ 'month'|trans }}</span>
+							</div>
+
+							<ul class="space-y-3">
+								{% for feature, value in plan.features %}
+									<li class="flex items-start">
+										<svg class="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+										</svg>
+										<span class="text-gray-700">
+
+											<span class="font-medium">
+												{{ (value|replace({'_': ' '})|title) |capitalize|trans }}
+											</span>
+										</span>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+
+						<div class="p-8 bg-gray-50 border-t border-gray-200">
+							{% if currentPlan and plan.id == currentPlan.subscriptionPlan.id %}
+								<button class="w-full bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium cursor-not-allowed" disabled>
+									{{ 'Current Plan'|trans }}
+								</button>
+							{% else %}
+								<a href="#" class="block w-full bg-trash hover:bg-trash_bold text-white py-3 px-4 rounded-lg font-medium text-center transition-colors duration-200">
+									{{ 'Get Started'|trans }}
+								</a>
+							{% endif %}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+
+			<!-- Additional Info -->
+			<div class="mt-16 text-center">
+				<h3 class="text-lg font-medium text-gray-900">{{ 'Need help choosing?'|trans }}</h3>
+				<p class="mt-2 text-gray-600 max-w-2xl mx-auto">
+					{{ 'Contact our sales team to find the best solution for your business needs.'|trans }}
+				</p>
+				<div class="mt-6">
+					<a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-500 font-medium">
+						{{ 'Contact Sales'|trans }}
+						<svg class="ml-2 h-5 w-5" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+						</svg>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

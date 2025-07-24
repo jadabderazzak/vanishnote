@@ -39,6 +39,14 @@ class SubscriptionPlan
     #[ORM\Column]
     private ?bool $isActive = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Assert\Type(
+        type: 'integer',
+        message: 'The value {{ value }} is not a valid {{ type }}.'
+    )]
+    #[Assert\PositiveOrZero(message: 'The number of notes must be zero or positive.')]
+private ?int $numberNotes = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -112,6 +120,18 @@ class SubscriptionPlan
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getNumberNotes(): ?int
+    {
+        return $this->numberNotes;
+    }
+
+    public function setNumberNotes(?int $numberNotes): static
+    {
+        $this->numberNotes = $numberNotes;
 
         return $this;
     }

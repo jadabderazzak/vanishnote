@@ -52,7 +52,15 @@ class SubscriptionPlanType extends AbstractType
                         'placeholder' => $this->translator->trans('e.g. Includes advanced encryption and 24/7 support'),
                     ],
                 ])
-
+            ->add('numberNotes', NumberType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Number of Notes'),
+               
+                'attr' => [
+                    'min' => 0,
+                    'placeholder' => $this->translator->trans('e.g. 100'),
+                ],
+            ])            
             // Features field displayed as multiple checkboxes
             ->add('features', ChoiceType::class, [
                 'label' => $this->translator->trans('Features'),
@@ -60,7 +68,7 @@ class SubscriptionPlanType extends AbstractType
                     $this->translator->trans('Client-side encryption') => 'encryption',
                     $this->translator->trans('Burn after reading') => 'burn_after_reading',
                     $this->translator->trans('Custom expiration') => 'custom_expiration',
-                    $this->translator->trans('IP logging') => 'ip_logging',
+                    $this->translator->trans('Unlimited notes') => 'unlimited_notes',
                     $this->translator->trans('Attachment support') => 'attachment_support',
                     $this->translator->trans('Password protection') => 'password_protection',
                     $this->translator->trans('Email notifications') => 'email_notifications',
