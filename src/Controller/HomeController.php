@@ -35,7 +35,7 @@ final class HomeController extends AbstractController
 
             // Redirect regular users to the client dashboard
             if (in_array('ROLE_USER', $roles, true)) {
-                return $this->redirectToRoute('app_clients');
+                return $this->redirectToRoute('app_clients_dashboard');
             }
         }
 

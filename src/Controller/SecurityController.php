@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\User;
 use App\Form\RegisterType;
 use App\Service\HtmlSanitizer;
@@ -89,6 +90,27 @@ class SecurityController extends AbstractController
 
                     $manager->persist($user);
                     $manager->flush();
+
+                    // Create a new Client entity linked to the newly created User.
+                    $client = new Client();
+
+                    // Set the Client's name using a sanitized variable.
+                    $client->setName($cleanName)
+                        // Default the client type as an individual (not a company).
+                        ->setIsCompany(false)
+                        // Initialize the count of notes created by this client to zero.
+                        ->setNumberNotesCreated(0)
+                        // Link this Client to the associated User entity.
+                        ->setUser($user);
+
+                    // Persist and save the Client entity to the database.
+                    // This stores the client data and the relationship to the User.
+                    $manager->persist($client);
+                    $manager->flush();
+                    
+                    $manager->persist($client);
+                    $manager->flush();    
+
 
                     $this->addFlash("success", $this->translator->trans("Your account has been successfully created. You can now log in."));
                     return $this->redirectToRoute("app_login");

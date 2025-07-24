@@ -13,6 +13,10 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    App\Form\EventSubscriber\FormSanitizeSubscriber:
+        arguments:
+            - '@App\Service\HtmlSanitizer'
+        public: true
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

@@ -58,7 +58,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         // Otherwise, check if the user has the ROLE_USER role
         if (in_array('ROLE_USER', $roles, true)) {
             // Redirect the user to the client dashboard route
-            return new RedirectResponse($this->urlGenerator->generate('app_clients'));
+            return new RedirectResponse($this->urlGenerator->generate('app_clients_dashboard'));
         }
 
         // By default, redirect the user to the homepage route if no recognized roles are found
