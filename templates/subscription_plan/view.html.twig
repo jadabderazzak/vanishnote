@@ -1,0 +1,150 @@
+{# templates/subscription_plan/view.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ plan.name }}
+	|
+	{{ 'Subscription Plan Details' | trans }}
+{% endblock %}
+
+{% block body %}
+	<div
+		class="max-w-5xl mx-auto px-4 py-8 mt-20">
+		<!-- Header with breadcrumb -->
+		<div class="mb-6 flex flex-row items-center justify-between gap-4">
+			<div>
+
+				<h1 class="text-2xl font-bold tracking-tight text-gray-900">{{ plan.name }}</h1>
+			</div>
+			<div class="flex space-x-3">
+				<a href="{{ path('app_subscription_plan_update', {slug: plan.slug}) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+					{{ 'Edit' | trans }}
+				</a>
+			</div>
+		</div>
+
+		<!-- Main content -->
+		<div class="bg-white shadow rounded-lg overflow-hidden">
+			<div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+				<h3 class="text-lg leading-6 font-medium text-gray-900">{{ 'Plan Details' | trans }}</h3>
+			</div>
+			<div class="px-4 py-5 sm:p-6">
+				<div
+					class="grid grid-cols-1 gap-8 md:grid-cols-3">
+					<!-- Left column -->
+					<div
+						class="md:col-span-2 space-y-6">
+						<!-- Description -->
+						<div>
+							<h4 class="text-sm font-medium text-gray-500 mb-2">{{ 'Description' | trans }}</h4>
+							<div class="prose prose-sm max-w-none text-gray-700">
+								{{ plan.description ? plan.description|raw : ('No description provided' | trans) }}
+							</div>
+						</div>
+
+						<!-- Features -->
+						<div>
+							<h4 class="text-sm font-medium text-gray-500 mb-3">{{ 'Features' | trans }}</h4>
+							{% if plan.features %}
+								<ul class="divide-y divide-gray-200">
+									{% for feature in plan.features %}
+										<li class="py-3">
+											<div class="flex items-center">
+												<div class="min-w-0 flex-1 flex items-center">
+													<span class="mr-3 flex-shrink-0 h-5 w-5 text-green-500">
+														<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20" fill="currentColor">
+															<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+														</svg>
+													</span>
+													<span class="min-w-0 flex-1">
+														<p class="text-sm font-medium text-gray-900">{{ feature|trans }}</p>
+														<p class="text-xs text-gray-500 mt-1">
+															{% if feature == 'encryption' %}
+																{{ 'Secures all content with encryption' | trans }}
+															{% elseif feature == 'burn_after_reading' %}
+																{{ 'Automatically deletes after viewing' | trans }}
+															{% elseif feature == 'custom_expiration' %}
+																{{ 'Customizable expiration timeframe' | trans }}
+															{% elseif feature == 'ip_logging' %}
+																{{ 'Logs IP addresses of viewers' | trans }}
+
+															{% elseif feature == 'attachment_support' %}
+																{{ 'Support for attachments (files, images)' | trans }}
+															{% elseif feature == 'password_protection' %}
+																{{ 'Protect notes with a password' | trans }}
+															{% elseif feature == 'email_notifications' %}
+																{{ 'Receive email notifications on note access or expiration' | trans }}
+															{% elseif feature == 'priority_support' %}
+																{{ 'Access to priority customer support' | trans }}
+															{% endif %}
+														</p>
+													</span>
+												</div>
+											</div>
+										</li>
+									{% endfor %}
+								</ul>
+							{% else %}
+								<p class="text-sm text-gray-500 italic">{{ 'No features defined for this plan' | trans }}</p>
+							{% endif %}
+						</div>
+					</div>
+
+					<!-- Right column -->
+					<div
+						class="space-y-6">
+						<!-- Pricing -->
+						<div class="bg-gray-50 p-4 rounded-md">
+							<h4 class="text-sm font-medium text-gray-500 mb-3">{{ 'Pricing' | trans }}</h4>
+							<div class="flex items-baseline">
+								<span class="text-3xl font-bold text-gray-900">${{ plan.price|number_format(2) }}</span>
+								<span class="ml-1 text-sm font-medium text-gray-500">{{ '/month' | trans }}</span>
+							</div>
+						</div>
+
+						<!-- Plan metadata -->
+						<div>
+							<h4 class="text-sm font-medium text-gray-500 mb-3">{{ 'Technical Details' | trans }}</h4>
+							<dl class="grid grid-cols-1 gap-x-4 gap-y-3">
+								<div class="sm:col-span-1">
+									<dt class="text-xs font-medium text-gray-500">{{ 'Plan ID' | trans }}</dt>
+									<dd class="mt-1 text-sm text-gray-900 font-mono">{{ plan.id }}</dd>
+								</div>
+								<div class="sm:col-span-1">
+									<dt class="text-xs font-medium text-gray-500">{{ 'Slug' | trans }}</dt>
+									<dd class="mt-1 text-sm text-gray-900">{{ plan.slug }}</dd>
+								</div>
+							</dl>
+						</div>
+
+						{% if plan.isActive %}
+							<!-- Danger zone: désactivation -->
+							<div class="border border-red-200 rounded-md p-4">
+								<h4 class="text-sm font-medium text-red-800 mb-3">{{ 'Danger Zone' | trans }}</h4>
+								<p class="text-xs text-red-600 mb-3">
+									{{ 'Deactivating this plan will make it unavailable for new subscriptions. This action can be reversed.' | trans }}
+								</p>
+								<a href="{{ path('app_subscription_plan_desactivate', {'slug': plan.slug}) }}" onclick="return confirm('{{ 'Are you sure you want to deactivate this plan?' | trans }}');" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+									{{ 'Deactivate Plan' | trans }}
+								</a>
+							</div>
+						{% else %}
+							<!-- Plan désactivé: possibilité de réactivation -->
+							<div class="border border-green-200 rounded-md p-4 bg-green-50">
+								<h4 class="text-sm font-medium text-green-700 mb-3">{{ 'Plan is currently deactivated' | trans }}</h4>
+								<p class="text-xs text-green-700 mb-3">
+									{{ 'This subscription plan is inactive and cannot be selected by new users.' | trans }}
+								</p>
+								<a href="{{ path('app_subscription_plan_reactivate', {'slug': plan.slug}) }}" onclick="return confirm('{{ 'Are you sure you want to reactivate this plan?' | trans }}');" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+									{{ 'Reactivate Plan' | trans }}
+								</a>
+							</div>
+						{% endif %}
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

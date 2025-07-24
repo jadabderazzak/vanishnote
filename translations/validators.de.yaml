@@ -170,3 +170,7 @@ Code is required: "Code ist erforderlich."
 'The public key contains invalid characters.': "Der öffentliche Schlüssel enthält ungültige Zeichen."
 
 'Service name is required': "Der Dienstname ist erforderlich."
+
+"Price is required": "Preis ist erforderlich"
+"Price must be a valid number": "Preis muss eine gültige Zahl sein"
+"Price must be zero or positive": "Preis muss null oder positiv sein"

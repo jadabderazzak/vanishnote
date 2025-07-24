@@ -168,5 +168,7 @@ Code is required: "Le code est obligatoire."
 'The public key is too short (minimum {{ limit }} characters).': "La clé publique est trop courte (minimum {{ limit }} caractères)."
 'The public key is too long (maximum {{ limit }} characters).': "La clé publique est trop longue (maximum {{ limit }} caractères)."
 'The public key contains invalid characters.': "La clé publique contient des caractères non valides."
-
 'Service name is required': "Le nom du service est requis."
+"Price is required": "Le prix est obligatoire"
+"Price must be a valid number": "Le prix doit être un nombre valide"
+"Price must be zero or positive": "Le prix doit être zéro ou positif"

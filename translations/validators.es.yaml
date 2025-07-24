@@ -170,3 +170,6 @@ Code is required: "El código es obligatorio."
 'The public key contains invalid characters.': "La clave pública contiene caracteres no válidos."
 
 'Service name is required': "El nombre del servicio es obligatorio."
+"Price is required": "El precio es obligatorio"
+"Price must be a valid number": "El precio debe ser un número válido"
+"Price must be zero or positive": "El precio debe ser cero o positivo"
