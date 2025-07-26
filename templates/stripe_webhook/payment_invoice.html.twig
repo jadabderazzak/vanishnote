@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<style>
+			body {
+				font-family: 'Helvetica Neue', Arial, sans-serif;
+				font-size: 14px;
+				color: #333;
+				line-height: 1.5;
+				max-width: 800px;
+				margin: 0 auto;
+				padding: 30px;
+			}
+			.header {
+				text-align: center;
+				margin-bottom: 40px;
+				border-bottom: 1px solid #eee;
+				padding-bottom: 20px;
+			}
+			.header h1 {
+				color: #2c3e50;
+				font-size: 24px;
+				margin-bottom: 10px;
+			}
+			.company-info,
+			.client-info {
+				width: 48%;
+				display: inline-block;
+				vertical-align: top;
+				margin-bottom: 30px;
+			}
+			.company-info {
+				text-align: left;
+			}
+			.client-info {
+				text-align: right;
+				float: right;
+			}
+			.section {
+				clear: both;
+				margin-bottom: 30px;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				margin: 20px 0;
+			}
+			th {
+				background-color: #f8f9fa;
+				color: #2c3e50;
+				font-weight: 600;
+				padding: 12px 15px;
+				text-align: left;
+				border: 1px solid #ddd;
+			}
+			td {
+				padding: 12px 15px;
+				border: 1px solid #ddd;
+			}
+			.total-row {
+				background-color: #f8f9fa;
+				font-weight: bold;
+			}
+			.total {
+				text-align: right;
+				font-size: 16px;
+				font-weight: bold;
+				margin: 20px 0;
+			}
+			.footer {
+				text-align: center;
+				margin-top: 40px;
+				padding-top: 20px;
+				border-top: 1px solid #eee;
+				color: #7f8c8d;
+				font-size: 12px;
+			}
+			.invoice-number {
+				color: #7f8c8d;
+				font-size: 14px;
+				margin-bottom: 5px;
+			}
+			.invoice-date {
+				color: #7f8c8d;
+				font-size: 14px;
+			}
+			.info-label {
+				font-weight: 600;
+				color: #2c3e50;
+				margin-bottom: 5px;
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div class="header" style="display: flex; align-items: center; justify-content: space-between;">
+			{% if entreprise.showLogoOnInvoice %}
+					{% if entreprise.logoPath is not empty %}
+						<img src="{{ absolute_url(asset('template/logo/' ~ entreprise.logoPath)) }}" alt="{{ 'Company Logo'|trans }}" style="height: 40px;">
+					{% else %}
+						<div style="font-size: 24px; font-weight: bold; text-transform: uppercase;">
+							{{ entreprise.companyName }}
+						</div>
+					{% endif %}
+						{% else %}
+				  <div style="font-size: 24px; font-weight: bold; text-transform: uppercase;">
+						{{ entreprise.companyName|default('')|capitalize }}
+					</div>
+			{% endif %}
+
+			<div style="text-align: right; flex-grow: 1; padding-left: 20px;">
+				<h1>{{ 'Invoice'|trans }}</h1>
+				<div class="invoice-number">{{ 'Invoice number'|trans }}: #{{ entreprise.invoicePrefix is defined and entreprise.invoicePrefix ? entreprise.invoicePrefix : 'INV-' }}{{ '%06d'|format(payment.id) }}
+				</div>
+				<div class="invoice-date">{{ 'Date'|trans }}:
+					{{ payment.createdAt|date('Y-m-d') }}</div>
+			</div>
+
+		</div>
+
+		<div class="section">
+			<div class="company-info">
+				<span class="info-label">{{ 'From'|trans }}:</span>
+				{% if entreprise.companyName is defined and entreprise.companyName %}
+					<strong>{{ entreprise.companyName|capitalize }}</strong><br>
+				{% endif %}
+
+				{% if entreprise.companyAddress is defined and entreprise.companyAddress %}
+					{{ 'Address'|trans }}:
+					{{ entreprise.companyAddress }}<br>
+				{% endif %}
+
+				{% if entreprise.companyEmail is defined and entreprise.companyEmail %}
+					{{ 'Email'|trans }}:
+					{{ entreprise.companyEmail }}<br>
+				{% endif %}
+
+				{% if entreprise.companyPhone is defined and entreprise.companyPhone %}
+					{{ 'Phone'|trans }}:
+					{{ entreprise.companyPhone }}<br>
+				{% endif %}
+
+				{% if entreprise.vatNumber is defined and entreprise.vatNumber %}
+					{{ 'VAT Number'|trans }}:
+					{{ entreprise.vatNumber }}<br>
+				{% endif %}
+			</div>
+
+			<div class="client-info">
+				<span class="info-label">{{ 'Bill To'|trans }}:</span>
+				{{ client.name }}<br>
+				{% if client.isCompany %}
+					{{ client.company }}<br>
+					{{ client.companyAdress }}<br>
+					{{ 'VAT number'|trans }}:
+					{{ client.vatNumber }}<br>
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="section">
+			<table>
+				<thead>
+					<tr>
+						<th>{{ 'Description'|trans }}</th>
+						<th>{{ 'Duration'|trans }}</th>
+						<th>{{ 'Amount'|trans }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{ payment.subscriptionPlan.name | trans}}</td>
+						<td>{{ payment.months }}
+							{{ 'months'|trans }}</td>
+						<td>{{ payment.amount|number_format(2, '.', ' ') }}
+							{{ payment.currency }}</td>
+					</tr>
+
+					{% set totalTTC = payment.amount %}
+					{% set tvaRatePercent = entreprise.tvaRate %}
+					{% set totalHT = (totalTTC / (1 + (tvaRatePercent / 100))) %}
+					{% set tvaAmount = totalTTC - totalHT %}
+					<tr>
+						<td colspan="2">{{ 'Subtotal (excl. VAT)'|trans }}</td>
+						<td>{{ totalHT|number_format(2, '.', ' ') }}
+							{{ payment.currency }}</td>
+					</tr>
+					<tr>
+						<td colspan="2">{{ 'VAT'|trans }}
+							({{ tvaRatePercent }}%)</td>
+						<td>{{ tvaAmount|number_format(2, '.', ' ') }}
+							{{ payment.currency }}</td>
+					</tr>
+					<tr class="total-row">
+						<td colspan="2">{{ 'Total (incl. VAT)'|trans }}</td>
+						<td>{{ totalTTC|number_format(2, '.', ' ') }}
+							{{ payment.currency }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="footer">
+			<div>{{ 'Status'|trans }}:
+				{{ payment.status|trans }}</div>
+			<div style="margin-top: 10px;">{{ 'This invoice was generated automatically. No signature required.'|trans }}</div>
+		</div>
+
+	</body>
+</html>

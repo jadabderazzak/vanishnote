@@ -2,14 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\AdminEntreprise;
 use Exception;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Entity\Payment;
+use App\Repository\AdminEntrepriseRepository;
 use App\Repository\ClientRepository;
+use App\Repository\PaymentRepository;
 use App\Service\StripePaymentService;
 use App\Repository\CurrencyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ApiCredentialRepository;
-use App\Repository\PaymentRepository;
 use App\Repository\SubscriptionsRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\SubscriptionPlanRepository;
@@ -104,6 +108,7 @@ final class ClientSubscriptionController extends AbstractController
         SubscriptionPlanRepository $repoSubPlans,
         CurrencyRepository $repoCurrency,
         ClientRepository $repoClient,
+        AdminEntrepriseRepository $repoEntreprise
     ): Response {
         $plan = $repoSubPlans->findOneBy(['slug' => $request->get('slug')]);
 
@@ -111,6 +116,10 @@ final class ClientSubscriptionController extends AbstractController
             $this->addFlash('warning', $this->translator->trans('The selected subscription plan is not available.'));
             return $this->redirectToRoute('app_client_subscription');
         }
+
+        $entrepriseInfo = $repoEntreprise->findOneBy([
+            'id' => 1
+        ]);
 
         $currency = $repoCurrency->findOneBy(['isPrimary' => true]);
         $user = $this->getUser();
@@ -124,11 +133,15 @@ final class ClientSubscriptionController extends AbstractController
                 return $this->redirectToRoute('app_clients_profile');
             }
         }
-
+        $isTvaApplicable = $entrepriseInfo->isTvaApplicable();
+        $tvaRate = $entrepriseInfo->getTvaRate();
+      
         return $this->render('client_subscription/recap.html.twig', [
             'plan' => $plan,
             'currency' => $currency,
-            'client' => $client
+            'client' => $client,
+            'tvaRate' => $tvaRate,
+            'isTvaApplicable' => $isTvaApplicable,
         ]);
     }
 
@@ -156,7 +169,8 @@ final class ClientSubscriptionController extends AbstractController
         ApiCredentialRepository $apiCredentialRepository,
         StripePaymentService $stripePaymentService,
         EntityManagerInterface $manager,
-        CurrencyRepository $repoCurrency
+        CurrencyRepository $repoCurrency,
+        AdminEntrepriseRepository $repoEntreprise
     ): Response {
         // Get currently logged-in user
         /** @var \App\Entity\User $user */
@@ -190,6 +204,20 @@ final class ClientSubscriptionController extends AbstractController
             return $this->redirectToRoute('app_client_subscription_recap', ['slug' => $slug]);
         }
 
+        $entrepriseInfo = $repoEntreprise->findOneBy([
+            'id' => 1
+        ]);
+        $isTvaApplicable = $entrepriseInfo->isTvaApplicable();
+        $tvaRate = $entrepriseInfo ? ($entrepriseInfo->getTvaRate() ?? 0) : 0;
+        $subtotal = $plan->getPrice() * $months;
+        $totalAmount = 0;
+            if ($isTvaApplicable) {
+                $tvaAmount = round($subtotal * ($tvaRate / 100), 2);
+                $totalAmount = $subtotal + $tvaAmount;
+            } else {
+                $totalAmount = $subtotal;
+            }
+            
         try {
             // Fetch primary currency code
             $currency = $repoCurrency->findOneBy(['isPrimary' => true]);
@@ -199,7 +227,8 @@ final class ClientSubscriptionController extends AbstractController
             $payment->setUser($user);
             $payment->setSubscriptionPlan($plan);
             $payment->setStatus('pending');
-            $payment->setAmount($plan->getPrice() * $months);
+            $payment->setAmount($totalAmount);
+            $payment->setTva($tvaRate );
             $payment->setCurrency($currency->getCode());
             $payment->setMonths($months);
             $payment->setCreatedAt(new \DateTime());
@@ -215,6 +244,7 @@ final class ClientSubscriptionController extends AbstractController
                 $client,
                 $plan,
                 $months,
+                $totalAmount,
                 $payment->getId(),
                 $payment->getSlug()
             );
@@ -310,6 +340,90 @@ final class ClientSubscriptionController extends AbstractController
             ]);
         }
     
+        /**
+         * Generates and displays a PDF invoice for a given payment.
+         *
+         * This action:
+         * - Verifies the payment belongs to the authenticated user
+         * - Retrieves the client information
+         * - Renders a Twig HTML template into PDF via Dompdf
+         * - Streams the PDF directly in the browser
+         *
+         * Route: /payment/invoice/{slug}
+         * Method: GET
+         *
+         * @param string $slug Unique slug for the payment
+         * @param PaymentRepository $paymentRepo Repository to fetch payment
+         * @param ClientRepository $clientRepo Repository to fetch client data
+         *
+         * @return Response The rendered PDF invoice or a redirection with flash
+         */
+        #[Route('/payment/invoice/{slug}', name: 'payment_invoice')]
+        public function invoicePdf(
+            string $slug,
+            PaymentRepository $paymentRepo,
+            ClientRepository $clientRepo,
+            AdminEntrepriseRepository $repoEntreprise
+        ): Response {
+            $user = $this->getUser();
+
+            $payment = $paymentRepo->findOneBy(['slug' => $slug, 'user' => $user]);
+            if (!$payment) {
+                $this->addFlash('danger', 'Payment not found.');
+                return $this->redirectToRoute('app_client_subscription');
+            }
+
+            $client = $clientRepo->findOneBy(['user' => $user]);
+            if (!$client) {
+                $this->addFlash('danger', 'Client information is missing. Please update your profile.');
+                return $this->redirectToRoute('app_clients_profile');
+            }
+
+            $options = new Options();
+            $options->set('defaultFont', 'DejaVu Sans');
+            $options->setIsRemoteEnabled(true);
+            $dompdf = new Dompdf($options);
+              $entrepriseInfo = $repoEntreprise->findOneBy([
+            'id' => 1
+            ]);
+          
+            $html = $this->renderView('stripe_webhook/payment_invoice.html.twig', [
+                'payment' => $payment,
+                'client' => $client,
+                'entreprise' => $entrepriseInfo
+             
+            ]);
+
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+
+            return new Response($dompdf->output(), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="invoice-'.$payment->getSlug().'.pdf"',
+            ]);
+        }
+
+
+          #[Route('/client/payments', name: 'app_client_payments')]
+    public function payments(
+        PaymentRepository $repoPayment, 
+     
+    ): Response
+    {
+      
+        
+        $payments = $repoPayment->findBy([
+            'user' => $this->getUser()
+        ]);
+
+      
+        
+        return $this->render('client_subscription/payments.html.twig', [
+            'payments' => $payments,
+        
+        ]);
+    }
 
 
 }

@@ -49,6 +49,7 @@ class StripePaymentService
         Client $client,
         SubscriptionPlan $plan,
         int $months,
+        float $totalAmount,
         int $paymentId,
         string $slug
     ): Session {
@@ -67,7 +68,7 @@ class StripePaymentService
         Stripe::setApiKey($secretKey);
 
         // Calculate total amount in the smallest currency unit (cents)
-        $amount = $plan->getPrice() * $months;
+       
 
         try {
             // Create a Stripe Checkout session with payment details
@@ -76,7 +77,7 @@ class StripePaymentService
                 'line_items' => [[
                     'price_data' => [
                         'currency' => $primaryCurrency->getCode(),
-                        'unit_amount' => (int)($amount * 100), // convert to cents
+                        'unit_amount' => (int)($totalAmount * 100), // convert to cents
                         'product_data' => [
                             'name' => $plan->getName(),
                         ],

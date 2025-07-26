@@ -80,6 +80,7 @@
 						<span id="durationAmount"></span>
 					</td>
 				</tr>
+				
 				<tr>
 					<td class="pt-4 text-right font-bold text-lg" colspan="2">
 						{{ 'Total'|trans }}:
@@ -87,6 +88,22 @@
 						{{ currency.symbol }}
 					</td>
 				</tr>
+				{% if isTvaApplicable %}
+					<tr>
+						<td class="pt-4 text-right font-medium" colspan="2">
+							{{ 'TVA'|trans }} ({{ tvaRate }}%):
+							<span id="tvaAmount"></span>
+							{{ currency.symbol }}
+						</td>
+					</tr>
+					<tr>
+						<td class="pt-4 text-right font-bold text-lg" colspan="2">
+							{{ 'Total with VAT'|trans }}:
+							<span id="totalTTC"></span>
+							{{ currency.symbol }}
+						</td>
+					</tr>
+				{% endif %}
 
 			</tbody>
 		</table>
@@ -168,31 +185,44 @@
     return count > 1 ? t.months : t.month;
   }
 
+  
+
   // Wait for the DOM to be fully loaded before attaching events and calculating values
   document.addEventListener('DOMContentLoaded', () => {
     // Price per month, injected safely from Twig as a JSON number
     const price = {{ plan.price|json_encode() }};
-
+	const tvaRate = {{ tvaRate|json_encode() }};
+	const isTvaApplicable = {{ isTvaApplicable ? 'true' : 'false' }};
     // Get references to the DOM elements
     const monthsSelect = document.getElementById('months');      // <select> for month selection
     const totalCell = document.getElementById('totalAmount');    // Where total price will be displayed
     const durationCell = document.getElementById('durationAmount'); // Where duration description will be displayed
 
     /**
-     * Updates the subscription summary whenever the user changes the number of months.
-     * Calculates total = price * months and updates the displayed duration text with proper pluralization.
-     */
-    function updateSummary() {
-      const months = parseInt(monthsSelect.value, 10) || 1;
-      const total = (price * months).toFixed(2);
+ * Updates the subscription summary whenever the user changes the number of months.
+ * - Calculates the subtotal (price * months).
+ * - Displays the duration with proper pluralization.
+ * - If VAT is applicable:
+ *    - Calculates and rounds the VAT amount to 2 decimals.
+ *    - Calculates the total including VAT (rounded).
+ *    - Updates the corresponding HTML elements with these values.
+ */
+  function updateSummary() {
+  const months = parseInt(monthsSelect.value, 10) || 1;
+  const subtotal = price * months;
+  const monthText = getMonthText(months);
 
-      // Get the correct month text (singular/plural) for current locale
-      const monthText = getMonthText(months);
+  durationCell.textContent = `${months} ${monthText}`;
+  totalCell.textContent = subtotal.toFixed(2);
 
-      // Update the DOM elements with the calculated values
-      durationCell.textContent = `${months} ${monthText}`;
-      totalCell.textContent = total;
-    }
+  if (isTvaApplicable === true || isTvaApplicable === 'true') {
+    const tva = +(subtotal * (tvaRate / 100)).toFixed(2);  // ✅ ARRONDI à 2 décimales
+    const totalTTC = +(subtotal + tva).toFixed(2);         // ✅ Idem ici
+
+    document.getElementById('tvaAmount').textContent = tva.toFixed(2);
+    document.getElementById('totalTTC').textContent = totalTTC.toFixed(2);
+  }
+}
 
     // Attach event listener to update summary on month selection change
     monthsSelect.addEventListener('change', updateSummary);

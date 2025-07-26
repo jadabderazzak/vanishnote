@@ -50,6 +50,9 @@ class Payment
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $stripePaymentIntentId = null;
 
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $tva = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -187,6 +190,18 @@ class Payment
      public function setStripePaymentIntentId(?string $stripePaymentIntentId): static
      {
          $this->stripePaymentIntentId = $stripePaymentIntentId;
+
+         return $this;
+     }
+
+     public function getTva(): ?int
+     {
+         return $this->tva;
+     }
+
+     public function setTva(int $tva): static
+     {
+         $this->tva = $tva;
 
          return $this;
      }
