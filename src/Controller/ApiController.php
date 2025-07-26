@@ -77,13 +77,18 @@ final class ApiController extends AbstractController
             // Get raw (unencrypted) keys from the form fields
             $secretKeyRaw = $form->get('secretKeyEncrypted')->getData();
             $publicKeyRaw = $form->get('publicKeyEncrypted')->getData();
+            $webhookSecretRaw = $form->get('webhookSecretEncrypted')->getData();
+
+
 
             // Encrypt keys if present
             $secretKeyEncrypted = $encryptionService->encrypt($secretKeyRaw);
             $publicKeyEncrypted = !empty($publicKeyRaw) ? $encryptionService->encrypt($publicKeyRaw) : "";
+            $webhookSecretEncrypted = !empty($webhookSecretRaw) ? $encryptionService->encrypt($webhookSecretRaw) : "";
 
             $apiCredential->setSecretKeyEncrypted($secretKeyEncrypted);
             $apiCredential->setPublicKeyEncrypted($publicKeyEncrypted);
+            $apiCredential->setWebhookSecretEncrypted($webhookSecretEncrypted);
 
             $manager->persist($apiCredential);
             $manager->flush();
@@ -128,12 +133,15 @@ final class ApiController extends AbstractController
 
             $secretKeyRaw = $apiCredential->getSecretKeyEncrypted();
             $publicKeyRaw = $apiCredential->getPublicKeyEncrypted();
+            $webhookSecretRaw = $apiCredential->getWebhookSecretEncrypted();
 
             $secretKeyEncrypted = $encryptionService->encrypt($secretKeyRaw);
             $publicKeyEncrypted = !empty($publicKeyRaw) ? $encryptionService->encrypt($publicKeyRaw) : "";
+            $webhookSecretEncrypted = !empty($webhookSecretRaw) ? $encryptionService->encrypt($webhookSecretRaw) : "";
 
             $apiCredential->setSecretKeyEncrypted($secretKeyEncrypted);
             $apiCredential->setPublicKeyEncrypted($publicKeyEncrypted);
+            $apiCredential->setWebhookSecretEncrypted($webhookSecretEncrypted);
 
             $manager->flush();
 

@@ -49,6 +49,9 @@ class ApiCredential
     #[ORM\Column]
     private ?bool $isActive = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $webhookSecretEncrypted = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -98,6 +101,18 @@ class ApiCredential
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getWebhookSecretEncrypted(): ?string
+    {
+        return $this->webhookSecretEncrypted;
+    }
+
+    public function setWebhookSecretEncrypted(?string $webhookSecretEncrypted): static
+    {
+        $this->webhookSecretEncrypted = $webhookSecretEncrypted;
 
         return $this;
     }

@@ -1,0 +1,205 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'Subscription Summary'|trans }}
+{% endblock %}
+
+{% block body %}
+	{% set months = months is defined ? months : 1 %}
+	{% set total = (plan.price * months) | number_format(2, '.', ',') %}
+	<div
+		class="max-w-3xl mx-auto my-8 p-8 bg-white border border-gray-300 mt-24">
+		<!-- En-tête de facture -->
+		<div class="flex justify-between items-start mb-12">
+			<div>
+				<h1 class="text-2xl font-bold text-gray-800">#{{ 'Invoice'|trans }}
+				</h1>
+				<p class="text-gray-600">{{ 'Subscription Summary'|trans }}</p>
+			</div>
+			<div class="text-right">
+
+				<p class="text-gray-700">
+					<strong>{{ 'Due Date'|trans }}:</strong>
+					{{ "now"|date("d/m/Y") }}</p>
+			</div>
+		</div>
+
+		<!-- Informations client -->
+		<div class="mb-10">
+			<h2 class="text-lg font-semibold border-b border-gray-300 pb-2 mb-4">{{ 'Bill To'|trans }}</h2>
+			<address class="not-italic">
+				<p class="font-medium">{{ client.name }}</p>
+				{% if client.isCompany %}
+					<p>{{ client.company }}</p>
+					<p>{{ client.companyAdress }}</p>
+					<p>{{ 'VAT Number'|trans }}:
+						{{ client.vatNumber }}</p>
+				{% endif %}
+				<p>{{ client.phone }}</p>
+				{% if client.country %}
+					<p>{{ client.country.name }}</p>
+				{% endif %}
+			</address>
+		</div>
+
+		<table class="w-full mb-8">
+			<thead>
+				<tr class="border-b border-gray-300">
+					<th class="text-left pb-2 font-semibold">{{ 'Description'|trans }}</th>
+					<th class="text-right pb-2 font-semibold">{{ 'Amount'|trans }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="border-b border-gray-200">
+					<td class="py-4">
+						<p class="font-medium">{{ plan.name | trans }}</p>
+						<p class="text-sm text-gray-600">{{ plan.description }}</p>
+						<p class="text-sm text-gray-600 mt-1">
+							{% if plan.numberNotes == 0 %}
+								{{ 'Unlimited notes'|trans }}
+							{% else %}
+								{{ plan.numberNotes }}
+								{{ 'notes'|trans }}
+							{% endif %}
+						</p>
+
+					</td>
+					<td class="py-4 text-right">{{ plan.price }}
+						{{ currency.symbol }}</td>
+				</tr>
+				<tr>
+					<td class="pt-4 text-right font-medium" colspan="2">
+						{{ 'Subtotal'|trans }}:
+						{{ plan.price }}
+						{{ currency.symbol }}
+					</td>
+				</tr>
+				<tr>
+					<td class="pt-4 text-right font-medium" colspan="2">
+						{{ 'Duration'|trans }}:
+						<span id="durationAmount"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="pt-4 text-right font-bold text-lg" colspan="2">
+						{{ 'Total'|trans }}:
+						<span id="totalAmount"></span>
+						{{ currency.symbol }}
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+
+
+		<!-- Durée et paiement -->
+		<div class="border-t border-gray-300 pt-6">
+			<form method="POST" action="{{ path('stripe_checkout', {slug : plan.slug})}}">
+				<input type="hidden" name="_token" value="{{ csrf_token('subscription_recap') }}">
+
+				<div class="flex items-center justify-between mb-6">
+					<label for="months" class="font-medium text-gray-700 mr-4">
+						{{ 'Subscription duration'|trans }}:
+					</label>
+					{% set locale = app.request.locale %}
+
+					{% set monthTranslations = {
+                    'fr': {'one': 'mois', 'other': 'mois'},
+                    'en': {'one': 'month', 'other': 'months'},
+                    'es': {'one': 'mes', 'other': 'meses'},
+                    'de': {'one': 'Monat', 'other': 'Monate'}
+                } %}
+					<select name="months" id="months" required class="border border-gray-300 rounded px-3 py-2 w-32 bg-white">
+						{% for m in 1..12 %}
+							{% set trans = monthTranslations[locale] is defined ? monthTranslations[locale] : monthTranslations['en'] %}
+							{% set monthText = m > 1 ? trans.other : trans.one %}
+							<option value="{{ m }}">{{ m }}
+								{{ monthText }}</option>
+						{% endfor %}
+					</select>
+				</div>
+
+				<button type="submit" class="w-full py-3 bg-gray-800 hover:bg-gray-900 text-white font-medium rounded">
+					{{ 'Proceed to Payment'|trans }}
+				</button>
+			</form>
+		</div>
+
+		<!-- Messages flash -->
+		{% for label, messages in app.flashes %}
+			<div class="mt-6 p-4 {{ label == 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200' }}">
+				{% for message in messages %}
+					<p>{{ message }}</p>
+				{% endfor %}
+			</div>
+		{% endfor %}
+
+		<!-- Pied de page facture -->
+		<div class="mt-12 pt-4 border-t border-gray-300 text-center text-sm text-gray-500">
+			<p>{{ 'Thank you for your business'|trans }}</p>
+			<p class="mt-1">{{ 'Invoice generated automatically'|trans }}</p>
+		</div>
+	</div>
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+  <script>
+  // Get the current locale from Symfony request (e.g. 'en', 'fr', 'es', 'de')
+  const locale = "{{ app.request.locale }}";
+
+  // Translation dictionary for singular and plural forms of "month" in supported languages
+  const translations = {
+    fr: { month: "mois", months: "mois" },   // French: singular = plural = "mois"
+    en: { month: "month", months: "months" }, // English
+    es: { month: "mes", months: "meses" },    // Spanish
+    de: { month: "Monat", months: "Monate" }, // German
+  };
+
+  /**
+   * Returns the correct translation for "month" based on the count and current locale.
+   * Defaults to English if locale is not found.
+   * @param {number} count - The number of months selected
+   * @returns {string} The localized singular or plural word for "month"
+   */
+  function getMonthText(count) {
+    const t = translations[locale] || translations.en;
+    return count > 1 ? t.months : t.month;
+  }
+
+  // Wait for the DOM to be fully loaded before attaching events and calculating values
+  document.addEventListener('DOMContentLoaded', () => {
+    // Price per month, injected safely from Twig as a JSON number
+    const price = {{ plan.price|json_encode() }};
+
+    // Get references to the DOM elements
+    const monthsSelect = document.getElementById('months');      // <select> for month selection
+    const totalCell = document.getElementById('totalAmount');    // Where total price will be displayed
+    const durationCell = document.getElementById('durationAmount'); // Where duration description will be displayed
+
+    /**
+     * Updates the subscription summary whenever the user changes the number of months.
+     * Calculates total = price * months and updates the displayed duration text with proper pluralization.
+     */
+    function updateSummary() {
+      const months = parseInt(monthsSelect.value, 10) || 1;
+      const total = (price * months).toFixed(2);
+
+      // Get the correct month text (singular/plural) for current locale
+      const monthText = getMonthText(months);
+
+      // Update the DOM elements with the calculated values
+      durationCell.textContent = `${months} ${monthText}`;
+      totalCell.textContent = total;
+    }
+
+    // Attach event listener to update summary on month selection change
+    monthsSelect.addEventListener('change', updateSummary);
+
+    // Initial call to display correct info on page load
+    updateSummary();
+  });
+</script>
+
+{% endblock %}

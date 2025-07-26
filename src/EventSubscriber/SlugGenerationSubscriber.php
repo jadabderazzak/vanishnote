@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Payment;
 use App\Entity\Subscriptions;
 use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
@@ -48,6 +49,18 @@ class SlugGenerationSubscriber implements EventSubscriber
         $entity = $args->getObject();
 
         if ($entity instanceof Subscriptions) {
+            // Generate a slug if not already set
+            if (!$entity->getSlug()) {
+                $entity->generateRandomSlug();
+            }
+
+            // Set createdAt timestamp if not already set
+            if (!$entity->getCreatedAt()) {
+                $entity->setCreatedAt(new \DateTime());
+            }
+        }
+
+        if ($entity instanceof Payment) {
             // Generate a slug if not already set
             if (!$entity->getSlug()) {
                 $entity->generateRandomSlug();

@@ -34,6 +34,12 @@ class ApiType extends AbstractType
                 'attr' => ['autocomplete' => 'new-password'],
                 'help' => $this->translator->trans('Optional public key, will be encrypted.'),
             ])
+            ->add('webhookSecretEncrypted', PasswordType::class, [
+                'label' => $this->translator->trans('Webhook'),
+                'required' => false,
+                'attr' => ['autocomplete' => 'new-password'],
+                'help' => $this->translator->trans('Optional secret key for the webhook, stored securely with encryption.'),
+            ])
             ->add('service', ChoiceType::class, [
                 'choices' => [
                     $this->translator->trans('Stripe') => 'stripe',
