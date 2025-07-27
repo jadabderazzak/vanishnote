@@ -11,6 +11,7 @@ use App\Entity\SubscriptionPlan;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ApiCredentialRepository;
+use App\Repository\PaymentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,7 +35,8 @@ class StripeWebhookController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private EncryptionService $encrypt,
-        private ApiCredentialRepository $apiCredentialRepository
+        private ApiCredentialRepository $apiCredentialRepository,
+        private PaymentRepository $repoPayment
     ) {
         // Constructor to inject dependencies
     }
@@ -133,6 +135,13 @@ class StripeWebhookController extends AbstractController
         $this->entityManager->beginTransaction();
 
         try {
+            /**
+             * Retrieves the latest succeeded invoice ID and increments it for the current payment.
+             *
+             * If a succeeded invoice already exists, the new invoice ID will be set as the last one + 1.
+             */
+            $lastId = $this->repoPayment->findLastSucceededInvoiceId();
+            $payment->setInvoiceId($lastId + 1);
             // Update payment status to succeeded
             $payment->setStatus('succeeded');
             $payment->setUpdatedAt(new \DateTime());

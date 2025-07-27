@@ -15,29 +15,24 @@ class PaymentRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Payment::class);
     }
+    
+    /**
+     * Returns the highest invoiceId from succeeded payments.
+     *
+     * This is used to determine the next invoice number in sequence (e.g., INV001, INV002...).
+     *
+     * @return int The highest invoiceId, or 0 if no succeeded payment exists.
+     */
+    public function findLastSucceededInvoiceId(): int
+    {
+        $result = $this->createQueryBuilder('p')
+            ->select('MAX(p.invoiceId) as maxInvoiceId')
+            ->where('p.status = :status')
+            ->setParameter('status', 'succeeded')
+            ->getQuery()
+            ->getSingleScalarResult();
 
-    //    /**
-    //     * @return Payment[] Returns an array of Payment objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+        return (int) $result; // will return 0 if null
+    }
 
-    //    public function findOneBySomeField($value): ?Payment
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

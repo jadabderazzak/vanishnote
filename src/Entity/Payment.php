@@ -53,6 +53,12 @@ class Payment
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $tva = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $invoiceRef = null;
+
+    #[ORM\Column]
+    private ?int $invoiceId = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -202,6 +208,30 @@ class Payment
      public function setTva(int $tva): static
      {
          $this->tva = $tva;
+
+         return $this;
+     }
+
+     public function getInvoiceRef(): ?string
+     {
+         return $this->invoiceRef;
+     }
+
+     public function setInvoiceRef(?string $invoiceRef): static
+     {
+         $this->invoiceRef = $invoiceRef;
+
+         return $this;
+     }
+
+     public function getInvoiceId(): ?int
+     {
+         return $this->invoiceId;
+     }
+
+     public function setInvoiceId(int $invoiceId): static
+     {
+         $this->invoiceId = $invoiceId;
 
          return $this;
      }

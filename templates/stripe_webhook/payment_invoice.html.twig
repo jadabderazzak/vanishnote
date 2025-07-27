@@ -112,7 +112,7 @@
 
 			<div style="text-align: right; flex-grow: 1; padding-left: 20px;">
 				<h1>{{ 'Invoice'|trans }}</h1>
-				<div class="invoice-number">{{ 'Invoice number'|trans }}: #{{ entreprise.invoicePrefix is defined and entreprise.invoicePrefix ? entreprise.invoicePrefix : 'INV-' }}{{ '%06d'|format(payment.id) }}
+				<div class="invoice-number">{{ 'Invoice number'|trans }}: #{{ entreprise.invoicePrefix is defined and entreprise.invoicePrefix ? entreprise.invoicePrefix : 'INV-' }}{{ '%06d'|format(payment.invoiceID) }}
 				</div>
 				<div class="invoice-date">{{ 'Date'|trans }}:
 					{{ payment.createdAt|date('Y-m-d') }}</div>

@@ -229,6 +229,7 @@ final class ClientSubscriptionController extends AbstractController
             $payment->setStatus('pending');
             $payment->setAmount($totalAmount);
             $payment->setTva($tvaRate );
+            $payment->setInvoiceId(0);
             $payment->setCurrency($currency->getCode());
             $payment->setMonths($months);
             $payment->setCreatedAt(new \DateTime());
