@@ -74,12 +74,12 @@
                                 {% endif %}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-500">{{ payment.createdAt|format_datetime(pattern='MMMM d, Y', locale=app.request.locale) }}</div>
+                                <div class="text-sm text-gray-500">{{ payment.createdAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}</div>
                             </td>
                              <td  class="px-6 py-4 whitespace-nowrap">
                                <div class="text-sm text-gray-500">
                                 {% set endsAt = payment.createdAt|date_modify('+' ~ payment.months ~ ' months') %}
-                                {{ endsAt|format_datetime(pattern='MMMM d, Y', locale=app.request.locale) }}
+                                {{ endsAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right">

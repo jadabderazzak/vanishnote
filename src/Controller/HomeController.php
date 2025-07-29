@@ -59,4 +59,26 @@ final class HomeController extends AbstractController
 
         return $this->redirect($request->headers->get('referer') ?: $this->generateUrl('app_home'));   
     }
+
+    #[Route('/terms', name: 'app_terms')]
+    /**
+     * Affiche la page des Conditions d'utilisation et Politique de confidentialité.
+     *
+     * @return Response
+     */
+    public function terms(): Response
+    {
+        return $this->render('home/terms.html.twig');
+    }
+
+     #[Route('/privacy', name: 'app_privacy')]
+    /**
+     * Affiche la page des Conditions d'utilisation et Politique de confidentialité.
+     *
+     * @return Response
+     */
+    public function privacy(): Response
+    {
+        return $this->render('home/privacy.html.twig');
+    }
 }

@@ -2,9 +2,12 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Logs;
+use App\Entity\Notes;
 use App\Entity\Payment;
-use App\Entity\Subscriptions;
 use Doctrine\ORM\Events;
+use App\Entity\Attachements;
+use App\Entity\Subscriptions;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
@@ -69,6 +72,32 @@ class SlugGenerationSubscriber implements EventSubscriber
             // Set createdAt timestamp if not already set
             if (!$entity->getCreatedAt()) {
                 $entity->setCreatedAt(new \DateTime());
+            }
+        }
+
+        if ($entity instanceof Notes) {
+            // Generate a slug if not already set
+            if (!$entity->getSlug()) {
+                $entity->generateRandomSlug();
+            }
+
+            // Set createdAt timestamp if not already set
+            if (!$entity->getCreatedAt()) {
+                $entity->setCreatedAt(new \DateTime());
+            }
+        }
+
+         if ($entity instanceof Attachements) {
+            // Generate a slug if not already set
+            if (!$entity->getSlug()) {
+                $entity->generateRandomSlug();
+            }
+        }
+
+        if ($entity instanceof Logs) {
+            // Generate a slug if not already set
+            if (!$entity->getSlug()) {
+                $entity->generateRandomSlug();
             }
         }
     }

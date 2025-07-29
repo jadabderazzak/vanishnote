@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Privacy Policy{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto px-8 py-12 mt-24 mb-20 bg-white rounded-xl shadow-lg border border-gray-200">
+  <header class="mb-10 text-center">
+    <h1 class="text-4xl font-extrabold text-indigo-700 tracking-tight">Privacy Policy</h1>
+    <p class="mt-2 text-gray-600 text-sm uppercase tracking-widest font-semibold">Your privacy matters</p>
+  </header>
+
+  {% set sections = {
+    1: {
+      title: 'Introduction',
+      content: 'We take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your personal information when you use our Service.'
+    },
+    2: {
+      title: 'Information We Collect',
+      list: [
+        '<strong>Personal Information:</strong> We do not require you to provide personal information to use the core features of the Service.',
+        '<strong>Technical Data:</strong> We may collect non-identifying technical data such as browser type, device information, and usage statistics to improve our Service.',
+        '<strong>Cookies:</strong> We use cookies only as necessary to enhance user experience and performance. We do not use third-party tracking cookies without your consent.'
+      ]
+    },
+    3: {
+      title: 'How We Use Your Information',
+      list: [
+        'To provide and maintain the Service.',
+        'To monitor and analyze usage trends and improve functionality.',
+        'To comply with legal obligations.'
+      ]
+    },
+    4: {
+      title: 'Data Security',
+      content: 'We implement industry-standard measures to protect your data. All notes and attachments are encrypted before storage, and we do not keep decrypted copies. However, no method of transmission or storage is 100% secure, so use the Service at your own risk.'
+    },
+    5: {
+      title: 'Data Retention',
+      content: 'Notes and attachments are retained only as long as specified by you or until they expire or are deleted. After that, data is permanently removed from our servers.'
+    },
+    6: {
+      title: 'Your Rights',
+      list: [
+        'You can delete notes at any time before their expiration.',
+        'You have the right to request information about your data stored by us.',
+        'You may contact us to correct or delete your personal information if applicable.'
+      ]
+    },
+    7: {
+      title: 'Third-Party Services',
+      content: 'We do not share your personal data with third parties except as necessary to provide the Service or comply with the law.'
+    },
+    8: {
+      title: 'Children’s Privacy',
+      content: 'This Service is not intended for use by children under the age of 13 in the United States, in compliance with the Children’s Online Privacy Protection Act (COPPA). In the European Union, the minimum age is generally 16 according to the General Data Protection Regulation (GDPR), although some member states allow the age to be lowered to 13. We do not knowingly collect personal data from children below the applicable minimum age in your jurisdiction. If you believe we have collected data from a child without parental consent, please contact us immediately to request deletion.'
+    },
+    9: {
+      title: 'Changes to This Privacy Policy',
+      content: 'We may update this Privacy Policy occasionally. Significant changes will be communicated via email or prominent notice. Continued use of the Service after changes indicates your acceptance of the updated policy.'
+    },
+    10: {
+      title: 'Contact Us',
+      content: 'If you have questions about this Privacy Policy, please contact us at: <a href="#" class="text-indigo-600 hover:underline font-semibold">Support Email here</a>'
+    }
+  } %}
+
+  <div class="space-y-10">
+    {% for num, section in sections %}
+    <section>
+      <h2 class="flex items-center text-xl font-semibold text-indigo-700 mb-3">
+        <span class="flex-shrink-0 flex justify-center items-center w-10 h-10 mr-4 rounded-full bg-indigo-100 text-indigo-700 font-bold text-lg select-none">
+          {{ num }}
+        </span>
+        {{ section.title }}
+      </h2>
+      {% if section.content is defined %}
+      <p class="text-gray-700 text-base leading-relaxed">{% autoescape false %}{{ section.content }}{% endautoescape %}</p>
+      {% endif %}
+      {% if section.list is defined %}
+      <ul class="list-disc list-inside text-gray-700 space-y-2 text-base leading-relaxed">
+        {% for item in section.list %}
+        <li>{% autoescape false %}{{ item }}{% endautoescape %}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </section>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

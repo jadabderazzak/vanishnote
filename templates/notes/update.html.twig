@@ -1,0 +1,452 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'Create Secure Note'|trans }}
+{% endblock %}
+
+{% block body %}
+	<!-- Back Button -->
+	<div class="max-w-6xl mx-6 md:mx-auto  mt-24">
+
+		<a href="{{ path('app_notes') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white transition-all duration-300 shadow-sm group">
+			<svg class="h-5 w-5 text-gray-500 group-hover:text-white transition duration-300" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+			</svg>
+			<span class="text-sm font-thin tracking-wide">{{ 'Back to notes'|trans }}</span>
+		</a>
+
+
+	</div>
+	<div class="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+
+		<div
+			class="w-full max-w-6xl bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row border border-gray-200">
+
+			{# Left Column - Form #}
+			<div class="w-full md:w-2/3 p-8 md:p-10">
+				<div class="flex items-center mb-8">
+					<div class="bg-indigo-100 p-3 rounded-lg mr-4">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-trash_bold" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+						</svg>
+					</div>
+					<div>
+						<h1 class="text-2xl font-bold text-gray-900">{{ 'Secure Note Creation'|trans }}</h1>
+						<p class="text-sm text-gray-600">{{ 'End-to-end encrypted content protection'|trans }}</p>
+					</div>
+				</div>
+
+				{{ form_start(form, {'attr': {'class': 'space-y-6', 'id': 'secure-note-form'}}) }}
+
+				<div
+					class="grid grid-cols-1 lg:grid-cols-1 gap-6 ">
+					{# Left Form Column #}
+					<div class="space-y-6">
+						<div
+							class="flex flex-col md:flex-row items-center justify-between gap-6 w-full ">
+							{# Title #}
+							<div class="flex-1 space-y-2 w-full">
+								<label class="block text-sm font-medium text-gray-700">{{ 'Note Title'|trans }}</label>
+								{{ form_widget(form.title, {'attr': {
+                                'class': 'block w-full px-4 py-3 rounded-lg placeholder:text-xs border border-trash focus:border-trash_bold focus:ring-trash_bold placeholder-gray-400'
+                                }}) }}
+								<span class="text-red-500 text-sm">{{ form_errors(form.title) }}</span>
+								<p class="text-xs text-gray-500">{{ 'Helps identify your secure note'|trans }}</p>
+							</div>
+
+							{# Password #}
+							{% if form.password is defined %}
+								<div class="flex-1 space-y-2 w-full">
+									<label class="block text-sm font-medium text-gray-700">{{ 'Encryption Password'|trans }}</label>
+									{{ form_widget(form.password, {'attr': {
+                                'class': 'block w-full px-4 py-3 rounded-lg placeholder:text-xs border border-trash focus:border-trash_bold focus:ring-trash placeholder-gray-400',
+                                'placeholder': 'Set additional password (optional)'|trans
+                                }}) }}
+									<span class="text-red-500 text-sm">{{ form_errors(form.password) }}</span>
+									<p class="text-xs text-red-500">{{ 'You must re-enter the password.'|trans }}</p>
+								</div>
+							{% endif %}
+						</div>
+
+
+						{# Content #}
+						<div class="space-y-2">
+							<label class="block text-sm font-medium text-gray-700">{{ 'Secret Content'|trans }}
+								<span class="text-red-500">*</span>
+							</label>
+							{{ form_widget(form.content, {'attr': {
+                                'class': 'block w-full px-4 py-3 rounded-lg placeholder:text-xs border border-trash  focus:border-trash_bold focus:ring-trash min-h-[180px]',
+                                'placeholder': 'Paste your sensitive information here...'|trans,
+                                'rows': 6
+                                }}) }}
+
+							<span class="text-red-500 text-sm">{{ form_errors(form.content) }}</span>
+							<p class="text-xs text-gray-500">{{ 'All content is encrypted before storage'|trans }}</p>
+						</div>
+					</div>
+
+
+					<div
+						class="space-y-6">
+						{# Attachments #}
+						{% if form.attachements is defined %}
+							<div class="space-y-2">
+								<label class="block text-sm font-medium text-gray-700">{{ 'Add Attachments'|trans }}</label>
+								<div class="mt-1 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-6 text-center hover:border-gray-400 transition-colors duration-150 bg-gray-50" id="dropzone">
+									<svg class="mx-auto h-10 w-10 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12l-3-3m0 0l-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+									</svg>
+									<div class="mt-2 flex text-sm text-gray-600">
+										<label class="relative cursor-pointer font-medium text-trash_bold hover:text-trash">
+											<span>{{ 'Select files'|trans }}</span>
+											{{ form_widget(form.attachements, {'attr': {
+                                            'class': 'sr-only',
+                                            'multiple': 'multiple'
+                                        }}) }}
+										</label>
+										<p class="pl-1">{{ 'or drag & drop'|trans }}</p>
+									</div>
+									<p class="text-xs text-gray-500 mt-1">
+										{{ 'Max. 5 files allowed — total size: 10MB'|trans }}
+									</p>
+								</div>
+								<span class="text-red-500 text-sm">{{ form_errors(form.attachements) }}</span>
+								<div id="file-preview" class="grid grid-cols-1 gap-2 mt-3 hidden"></div>
+								<p class="text-xs text-gray-500">{{ 'All attachments are encrypted before storage'|trans }}</p>
+							</div>
+						{% endif %}
+						<!-- Attachments -->
+						{% if attachments|length > 0 %}
+							<div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
+								<div class="px-6 py-5 bg-gray-50 border-b border-gray-200">
+									<h2 class="text-lg font-medium text-gray-900">{{ 'Attachments'|trans }}
+										({{ attachments|length }})</h2>
+								</div>
+								<div class="divide-y divide-gray-200">
+									{% for attachment in attachments %}
+										<div id="attachment-{{ attachment.slug }}" class="attachment-item p-4 hover:bg-gray-50 transition-colors duration-150 flex items-center space-x-4">
+
+											<div class="flex-1 min-w-0">
+												<p class="text-sm font-medium text-gray-900 truncate">{{ attachment.filename }}</p>
+												<p class="text-sm text-gray-500">{{ attachment.mimeType }}
+													•
+													{{ (attachment.size / 1024)|number_format(1) }}
+													KB</p>
+												<p class="text-sm text-gray-400">{{ attachment.uploadedAt ? attachment.uploadedAt|date('d/m/Y H:i') : '' }}</p>
+											</div>
+											<div>
+												<a href="{{ path('app_attachment_download', { slug: attachment.slug }) }}" target="_blank" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-trash_bold bg-gray-100 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-trash">
+													{{ 'Download'|trans }}
+												</a>
+												<button data-slug="{{ attachment.slug }}" class="delete-attachment-btn inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-red-500 bg-gray-100 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-trash" type="button">
+													{{ 'Remove'|trans }}
+												</button>
+											</div>
+										</div>
+									{% endfor %}
+								</div>
+							</div>
+						{% endif %}
+
+
+					</div>
+				</div>
+
+				{# Security Options - Full Width Below #}
+				<div class="pt-6 space-y-4">
+					<h3 class="text-lg font-medium text-gray-900">{{ 'Advanced Security Settings'|trans }}</h3>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+						{% if form.expirationDate is defined %}
+							<div class="flex items-center justify-between gap-4 p-4 border border-gray-200 rounded-2xl shadow-sm hover:bg-gray-50 transition">
+								<label
+									for="{{ form.expirationDate.vars.id }}" class="flex items-center gap-3 w-full cursor-text">
+									<!-- Calendar icon -->
+									<div class="relative">
+										<svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+										</svg>
+										{{ form_widget(form.expirationDate, {
+												'attr': {
+													'id': form.expirationDate.vars.id,
+													'class': 'datetime-picker pl-11 pr-4 py-2 w-full rounded-lg  shadow-sm focus:border-trash focus:ring-trash text-sm text-gray-700 bg-white transition',
+													'data-locale': app.request.locale,
+													'placeholder': 'Select expiration date'|trans
+												}
+											}) }}
+									</div>
+								</label>
+
+								<div class="relative group shrink-0">
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-gray-600 transition" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/>
+									</svg>
+									<div class="absolute bottom-full right-0 mb-2 w-max px-3 py-2 text-xs text-white bg-gray-700 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+										{{ 'Date when note will expire'|trans }}
+									</div>
+								</div>
+							</div>
+
+							{% if form_errors(form.expirationDate) %}
+								<p class="text-sm text-red-500 mt-1">{{ form_errors(form.expirationDate) }}</p>
+							{% endif %}
+
+
+						{% endif %}
+
+						{% if form.burnAfterReading is defined %}
+							<div class="flex items-center justify-between gap-4 p-4 border border-gray-200 rounded-2xl shadow-sm hover:bg-gray-50 transition">
+								<label for="{{ form.burnAfterReading.vars.id }}" class="flex items-center gap-3 cursor-pointer">
+									{{ form_widget(form.burnAfterReading, {
+										'attr': {
+											'id': form.burnAfterReading.vars.id,
+											'class': 'h-5 w-5 text-trash_bold focus:ring-trash border-gray-300 rounded'
+										}
+									}) }}
+									<span class="text-sm font-medium text-gray-700">{{ 'Burn after reading'|trans }}</span>
+								</label>
+
+								<div class="relative group">
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-gray-600 transition" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/>
+									</svg>
+									<div class="absolute bottom-full right-0 mb-2 w-max px-3 py-2 text-xs text-white bg-gray-700 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+										{{ 'Note will self-destruct after first opening'|trans }}
+									</div>
+								</div>
+							</div>
+
+						{% endif %}
+					</div>
+				</div>
+
+				{# Submit Button #}
+				<div class="pt-8">
+					<button type="submit" id="submit-btn" class="w-full flex justify-center items-center py-3 px-6 rounded-lg bg-trash hover:bg-trash_bold text-white font-medium shadow-sm transition-all duration-200 transform hover:-translate-y-0.5">
+						<span id="btn-text">{{ 'Generate Secure Link'|trans }}</span>
+						<svg id="loading-spinner" class="hidden ml-3 h-5 w-5 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24">
+							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+							<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+						</svg>
+					</button>
+				</div>
+
+				{{ form_end(form) }}
+			</div>
+
+			{# Right Column - Information Panel #}
+			<div class="w-full md:w-1/3 bg-gray-50 p-8 md:p-10 border-t md:border-t-0 md:border-l border-gray-200">
+				<div class="sticky top-10 space-y-8">
+					<div class="space-y-4">
+						<h3 class="text-lg font-bold text-gray-900 flex items-center">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-trash_bold mr-2" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+							</svg>
+							{{ 'How It Works'|trans }}
+						</h3>
+						<ul class="space-y-3 text-sm text-gray-600">
+							<li class="flex items-start">
+								<svg class="h-5 w-5 text-green-500 mr-2 flex-shrink-0" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+								</svg>
+								<span>{{ 'All content is encrypted before being stored'|trans }}</span>
+							</li>
+							<li class="flex items-start">
+								<svg class="h-5 w-5 text-green-500 mr-2 flex-shrink-0" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+								</svg>
+								<span>{{ 'Only people with the link can access the note'|trans }}</span>
+							</li>
+							<li class="flex items-start">
+								<svg class="h-5 w-5 text-green-500 mr-2 flex-shrink-0" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+								</svg>
+								<span>{{ 'Set expiration dates for automatic deletion'|trans }}</span>
+							</li>
+						</ul>
+					</div>
+
+					<div class="space-y-4">
+						<h3 class="text-lg font-bold text-gray-900 flex items-center">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-trash_bold mr-2" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+							</svg>
+							{{ 'Security Tips'|trans }}
+						</h3>
+						<ul class="space-y-3 text-sm text-gray-600">
+							<li class="flex items-start">
+								<svg class="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+								</svg>
+								<span>{{ 'Always set a password for sensitive information'|trans }}</span>
+							</li>
+							<li class="flex items-start">
+								<svg class="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+								</svg>
+								<span>{{ 'Use "Single View Mode" for one-time secrets'|trans }}</span>
+							</li>
+							<li class="flex items-start">
+								<svg class="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+								</svg>
+								<span>{{ 'Never share passwords through the same channel'|trans }}</span>
+							</li>
+						</ul>
+					</div>
+
+					<div class="space-y-4 pt-4 border-t border-gray-200">
+						<h3 class="text-lg font-bold text-gray-900 flex items-center">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-trash_bold mr-2" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+							</svg>
+							{{ 'Terms & Conditions'|trans }}
+						</h3>
+						<div class="text-xs text-gray-500 space-y-2">
+							<p>{{ 'By using this service, you agree that:'|trans }}</p>
+							<ul class="list-disc pl-5 space-y-1">
+								<li>{{ 'You are responsible for the content you share'|trans }}</li>
+								<li>{{ 'We cannot recover deleted or expired notes'|trans }}</li>
+								<li>{{ 'All content is encrypted before storage'|trans }}</li>
+								<li>{{ 'Illegal content is strictly prohibited'|trans }}</li>
+							</ul>
+							<p class="pt-2">
+								{{ 'For more details, please read our full'|trans }}
+								<a href="{{ path('app_terms') }}" target="_blank" class="text-indigo-600 hover:underline">
+									{{ 'Terms of Service'|trans }}
+								</a>
+								{{ 'and'|trans }}
+								<a href="{{ path('app_privacy') }}" target="_blank" class="text-indigo-600 hover:underline">
+									{{ 'Privacy Policy'|trans }}
+								</a>.
+							</p>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% if form.attachements is defined %}
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+const fileInput = document.querySelector('input[type="file"]');
+const filePreview = document.getElementById('file-preview');
+
+fileInput.addEventListener('change', function (e) {
+filePreview.innerHTML = '';
+
+if (this.files.length > 0) {
+filePreview.classList.remove('hidden');
+
+Array.from(this.files).forEach((file, index) => {
+const fileItem = document.createElement('div');
+fileItem.className = 'flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200';
+
+fileItem.innerHTML = `
+          <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+          <div class="ml-3 flex-1 min-w-0">
+            <p class="text-sm font-medium text-gray-900 truncate">${
+file.name
+}</p>
+            <p class="text-xs text-gray-500">${
+(file.size / 1024 / 1024).toFixed(2)
+} MB</p>
+          </div>
+          <button type="button" class="ml-2 text-red-500 hover:text-red-700" data-index="${index}">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        `;
+
+filePreview.appendChild(fileItem);
+});
+} else {
+filePreview.classList.add('hidden');
+}
+});
+
+// Handle file removal
+filePreview.addEventListener('click', function (e) {
+if (e.target.closest('button[data-index]')) {
+const index = e.target.closest('button').getAttribute('data-index');
+const dt = new DataTransfer();
+const files = Array.from(fileInput.files);
+
+files.splice(index, 1);
+files.forEach(file => dt.items.add(file));
+fileInput.files = dt.files;
+
+// Trigger change event to update preview
+const event = new Event('change');
+fileInput.dispatchEvent(event);
+}
+});
+
+// Form submission loading state
+const form = document.getElementById('secure-note-form');
+const submitBtn = document.getElementById('submit-btn');
+const btnText = document.getElementById('btn-text');
+const spinner = document.getElementById('loading-spinner');
+
+form.addEventListener('submit', function () {
+submitBtn.disabled = true;
+btnText.textContent = '{{ "Processing..."|trans }}';
+spinner.classList.remove('hidden');
+});
+});
+		</script>
+	{% endif %}
+
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+const buttons = document.querySelectorAll('.delete-attachment-btn');
+
+buttons.forEach(button => {
+button.addEventListener('click', function () {
+const slug = this.dataset.slug;
+
+if (!confirm('{{ "Are you sure you want to delete this attachment?"|trans }}')) {
+return;
+}
+
+fetch('{{ path("app_attachment_remove", {"slug": "SLUG"}) }}'.replace('SLUG', slug), {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+'X-Requested-With': 'XMLHttpRequest'
+},
+body: JSON.stringify({})
+}).then(response => response.json()).then(data => {
+if (data.status === 'success') {
+const attachmentDiv = document.getElementById('attachment-' + slug);
+if (attachmentDiv) { // Animation de disparition fluide
+attachmentDiv.style.transition = 'opacity 0.5s ease, max-height 0.5s ease, margin 0.5s ease, padding 0.5s ease';
+attachmentDiv.style.opacity = '0';
+attachmentDiv.style.maxHeight = '0';
+attachmentDiv.style.margin = '0';
+attachmentDiv.style.padding = '0';
+
+setTimeout(() => {
+attachmentDiv.remove();
+}, 500);
+}
+toastr.success(data.message);
+} else {
+toastr.error(data.message);
+}
+}).catch(() => {
+toastr.error('{{ "An error occurred. Please try again."|trans }}');
+});
+});
+});
+});
+	</script>
+
+
+{% endblock %}

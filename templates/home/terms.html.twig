@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Terms and Conditions{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto px-8 py-12 mt-24 mb-20 bg-white rounded-xl shadow-lg border border-gray-200">
+  <header class="mb-10 text-center">
+    <h1 class="text-4xl font-extrabold text-indigo-700 tracking-tight">Terms and Conditions</h1>
+    <p class="mt-2 text-gray-600 text-sm uppercase tracking-widest font-semibold">Service Agreement</p>
+  </header>
+
+  {% set sections = {
+    1: {
+      title: 'Acceptance of Terms',
+      content: 'By accessing or using this Service, you agree to be bound by these Terms and Conditions and our Privacy Policy. If you do not agree, please do not use the Service.'
+    },
+    2: {
+      title: 'User Responsibilities',
+      list: [
+        'You are solely responsible for the content you create, upload, or share via this Service.',
+        'You must not use the Service to store, transmit, or share content that is unlawful, harmful, offensive, or violates the rights of others.',
+        'You agree not to use the Service for any illegal or unauthorized purpose.'
+      ]
+    },
+    3: {
+      title: 'Content and Data Handling',
+      list: [
+        'All notes and attachments are encrypted before storage to ensure your privacy and security.',
+        'The Service does not retain any decrypted copies of your content.',
+        'Once a note expires or is deleted (including via “burn after reading”), it cannot be recovered.'
+      ]
+    },
+    4: {
+      title: 'Security Features',
+      list: [
+        'You may optionally set passwords for added protection.',
+        'The Service provides an automatic expiration feature to delete notes after a set period.',
+        '“Burn After Reading” allows notes to self-destruct after being viewed once.'
+      ]
+    },
+    5: {
+      title: 'Limitations of Liability',
+      content: 'The Service is provided "as is" without warranties of any kind. We are not liable for any loss or damage resulting from your use of the Service, including data loss. You acknowledge that no system is completely secure, and you use the Service at your own risk.'
+    },
+    6: {
+      title: 'Prohibited Uses',
+      content: '
+        You agree not to use the Service to store, share, or distribute any content that is:
+        <ul class="list-disc pl-6 space-y-2 mt-2">
+          <li>Illegal, including materials that violate laws or regulations.</li>
+          <li>Hateful, discriminatory, racist, or promoting violence against individuals or groups.</li>
+          <li>Threatening, harassing, or bullying others.</li>
+          <li>Related to terrorism, extremism, or any activity that could endanger public safety.</li>
+          <li>Detailed instructions or plans for illegal or dangerous activities (e.g., bomb-making, hacking, violent attacks).</li>
+          <li>Containing malware, viruses, spyware, or any other harmful software.</li>
+          <li>Violating intellectual property rights.</li>
+          <li>Explicitly sexual or pornographic material involving minors.</li>
+        </ul>
+        <p class="mt-4">We reserve the right to remove or block access to any content that violates these rules and to report illegal activities to appropriate authorities.</p>
+      '
+    },
+    7: {
+      title: 'Termination',
+      content: 'We reserve the right to suspend or terminate your access to the Service if you violate these Terms.'
+    },
+    8: {
+      title: 'Changes to Terms',
+      content: 'We may update these Terms at any time. Significant changes will be communicated via email or prominent notice. Continued use of the Service after changes constitutes acceptance of the revised Terms.'
+    },
+    9: {
+      title: 'Governing Law',
+      content: 'These Terms are governed by the laws of the jurisdiction where the Service provider is established. Any disputes arising shall be resolved in accordance with these laws.'
+    },
+    10: {
+      title: 'Contact',
+      content: 'If you have any questions regarding these Terms, please contact us at: <a href="#" class="text-indigo-600 hover:underline font-semibold">Support Email here</a>'
+    }
+  } %}
+
+  <div class="space-y-10">
+    {% for num, section in sections %}
+    <section>
+      <h2 class="flex items-center text-xl font-semibold text-indigo-700 mb-3">
+        <span class="flex-shrink-0 flex justify-center items-center w-10 h-10 mr-4 rounded-full bg-indigo-100 text-indigo-700 font-bold text-lg select-none">
+          {{ num }}
+        </span>
+        {{ section.title }}
+      </h2>
+      {% if section.content is defined %}
+      <p class="text-gray-700 text-base leading-relaxed">{% autoescape false %}{{ section.content }}{% endautoescape %}</p>
+      {% endif %}
+      {% if section.list is defined %}
+      <ul class="list-disc list-inside text-gray-700 space-y-2 text-base leading-relaxed">
+        {% for item in section.list %}
+        <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </section>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

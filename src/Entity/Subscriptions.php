@@ -19,8 +19,8 @@ class Subscriptions
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    #[ORM\Column(name: "status", type: "boolean")]
+    private bool $status = false;
 
     #[ORM\Column]
     private ?\DateTime $startedAt = null;
@@ -58,12 +58,12 @@ class Subscriptions
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?bool
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(bool $status): static
     {
         $this->status = $status;
 

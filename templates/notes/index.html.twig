@@ -1,0 +1,192 @@
+{# templates/notes/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'My Notes'|trans }}
+{% endblock %}
+
+{% block body %}
+	<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 mt-16">
+		<div
+			class="max-w-7xl mx-auto">
+			<!-- Header -->
+			<div class="text-center mb-8">
+				<h1 class="text-3xl font-bold text-gray-900 tracking-tight">
+					{{ 'My Notes'|trans }}
+				</h1>
+				<p class="mt-4 text-md text-gray-600 max-w-3xl mx-auto">
+					{{ 'Manage all your notes in one place'|trans }}
+				</p>
+			</div>
+
+			<!-- Notes Table -->
+			<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+				<div class="px-6 py-5 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+					<h2 class="text-lg font-medium text-gray-900">
+						{{ 'Notes List'|trans }}
+					</h2>
+					<a href="{{ path('app_notes_new') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-trash hover:bg-trash_bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-trash">
+						{{ 'Create New Note'|trans }}
+					</a>
+				</div>
+
+				<div class="overflow-x-auto">
+					<table class="min-w-full divide-y divide-gray-200">
+						<thead class="bg-gray-50">
+							<tr>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Title'|trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Created'|trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Readed AT'|trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Size'|trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Status'|trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Actions'|trans }}
+								</th>
+							</tr>
+						</thead>
+						<tbody class="bg-white divide-y divide-gray-200">
+							{% for note in notes %}
+								{% set colorBurn = note.readAt is defined and note.readAt is not null ? "bg-red-50" : "bg-transparent" %}
+								{% set hovercolorBurn = note.readAt is defined and note.readAt is not null ? "bg-red-300" : "bg-gray-50" %}
+								<tr class="hover:{{hovercolorBurn}} transition-colors duration-150 {{colorBurn}}">
+									<td class="px-6 py-4 whitespace-nowrap">
+										<div class="flex items-center">
+											<div class="flex-shrink-0 h-10 w-10 rounded-lg bg-cyan-50 flex items-center justify-center mr-4">
+												<svg class="h-6 w-6 text-trash_bold" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+												</svg>
+											</div>
+											<div>
+												<div class="text-sm font-medium text-gray-900">
+													{{ note.title }}
+												</div>
+												{% if note.expirationDate %}
+													<div class="text-sm text-gray-500">
+														{{ 'Expires'|trans }}
+														{{ note.expirationDate|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+
+													</div>
+												{% endif %}
+											</div>
+										</div>
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap">
+										<div class="text-sm text-gray-900">
+
+											{{ note.createdAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+										</div>
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap">
+										<div class="text-sm text-gray-900">
+											{% if note.readAt is defined and note.readAt is not null %}
+												{{ note.readAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+											{% else %}
+												{{"Not Yet" | trans}}
+											{% endif %}
+										</div>
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap">
+										<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-trash_bold text-white">
+											{{ note.characterCount }}
+											{{ 'chars'|trans }}
+										</span>
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap">
+										{% if note.readAt %}
+											<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+												{{ 'Read'|trans }}
+											</span>
+										{% else %}
+											<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+												{{ 'Unread'|trans }}
+											</span>
+										{% endif %}
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+										<a href="{{ path('app_notes_view', { slug: note.slug }) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-800 hover:text-white transition-all duration-300 shadow-sm group text-xs">
+											<svg class="h-4 w-4 text-gray-500 group-hover:text-white transition duration-300" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z"/>
+											</svg>
+											<span class="font-light tracking-wide">{{ 'View'|trans }}</span>
+										</a>
+
+										<a href="{{ path('app_notes_update', { slug: note.slug }) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-800 hover:text-white transition-all duration-300 shadow-sm group text-xs">
+
+											<svg class="h-4 w-4 text-gray-500 group-hover:text-white transition duration-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+												<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 5V4a1 1 0 0 0-1-1H8.914a1 1 0 0 0-.707.293L4.293 7.207A1 1 0 0 0 4 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5M9 3v4a1 1 0 0 1-1 1H4m11.383.772 2.745 2.746m1.215-3.906a2.089 2.089 0 0 1 0 2.953l-6.65 6.646L9 17.95l.739-3.692 6.646-6.646a2.087 2.087 0 0 1 2.958 0Z"/>
+											</svg>
+											<span class="font-light tracking-wide">{{ 'Edit'|trans }}</span>
+										</a>
+                                        <a href="#" 
+                                        onclick="copyLinkToClipboard(this)" data-link="{{ absolute_url(path('app_notes_view', { slug: note.slug })) }}"
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-gray-500 border border-gray-300 text-white hover:bg-gray-900 hover:text-white transition-all duration-300 shadow-sm group text-xs">
+
+											<svg class="h-4 w-4 text-white group-hover:text-white transition duration-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+												<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 5V4a1 1 0 0 0-1-1H8.914a1 1 0 0 0-.707.293L4.293 7.207A1 1 0 0 0 4 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5M9 3v4a1 1 0 0 1-1 1H4m11.383.772 2.745 2.746m1.215-3.906a2.089 2.089 0 0 1 0 2.953l-6.65 6.646L9 17.95l.739-3.692 6.646-6.646a2.087 2.087 0 0 1 2.958 0Z"/>
+											</svg>
+											<span class="font-light tracking-wide">{{ 'Copy link'|trans }}</span>
+										</a>
+                                        <a href="{{ path('app_notes_burn', { slug: note.slug }) }}" 
+										   onclick="return confirm('{{ 'Are you sure you want to permanently burn this note?'|trans }}')"
+										class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-red-500 border border-red-500 text-white hover:border-gray-800 hover:bg-gray-800 hover:text-white transition-all duration-300 shadow-sm group text-xs">
+
+											<svg class="h-4 w-4 text-white group-hover:text-white transition duration-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+												<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 5V4a1 1 0 0 0-1-1H8.914a1 1 0 0 0-.707.293L4.293 7.207A1 1 0 0 0 4 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5M9 3v4a1 1 0 0 1-1 1H4m11.383.772 2.745 2.746m1.215-3.906a2.089 2.089 0 0 1 0 2.953l-6.65 6.646L9 17.95l.739-3.692 6.646-6.646a2.087 2.087 0 0 1 2.958 0Z"/>
+											</svg>
+											<span class="font-light tracking-wide">{{ 'Burn'|trans }}</span>
+										</a>
+
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+										{{ 'No notes found'|trans }}
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Additional Info -->
+			<div class="mt-16 text-center">
+				<h3 class="text-lg font-medium text-gray-900">{{ 'Need help?'|trans }}</h3>
+				<p class="mt-2 text-gray-600 max-w-2xl mx-auto">
+					{{ 'Contact our support team if you have any questions about your notes.'|trans }}
+				</p>
+				<div class="mt-6">
+					<a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-500 font-medium">
+						{{ 'Contact Support'|trans }}
+						<svg class="ml-2 h-5 w-5" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+						</svg>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script>
+    function copyLinkToClipboard(el) {
+        const link = el.getAttribute('data-link');
+        navigator.clipboard.writeText(link).then(() => {
+            toastr.success('Link copied');
+        }).catch(err => {
+            console.error('Copy failed:', err);
+            toastr.error('Failed to copy link');
+        });
+    }
+</script>
+
+{% endblock %}

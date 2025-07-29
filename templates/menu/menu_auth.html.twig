@@ -17,7 +17,7 @@
 				</li>
 				<li class="py-0 lg:py-2 border-b-2 border-transparent hover:border-blue-400 transition-all duration-700 ">
 					<button id="mega-menu-dropdown-button" data-dropdown-toggle="notes" class="flex items-center justify-between w-full py-2 px-3   text-gray-800 rounded bg-transparent md:border-0  md:p-0 md:w-auto ">
-						{{"Temporary Notes" | trans}}
+						{{"My Notes" | trans}}
 						<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 10 6">
 							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
 						</svg>
@@ -25,13 +25,18 @@
 					<div id="notes" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-48 dark:bg-gray-700 dark:divide-gray-600">
 						<ul class="py-2 text-sm text-gray-900 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
 							<li>
-								<a href="{{ path('app_home')}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-gray-800">
+								<a href="{{ path('app_notes_new')}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-gray-800">
 									{{"Create New Note" | trans}}
 								</a>
 							</li>
 							<li>
-								<a href="{{ path('app_home')}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-gray-800">
-									{{"My Temporary Notes" | trans}}
+								<a href="{{ path('app_notes')}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-gray-800">
+									{{"Notes List" | trans}}
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_notes_logs')}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-gray-800">
+									{{"Logs" | trans}}
 								</a>
 							</li>
 

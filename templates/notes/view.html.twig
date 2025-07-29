@@ -1,0 +1,188 @@
+{# templates/notes/view.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ note.title }}
+	|
+	{{ 'Note Details'|trans }}
+{% endblock %}
+
+{% block body %}
+	<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 mt-16">
+		<div
+			class="max-w-4xl mx-auto">
+			<!-- Back Button -->
+			<div class="mb-6">
+				<a href="{{ path('app_notes') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white transition-all duration-300 shadow-sm group">
+					<svg class="h-5 w-5 text-gray-500 group-hover:text-white transition duration-300" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+					</svg>
+					<span class="text-sm font-thin tracking-wide">{{ 'Back to notes'|trans }}</span>
+				</a>
+			</div>
+
+			<!-- Note Card -->
+			<div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden mb-8">
+				<div class="px-6 py-5 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+					<h1 class="text-2xl font-bold text-gray-900">{{ note.title }}</h1>
+					<div class="flex space-x-2">
+						<a href="{{ path('app_notes_update', { slug: note.slug }) }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white transition-all duration-300 shadow-sm group">
+
+							<svg class="h-5 w-5 text-gray-500 group-hover:text-white transition duration-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 5V4a1 1 0 0 0-1-1H8.914a1 1 0 0 0-.707.293L4.293 7.207A1 1 0 0 0 4 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5M9 3v4a1 1 0 0 1-1 1H4m11.383.772 2.745 2.746m1.215-3.906a2.089 2.089 0 0 1 0 2.953l-6.65 6.646L9 17.95l.739-3.692 6.646-6.646a2.087 2.087 0 0 1 2.958 0Z"/>
+							</svg>
+
+							<span class="text-sm font-thin tracking-wide">{{ 'Edit'|trans }}</span>
+						</a>
+
+					</div>
+				</div>
+
+				<!-- Metadata -->
+				<div class="px-6 py-4 border-b border-gray-200">
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+						<div class="flex items-center">
+							<svg class="flex-shrink-0 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+								<path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+							</svg>
+							<span>
+								<span class="font-medium">{{ 'Created'|trans }}:</span>
+								{{ note.createdAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+
+							</div>
+							<div class="flex items-center">
+								<svg class="flex-shrink-0 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+									<path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+								</svg>
+								<span>
+									<span class="font-medium">{{ 'Last Updated'|trans }}:</span>
+
+									{{ note.updatedAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+								</span>
+							</div>
+							<div class="flex items-center">
+								<svg class="flex-shrink-0 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+									<path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"/>
+								</svg>
+								<span>
+									<span class="font-medium">{{ 'Characters'|trans }}:</span>
+									{{ note.characterCount|default(0) }}</span>
+							</div>
+							{% if note.expirationDate %}
+								<div class="flex items-center">
+									<svg class="flex-shrink-0 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+										<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+									</svg>
+									<span>
+										<span class="font-medium">{{ 'Expires'|trans }}:</span>
+										
+                                        {{ note.expirationDate ? note.expirationDate|format_datetime(pattern='MMMM d, y', locale=app.request.locale) : '-' }}</span>
+								</div>
+							{% endif %}
+
+                            {% if note.detetionDate %}
+								<div class="flex items-center">
+									<svg class="flex-shrink-0 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+										<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+									</svg>
+									<span>
+										<span class="font-medium">{{ 'Deleted At'|trans }}:</span>
+										
+                                        {{ note.detetionDate ? note.detetionDate|format_datetime(pattern='MMMM d, y', locale=app.request.locale) : '-' }}</span>
+								</div>
+							{% endif %}
+
+                              {% if note.burning %}
+								<div class="flex items-center">
+                                    <svg class="flex-shrink-0 mr-2 h-5 w-5 text-red-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8.597 3.2A1 1 0 0 0 7.04 4.289a3.49 3.49 0 0 1 .057 1.795 3.448 3.448 0 0 1-.84 1.575.999.999 0 0 0-.077.094c-.596.817-3.96 5.6-.941 10.762l.03.049a7.73 7.73 0 0 0 2.917 2.602 7.617 7.617 0 0 0 3.772.829 8.06 8.06 0 0 0 3.986-.975 8.185 8.185 0 0 0 3.04-2.864c1.301-2.2 1.184-4.556.588-6.441-.583-1.848-1.68-3.414-2.607-4.102a1 1 0 0 0-1.594.757c-.067 1.431-.363 2.551-.794 3.431-.222-2.407-1.127-4.196-2.224-5.524-1.147-1.39-2.564-2.3-3.323-2.788a8.487 8.487 0 0 1-.432-.287Z"/>
+                                    </svg>
+                                    <span>
+										<span class="font-medium">{{ 'Burn After Reading'|trans }}:</span>
+										{{ note.burning }}</span>
+								</div>
+							{% endif %}
+                             {% if note.password %}
+								<div class="flex items-center">
+
+                                    <svg class="flex-shrink-0 mr-2 h-5 w-5 text-trash_bold" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M8 10V7a4 4 0 1 1 8 0v3h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1Zm2-3a2 2 0 1 1 4 0v3h-4V7Zm2 6a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Z" clip-rule="evenodd"/>
+                                    </svg>
+
+                                    <span>
+										<span class="font-medium">{{ 'Password protected'|trans }}</span>
+									</span>
+								</div>
+                            {% else %}
+                            <div class="flex items-center">
+
+                                    <svg class="flex-shrink-0 mr-2 h-5 w-5 text-trash_bold" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M15 7a2 2 0 1 1 4 0v4a1 1 0 1 0 2 0V7a4 4 0 0 0-8 0v3H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2V7Zm-5 6a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Z" clip-rule="evenodd"/>
+                                    </svg>
+
+
+                                    <span>
+										<span class="font-medium">{{ 'No Password detected'|trans }}</span>
+									</span>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+
+					<!-- Content -->
+					<div class="p-6 prose max-w-none whitespace-pre-line tracking-widest leading-8" >
+						{{ note.content  }}
+					</div>
+				</div>
+
+				<!-- Attachments -->
+				{% if attachments|length > 0 %}
+					<div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
+						<div class="px-6 py-5 bg-gray-50 border-b border-gray-200">
+							<h2 class="text-lg font-medium text-gray-900">{{ 'Attachments'|trans }}
+								({{ attachments|length }})</h2>
+						</div>
+						<div class="divide-y divide-gray-200">
+							{% for attachment in attachments %}
+								<div class="p-4 hover:bg-gray-50 transition-colors duration-150 flex items-center space-x-4">
+
+									<div class="flex-1 min-w-0">
+										<p class="text-sm font-medium text-gray-900 truncate">{{ attachment.filename }}</p>
+										<p class="text-sm text-gray-500">{{ attachment.mimeType }}
+											•
+											{{ (attachment.size / 1024)|number_format(1) }}
+											KB</p>
+										<p class="text-sm text-gray-400">{{ attachment.uploadedAt ? attachment.uploadedAt|date('d/m/Y H:i') : '' }}</p>
+									</div>
+									<div>
+										<a href="{{ path('app_attachment_download', { slug: attachment.slug }) }}" target="_blank" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-trash_bold bg-gray-100 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-trash">
+											{{ 'Download'|trans }}
+										</a>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				{% endif %}
+
+				<!-- Burn After Reading -->
+				{% if note.burnAfterReading is defined and note.burnAfterReading %}
+					<div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-md">
+						<div class="flex">
+							<div class="flex-shrink-0">
+								<svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+									<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+								</svg>
+							</div>
+							<div class="ml-3">
+								<h3 class="text-sm font-medium text-yellow-800">{{ 'Important'|trans }}</h3>
+								<div class="mt-2 text-sm text-yellow-700">
+									<p>{{ 'This note is set to "Burn After Reading". It will be automatically deleted after being viewed once.'|trans }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	{% endblock %}

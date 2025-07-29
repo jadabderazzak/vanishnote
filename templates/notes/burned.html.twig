@@ -1,0 +1,117 @@
+{# templates/notes/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'Logs'|trans }}
+{% endblock %}
+
+{% block body %}
+	<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 mt-16">
+		<div
+			class="max-w-7xl mx-auto">
+			<!-- Header -->
+			<div class="text-center mb-8">
+				<h1 class="text-3xl font-bold text-gray-900 tracking-tight">
+					{{ 'Logs'|trans }}
+				</h1>
+				<p class="mt-4 text-md text-gray-600 max-w-3xl mx-auto">
+					{{ 'History of Burned Notes'|trans }}
+				</p>
+			</div>
+
+			<!-- Notes Table -->
+			<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+				<div class="px-6 py-5 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+					<h2 class="text-lg font-medium text-gray-900">
+						{{ 'Logs'|trans }}
+					</h2>
+					<a href="{{ path('app_notes_new') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-trash hover:bg-trash_bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-trash">
+						{{ 'Create New Note'|trans }}
+					</a>
+				</div>
+
+				<div class="overflow-x-auto">
+					<table class="min-w-full divide-y divide-gray-200">
+						<thead class="bg-gray-50">
+							<tr>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Note ID '|trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Created At'|trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Deleted At'|trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Burned Reason'|trans }}
+								</th>
+								
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Status'|trans }}
+								</th>
+							
+							</tr>
+						</thead>
+						<tbody class="bg-white divide-y divide-gray-200">
+							{% for log in logs %}
+								
+								<tr >
+									
+									<td class="px-6 py-4 whitespace-nowrap">
+										<div class="text-sm text-gray-900">
+											{{ "#"~ log.note.id }}
+										</div>
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap">
+										<div class="text-sm text-gray-900">
+											{{ log.note.createdAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+										</div>
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap">
+										<div class="text-sm text-gray-900">
+											{{ log.deletedAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+										</div>
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap text-xs">
+											{{ log.AdditionnalData | trans }}
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap">
+									<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+											{{"Deleted" | trans}}
+									</span>
+									</td>
+									
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+										{{ 'No Logs found'|trans }}
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Additional Info -->
+			<div class="mt-16 text-center">
+				<h3 class="text-lg font-medium text-gray-900">{{ 'Need help?'|trans }}</h3>
+				<p class="mt-2 text-gray-600 max-w-2xl mx-auto">
+					{{ 'Contact our support team if you have any questions about your notes.'|trans }}
+				</p>
+				<div class="mt-6">
+					<a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-500 font-medium">
+						{{ 'Contact Support'|trans }}
+						<svg class="ml-2 h-5 w-5" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+						</svg>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+   
+
+{% endblock %}
