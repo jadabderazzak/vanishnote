@@ -12,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -67,6 +68,26 @@ class NotesFormType extends AbstractType
                 ]);
             }
 
+             $builder->add('minutes', ChoiceType::class, [
+                'label' => $this->translator->trans('Self-destruct delay (minutes)'),
+                'required' => false,
+                'placeholder' => $this->translator->trans('Select duration (minutes)'),
+               'choices' => [
+                    $this->translator->trans('1 minute') => 1,
+                    $this->translator->trans('2 minutes') => 2,
+                    $this->translator->trans('3 minutes') => 3,
+                    $this->translator->trans('4 minutes') => 4,
+                    $this->translator->trans('5 minutes') => 5,
+                    $this->translator->trans('10 minutes') => 10,
+                    $this->translator->trans('15 minutes') => 15,
+                    $this->translator->trans('20 minutes') => 20,
+                    $this->translator->trans('30 minutes') => 30,
+                ],
+                'attr' => [
+                    'class' => 'rounded-lg shadow-sm focus:border-trash focus:ring-trash text-sm text-gray-700',
+                ],
+            ]);
+
 
             // Burn after reading - custom checkbox
             if (in_array('burn_after_reading', $privileges, true)) {
@@ -90,34 +111,34 @@ class NotesFormType extends AbstractType
 
            if (in_array('attachment_support', $privileges, true)) {
                $builder->add('attachements', FileType::class, [
-    'label' => $this->translator->trans('Attachments'),
-    'mapped' => false,
-    'required' => false,
-    'multiple' => true,
-    'attr' => [
-        'accept' => 'image/*,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain',
-    ],
-    'constraints' => [
-        new Count([
-            'max' => 5,
-            'maxMessage' => $this->translator->trans('You can upload up to 5 files only.'),
-        ]),
-        new All([
-            'constraints' => [
-                new File([
-                    'maxSize' => '10M',
-                    'mimeTypes' => [
-                        'image/*',
-                        'application/pdf',
-                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                        'text/plain',
-                    ],
-                    'mimeTypesMessage' => $this->translator->trans('Please upload a valid image, PDF, DOCX or text file'),
-                ])
-            ]
-        ]),
-    ],
-]);
+                'label' => $this->translator->trans('Attachments'),
+                'mapped' => false,
+                'required' => false,
+                'multiple' => true,
+                'attr' => [
+                    'accept' => 'image/*,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain',
+                ],
+                'constraints' => [
+                    new Count([
+                        'max' => 5,
+                        'maxMessage' => $this->translator->trans('You can upload up to 5 files only.'),
+                    ]),
+                    new All([
+                        'constraints' => [
+                            new File([
+                                'maxSize' => '10M',
+                                'mimeTypes' => [
+                                    'image/*',
+                                    'application/pdf',
+                                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                    'text/plain',
+                                ],
+                                'mimeTypesMessage' => $this->translator->trans('Please upload a valid image, PDF, DOCX or text file'),
+                            ])
+                        ]
+                    ]),
+                ],
+            ]);
             }
               
         }

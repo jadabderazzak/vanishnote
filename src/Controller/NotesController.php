@@ -14,6 +14,7 @@ use App\Repository\NotesRepository;
 use App\Service\SecureEncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AttachementsRepository;
+use App\Repository\LogsIpsRepository;
 use App\Repository\LogsRepository;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -114,7 +115,8 @@ final class NotesController extends AbstractController
             'user' => $this->getUser(),
            
         ]);
-      
+
+        
  
         return $this->render('notes/burned.html.twig', [
             'logs' => $logs
@@ -186,23 +188,35 @@ public function view(
         }
     }
 
-    // Optionally mark the note as read (currently commented out)
-    // if (!$note->getReadAt()) {
-    //     $note->setReadAt(new \DateTime());
-    //     $entityManager->flush();
-    // }
-
+    /************************ CInfigure GMT for dates */
+    $createdAt = $note->getCreatedAt();
+    $createdAt->setTimezone(new \DateTimeZone('GMT'));
+    $updatedAt = $note->getUpdatedAt();
+    $updatedAt->setTimezone(new \DateTimeZone('GMT'));
+    $expiredAt = $note->getExpirationDate() ? $note->getExpirationDate() : null;
+    if($note->getExpirationDate()){
+        $expiredAt->setTimezone(new \DateTimeZone('GMT'));
+    }
+    $deletedAt = $note->getDeletedAt() ? $note->getDeletedAt() : null;
+    if($note->getDeletedAt()){
+        $deletedAt->setTimezone(new \DateTimeZone('GMT'));
+    }
+    $readAt = $note->getReadAt() ? $note->getReadAt() : null;
+    if($note->getReadAt()){
+        $readAt->setTimezone(new \DateTimeZone('GMT'));
+    }
+    
     return $this->render('notes/view.html.twig', [
         'note' => [
             'title' => $decryptedTitle,
             'slug' => $note->getSlug(),
             'content' => $decryptedContent,
-            'createdAt' => $note->getCreatedAt(),
-            'updatedAt' => $note->getUpdatedAt(),
+            'createdAt' => $createdAt,
+            'updatedAt' => $updatedAt,
             'characterCount' => $note->getCharacterCount(),
-            'expirationDate' => $note->getExpirationDate(),
-            'detetionDate' => $note->getDeletedAt(),
-            'readAt' => $note->getReadAt(),
+            'expirationDate' => $expiredAt,
+            'detetionDate' => $deletedAt,
+            'readAt' => $readAt,
             'burning' => $note->isBurnAfterReading() ? "True" :  "False",
             'password' => (trim($note->getPassword()) !== "" && $note->getPassword() !== null)
         ],
@@ -310,11 +324,12 @@ public function new(
     }
 
     $features = $plan->getFeatures() ?? [];
-
+    $now =  new DateTime();
+    $now->setTimezone(new \DateTimeZone('GMT'));
     $note = new Notes();
     $note->setUser($this->getUser());
-    $note->setCreatedAt(new DateTime());
-    $note->setUpdatedat(new DateTime());
+    $note->setCreatedAt($now);
+    $note->setUpdatedat($now);
     $note->setCharacterCount(0);
     $note->setPlanType($plan);
     $note->setEncryptionMetadata("Meta");
@@ -376,6 +391,14 @@ public function new(
         // Set other required fields
         $note->setCharacterCount(mb_strlen($sanitizedContent));
         
+        /** Check if Burn After Reading is selected to set minutes by default at 15 minutes if doesn't selected */
+        if($note->isBurnAfterReading())
+        {
+            if(!$note->getMinutes())
+            {
+                $note->setMinutes(15);
+            }
+        }
 
         // Retrieve the plain password value from the form
         $plainPassword = $note->getPassword();
@@ -473,7 +496,7 @@ public function new(
                     $entityManager->persist($log);
                     $entityManager->flush();
                     $this->addFlash('success', $this->translator->trans('The note has been successfully created.'));
-                    return $this->redirectToRoute("app_notes_new");
+                    return $this->redirectToRoute("app_notes");
             }
 
             return $this->render('notes/add.html.twig', [
@@ -593,6 +616,16 @@ public function update(
                 $note->setPassword($encryptedPassword);
                 }
             $countAttachments = count($note->getAttachements());
+
+              /** Check if Burn After Reading is selected to set minutes by default at 15 minutes if doesn't selected */
+                if($note->isBurnAfterReading())
+                {
+                    if(!$note->getMinutes())
+                    {
+                        $note->setMinutes(15);
+                    }
+                }
+
             // Handle updated attachments
             if (in_array('attachment_support', $features, true)) {
                 $uploadedFiles = $request->files->get('notes_form')['attachements'] ?? [];
@@ -834,13 +867,15 @@ private function deleteAllAttachmentsForNote(?Notes $note): void
         $note->setBurned(true);
         $note->setContent("**********");
         $note->setTitle("**********");
-        $note->setDeletedAt(new DateTime());
+        $now = new DateTime();
+        $now->setTimezone(new \DateTimeZone('GMT'));
+        $note->setDeletedAt($now);
         
         $log = $repoLog->findOneBy([
             'note' => $note
         ]);
      
-        $log->setDeletedAt(new DateTime());
+        $log->setDeletedAt($now);
         $log->setAdditionnalData($this->translator->trans("Permanently removed by the note’s creator"));
 
         /***************** delete Attachments */

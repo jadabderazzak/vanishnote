@@ -1,0 +1,188 @@
+{# templates/notes/view.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ note.title }} | {{ 'Note Details'|trans }}{% endblock %}
+
+
+{% block body %}
+<div class="relative">
+    {# Logout button #}
+    <div class="max-w-4xl mx-auto pt-24 pb-4 px-4 sm:px-6 lg:px-8 ">
+    {# Burn timer #}
+    <div class="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4 w-full ">
+    {% if note.burning and note.minutes is defined and note.minutes > 0 %}
+    <div id="burn-timer" class="border-b border-red-500/30 pb-2 w-96">
+        <div class="flex items-center justify-between">
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {{ 'Burn After Reading activated'|trans }}
+            </p>
+            <div id="countdown" class="font-mono text-xl font-bold text-red-600 dark:text-red-400">
+                {{ note.minutes }}:00
+            </div>
+        </div>
+        <!-- Barre de progression discrète -->
+        <div class="mt-2 h-0.5 bg-gray-200 dark:bg-gray-700">
+            <div class="h-full bg-red-600 animate-progress"></div>
+        </div>
+    </div>
+
+<style>
+    .animate-progress {
+        animation: progress {{ note.minutes * 60 }}s linear forwards;
+    }
+    @keyframes progress {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
+</style>
+    {% endif %}
+        <div>
+        <form action="{{ path('app_note_logout') }}" method="post" onsubmit="return confirm('{{ 'Are you sure you want to clear the session?'|trans }}');">
+            <button type="submit"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md
+                       shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+                       transition-colors duration-200"
+                >
+                {{ 'Logout / Clear Session'|trans }}
+            </button>
+        </form>
+        </div>
+    </div>
+</div>
+
+
+    {# Main note content #}
+    <div id="note-container" class="max-w-4xl mx-auto pb-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto bg-amber-50 border border-amber-200 text-amber-800 p-4 mb-5 rounded text-center text-sm font-medium">
+    {{ 'For security and confidentiality reasons, your IP address will be recorded when viewing this private note.'|trans }}
+</div>
+        <div class="relative burning-note">
+            <!-- Burn effect overlay -->
+            <div class="burn-effect"></div>
+            
+            <!-- The note card -->
+            <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700 transform transition-all hover:scale-[1.01] note-content">
+                <!-- Note header -->
+                <div class="px-6 py-5 bg-gradient-to-r from-indigo-500 to-purple-600">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-2xl font-bold text-white truncate">{{ note.title }}</h1>
+                        <div class="flex space-x-2">
+                            {% if note.burning %}
+                            <span class="flex items-center px-2 py-1 rounded-full text-xs font-bold bg-white/20 text-white">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8.597 3.2A1 1 0 0 0 7.04 4.289a3.49 3.49 0 0 1 .057 1.795 3.448 3.448 0 0 1-.84 1.575.999.999 0 0 0-.077.094c-.596.817-3.96 5.6-.941 10.762l.03.049a7.73 7.73 0 0 0 2.917 2.602 7.617 7.617 0 0 0 3.772.829 8.06 8.06 0 0 0 3.986-.975 8.185 8.185 0 0 0 3.04-2.864c1.301-2.2 1.184-4.556.588-6.441-.583-1.848-1.68-3.414-2.607-4.102a1 1 0 0 0-1.594.757c-.067 1.431-.363 2.551-.794 3.431-.222-2.407-1.127-4.196-2.224-5.524-1.147-1.39-2.564-2.3-3.323-2.788a8.487 8.487 0 0 1-.432-.287Z"/>
+                                </svg>
+                                {{"Burn after reading" | trans}}
+                            </span>
+                            {% endif %}
+                            {% if note.password %}
+                            <span class="flex items-center px-2 py-1 rounded-full text-xs font-bold bg-white/20 text-white">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                                </svg>
+                                {{"Password protected" | trans}}
+                            </span>
+                            {% else %}
+                            <span class="flex items-center px-2 py-1 rounded-full text-xs font-bold bg-white/20 text-white">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M15 7a2 2 0 1 1 4 0v4a1 1 0 1 0 2 0V7a4 4 0 0 0-8 0v3H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2V7Zm-5 6a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Z" clip-rule="evenodd"/>
+                                </svg>
+                                {{"No Password needed" | trans}}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Note metadata -->
+                <div class="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                                <svg class="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{"Created" | trans}}</p>
+                                <p class="text-sm text-gray-900 dark:text-white">{{ note.createdAt|format_datetime(pattern='MMMM d, y HH:mm', locale=app.request.locale) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Note content -->
+                <div class="p-6">
+                    <div class="prose dark:prose-invert max-w-none">
+                       <div class="whitespace-pre-line text-gray-800 dark:text-gray-200 font-mono leading-relaxed bg-gray-50 dark:bg-gray-700/30 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                           {{ note.content|trim }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attachments -->
+                {% if attachments|length > 0 %}
+                <div class="border-t border-gray-200 dark:border-gray-700 px-6 py-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{"Attachments" | trans}} ({{ attachments|length }})</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        {% for attachment in attachments %}
+                        <a href="{{ path('app_attachment_public_download', { slug: attachment.slug }) }}" 
+                           class="group relative block p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-indigo-500 dark:hover:border-indigo-400 transition-colors">
+                            <div class="flex flex-col items-center text-center">
+                                {% if attachment.mimeType starts with 'image/' %}
+                                    <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mb-2">
+                                        <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                {% elseif attachment.mimeType starts with 'video/' %}
+                                    <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mb-2">
+                                        <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                {% elseif attachment.mimeType == 'application/pdf' %}
+                                    <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-2">
+                                        <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                {% else %}
+                                    <div class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-2">
+                                        <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                        </svg>
+                                    </div>
+                                {% endif %}
+                                <span class="text-sm font-medium text-gray-900 dark:text-white truncate w-full">{{ attachment.filename }}</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">{{ (attachment.size / 1024)|number_format(1) }} KB</span>
+                            </div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/50 transition-opacity rounded-lg">
+                                <span class="text-white text-sm font-medium">{{"Download" | trans}}</span>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% if note.burning and note.minutes is defined and note.minutes > 0 %}
+<div id="note-data"
+     data-minutes="{{ note.minutes }}"
+     data-redirect-url="{{ path('app_notes') }}"
+     data-slug="{{ note.slug }}"
+     style="display:none;">
+</div>
+
+
+
+
+<canvas id="shatter-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;pointer-events:none;"></canvas>
+<script src="{{ asset('template/js/htmltocanva.min.js')}}"></script>
+{# Include your JS bundle (e.g. Webpack Encore) #}
+<script src="{{ asset('build/note.js') }}"></script>
+{% endif %}
+{% endblock %}

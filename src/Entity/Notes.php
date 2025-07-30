@@ -159,6 +159,9 @@ class Notes
     #[ORM\Column(nullable: true)]
     private ?bool $burned = null;
 
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $minutes = null;
+
     public function __construct()
     {
         $this->attachements = new ArrayCollection();
@@ -381,6 +384,18 @@ class Notes
     public function setBurned(?bool $burned): static
     {
         $this->burned = $burned;
+
+        return $this;
+    }
+
+    public function getMinutes(): ?int
+    {
+        return $this->minutes;
+    }
+
+    public function setMinutes(?int $minutes): static
+    {
+        $this->minutes = $minutes;
 
         return $this;
     }

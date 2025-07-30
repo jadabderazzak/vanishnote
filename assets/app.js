@@ -8,7 +8,7 @@ import "flatpickr/dist/flatpickr.min.css"; // flatpickr library import
 import { French } from "flatpickr/dist/l10n/fr.js";
 import { German } from "flatpickr/dist/l10n/de.js";
 import { Spanish } from "flatpickr/dist/l10n/es.js";
-
+import './js/note';
 // Make toastr globally accessible
 window.toastr = toastr;
 

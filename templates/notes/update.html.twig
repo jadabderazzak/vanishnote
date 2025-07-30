@@ -5,6 +5,16 @@
 {% endblock %}
 
 {% block body %}
+<!-- Floating action buttons -->
+    <div class="fixed top-24 right-6 z-50 flex flex-col space-y-3">
+      
+        <a href="{{ path('app_notes') }}" 
+           class="w-12 h-12 rounded-full bg-gray-800 shadow-lg flex items-center justify-center text-white hover:bg-gray-900 transition-transform hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+        </a>
+    </div>
 	<!-- Back Button -->
 	<div class="max-w-6xl mx-6 md:mx-auto  mt-24">
 
@@ -218,6 +228,30 @@
 
 						{% endif %}
 					</div>
+					{% if form.burnAfterReading is defined %}
+							<div class="flex flex-col gap-1 p-4 border border-gray-200 rounded-2xl shadow-sm hover:bg-gray-50 transition">
+								<label for="{{ form.minutes.vars.id }}" class="flex items-center gap-3 w-full cursor-text">
+								<div class="relative w-full">
+									{{ form_widget(form.minutes, {
+									'attr': {
+										'id': form.minutes.vars.id,
+										'class': 'block w-full rounded-lg border border-trash focus:border-trash_bold focus:ring-trash text-sm text-gray-700 py-2 px-3 bg-white disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-400',
+										'aria-describedby': form.minutes.vars.id ~ '_help',
+										'disabled': 'disabled'
+									}
+									}) }}
+								</div>
+								</label>
+								<p id="{{ form.minutes.vars.id }}_help" class="text-xs text-gray-500 mt-1">
+								<p id="{{ form.minutes.vars.id }}_help" class="text-xs text-gray-500 mt-1">
+									{{ 'Choose the number of minutes the note remains accessible after the first opening when "Burn After Reading" is enabled.'|trans }}
+									</p>
+								</p>
+								{% if form_errors(form.minutes) %}
+								<p class="text-sm text-red-500 mt-1">{{ form_errors(form.minutes) }}</p>
+								{% endif %}
+							</div>
+						{% endif %}
 				</div>
 
 				{# Submit Button #}
@@ -446,6 +480,24 @@ toastr.error('{{ "An error occurred. Please try again."|trans }}');
 });
 });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+				const burnCheckbox = document.getElementById('{{ form.burnAfterReading.vars.id }}');
+				const minutesSelect = document.getElementById('{{ form.minutes.vars.id }}');
+
+				if (!burnCheckbox || !minutesSelect) return;
+
+				// Fonction pour activer ou désactiver minutes selon checkbox
+				function toggleMinutes() {
+					minutesSelect.disabled = !burnCheckbox.checked;
+				}
+
+				// Initialisation au chargement
+				toggleMinutes();
+
+				// Écoute le changement sur la checkbox
+				burnCheckbox.addEventListener('change', toggleMinutes);
+			});
 	</script>
 
 

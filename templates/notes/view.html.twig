@@ -8,6 +8,21 @@
 {% endblock %}
 
 {% block body %}
+<!-- Floating action buttons -->
+    <div class="fixed top-24 right-6 z-50 flex flex-col space-y-3">
+        <a href="{{ path('app_notes_update', { slug: note.slug }) }}" 
+           class="w-12 h-12 rounded-full bg-indigo-600 shadow-lg flex items-center justify-center text-white hover:bg-indigo-700 transition-transform hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+        </a>
+        <a href="{{ path('app_notes') }}" 
+           class="w-12 h-12 rounded-full bg-gray-800 shadow-lg flex items-center justify-center text-white hover:bg-gray-900 transition-transform hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+        </a>
+    </div>
 	<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 mt-16">
 		<div
 			class="max-w-4xl mx-auto">

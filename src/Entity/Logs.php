@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LogsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -83,11 +85,18 @@ class Logs
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $ipReceiver = null;
+    /**
+     * @var Collection<int, LogsIps>
+     */
+    #[ORM\OneToMany(targetEntity: LogsIps::class, mappedBy: 'log')]
+    private Collection $logsIps;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $userAgentReceiver = null;
+    public function __construct()
+    {
+        $this->logsIps = new ArrayCollection();
+    }
+
+
 
     public function getId(): ?int
     {
@@ -183,27 +192,35 @@ class Logs
         $this->slug = Uuid::v4()->toRfc4122(); 
     }
 
-     public function getIpReceiver(): ?string
+     /**
+      * @return Collection<int, LogsIps>
+      */
+     public function getLogsIps(): Collection
      {
-         return $this->ipReceiver;
+         return $this->logsIps;
      }
 
-     public function setIpReceiver(?string $ipReceiver): static
+     public function addLogsIp(LogsIps $logsIp): static
      {
-         $this->ipReceiver = $ipReceiver;
+         if (!$this->logsIps->contains($logsIp)) {
+             $this->logsIps->add($logsIp);
+             $logsIp->setLog($this);
+         }
 
          return $this;
      }
 
-     public function getUserAgentReceiver(): ?string
+     public function removeLogsIp(LogsIps $logsIp): static
      {
-         return $this->userAgentReceiver;
-     }
-
-     public function setUserAgentReceiver(?string $userAgentReceiver): static
-     {
-         $this->userAgentReceiver = $userAgentReceiver;
+         if ($this->logsIps->removeElement($logsIp)) {
+             // set the owning side to null (unless already changed)
+             if ($logsIp->getLog() === $this) {
+                 $logsIp->setLog(null);
+             }
+         }
 
          return $this;
      }
+
+  
 }

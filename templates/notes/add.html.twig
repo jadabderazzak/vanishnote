@@ -17,6 +17,15 @@
 
 
 	</div>
+	<!-- Floating action buttons -->
+	<div class="fixed bottom-6 right-6 z-50 flex flex-col space-y-3">
+
+		<a href="{{ path('app_notes') }}" class="w-12 h-12 rounded-full bg-gray-800 shadow-lg flex items-center justify-center text-white hover:bg-gray-900 transition-transform hover:scale-110">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+			</svg>
+		</a>
+	</div>
 	<div class="min-h-screen bg-gray-50 flex items-center justify-center p-6">
 		<div
 			class="w-full max-w-6xl bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row border border-gray-200">
@@ -124,66 +133,81 @@
 
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 						{% if form.expirationDate is defined %}
-							<div class="flex items-center justify-between gap-4 p-4 border border-gray-200 rounded-2xl shadow-sm hover:bg-gray-50 transition">
-								<label
-									for="{{ form.expirationDate.vars.id }}" class="flex items-center gap-3 w-full cursor-text">
-									<!-- Calendar icon -->
-									<div class="relative">
+							<div class="flex flex-col gap-1 p-4 border border-gray-200 rounded-2xl shadow-sm hover:bg-gray-50 transition">
+								<label for="{{ form.expirationDate.vars.id }}" class="flex items-center gap-3 w-full cursor-text">
+									<div
+										class="relative w-full">
+										<!-- Calendar icon -->
 										<svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewbox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
 										</svg>
 										{{ form_widget(form.expirationDate, {
-												'attr': {
-													'id': form.expirationDate.vars.id,
-													'class': 'datetime-picker pl-11 pr-4 py-2 w-full rounded-lg  shadow-sm focus:border-trash focus:ring-trash text-sm text-gray-700 bg-white transition',
-													'data-locale': app.request.locale,
-													'placeholder': 'Select expiration date'|trans
-												}
-											}) }}
+										'attr': {
+											'id': form.expirationDate.vars.id,
+											'class': 'datetime-picker pl-11 pr-4 py-2 w-full rounded-lg shadow-sm focus:border-trash focus:ring-trash text-sm text-gray-700 bg-white transition',
+											'data-locale': app.request.locale,
+											'placeholder': 'Select expiration date in GMT'|trans
+										}
+									}) }}
 									</div>
 								</label>
 
-								<div class="relative group shrink-0">
-									<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-gray-600 transition" fill="none" viewbox="0 0 24 24" stroke="currentColor">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/>
-									</svg>
-									<div class="absolute bottom-full right-0 mb-2 w-max px-3 py-2 text-xs text-white bg-gray-700 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
-										{{ 'Date when note will expire'|trans }}
-									</div>
-								</div>
+								<p class="text-xs text-gray-500 mt-1">
+									{{ 'Use this if the note will be shared with multiple people. The note will expire on the selected date.'|trans }}
+								</p>
+
+								{% if form_errors(form.expirationDate) %}
+									<p class="text-sm text-red-500 mt-1">{{ form_errors(form.expirationDate) }}</p>
+								{% endif %}
 							</div>
-
-							{% if form_errors(form.expirationDate) %}
-								<p class="text-sm text-red-500 mt-1">{{ form_errors(form.expirationDate) }}</p>
-							{% endif %}
-
-
 						{% endif %}
 
 						{% if form.burnAfterReading is defined %}
-							<div class="flex items-center justify-between gap-4 p-4 border border-gray-200 rounded-2xl shadow-sm hover:bg-gray-50 transition">
+							<div class="flex flex-col gap-1 p-4 border border-gray-200 rounded-2xl shadow-sm hover:bg-gray-50 transition">
 								<label for="{{ form.burnAfterReading.vars.id }}" class="flex items-center gap-3 cursor-pointer">
 									{{ form_widget(form.burnAfterReading, {
-										'attr': {
-											'id': form.burnAfterReading.vars.id,
-											'class': 'h-5 w-5 text-trash_bold focus:ring-trash border-gray-300 rounded'
-										}
-									}) }}
+											'attr': {
+												'id': form.burnAfterReading.vars.id,
+												'class': 'h-5 w-5 text-trash_bold focus:ring-trash border-gray-300 rounded'
+											}
+										}) }}
 									<span class="text-sm font-medium text-gray-700">{{ 'Burn after reading'|trans }}</span>
 								</label>
 
-								<div class="relative group">
-									<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-gray-600 transition" fill="none" viewbox="0 0 24 24" stroke="currentColor">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/>
-									</svg>
-									<div class="absolute bottom-full right-0 mb-2 w-max px-3 py-2 text-xs text-white bg-gray-700 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
-										{{ 'Note will self-destruct after first opening'|trans }}
-									</div>
-								</div>
+								<p class="text-xs text-gray-500 mt-1">
+									{{ 'Use this if the note will be shared with only one person. The note will self-destruct after it is read once.'|trans }}
+								</p>
 							</div>
-
 						{% endif %}
+
+						
+
+
 					</div>
+					{% if form.burnAfterReading is defined %}
+							<div class="flex flex-col gap-1 p-4 border border-gray-200 rounded-2xl shadow-sm hover:bg-gray-50 transition">
+								<label for="{{ form.minutes.vars.id }}" class="flex items-center gap-3 w-full cursor-text">
+								<div class="relative w-full">
+									{{ form_widget(form.minutes, {
+									'attr': {
+										'id': form.minutes.vars.id,
+										'class': 'block w-full rounded-lg border border-trash focus:border-trash_bold focus:ring-trash text-sm text-gray-700 py-2 px-3 bg-white disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-400',
+										'aria-describedby': form.minutes.vars.id ~ '_help',
+										'disabled': 'disabled'
+									}
+									}) }}
+								</div>
+								</label>
+								<p id="{{ form.minutes.vars.id }}_help" class="text-xs text-gray-500 mt-1">
+								<p id="{{ form.minutes.vars.id }}_help" class="text-xs text-gray-500 mt-1">
+									{{ 'Choose the number of minutes the note remains accessible after the first opening when "Burn After Reading" is enabled.'|trans }}
+									</p>
+								</p>
+								{% if form_errors(form.minutes) %}
+								<p class="text-sm text-red-500 mt-1">{{ form_errors(form.minutes) }}</p>
+								{% endif %}
+							</div>
+						{% endif %}
 				</div>
 
 				{# Submit Button #}
@@ -295,76 +319,94 @@
 	</div>
 
 	{% if form.attachements is defined %}
-		<script>
+	<script>
 			document.addEventListener('DOMContentLoaded', function () {
-const fileInput = document.querySelector('input[type="file"]');
-const filePreview = document.getElementById('file-preview');
+			const fileInput = document.querySelector('input[type="file"]');
+			const filePreview = document.getElementById('file-preview');
 
-fileInput.addEventListener('change', function (e) {
-filePreview.innerHTML = '';
+			fileInput.addEventListener('change', function (e) {
+			filePreview.innerHTML = '';
 
-if (this.files.length > 0) {
-filePreview.classList.remove('hidden');
+			if (this.files.length > 0) {
+			filePreview.classList.remove('hidden');
 
-Array.from(this.files).forEach((file, index) => {
-const fileItem = document.createElement('div');
-fileItem.className = 'flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200';
+			Array.from(this.files).forEach((file, index) => {
+			const fileItem = document.createElement('div');
+			fileItem.className = 'flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200';
 
-fileItem.innerHTML = `
-          <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-          </svg>
-          <div class="ml-3 flex-1 min-w-0">
-            <p class="text-sm font-medium text-gray-900 truncate">${
-file.name
-}</p>
-            <p class="text-xs text-gray-500">${
-(file.size / 1024 / 1024).toFixed(2)
-} MB</p>
-          </div>
-          <button type="button" class="ml-2 text-red-500 hover:text-red-700" data-index="${index}">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-        `;
+			fileItem.innerHTML = `
+					<svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+					</svg>
+					<div class="ml-3 flex-1 min-w-0">
+						<p class="text-sm font-medium text-gray-900 truncate">${
+			file.name
+			}</p>
+						<p class="text-xs text-gray-500">${
+			(file.size / 1024 / 1024).toFixed(2)
+			} MB</p>
+					</div>
+					<button type="button" class="ml-2 text-red-500 hover:text-red-700" data-index="${index}">
+						<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+						</svg>
+					</button>
+					`;
 
-filePreview.appendChild(fileItem);
-});
-} else {
-filePreview.classList.add('hidden');
-}
-});
+			filePreview.appendChild(fileItem);
+			});
+			} else {
+			filePreview.classList.add('hidden');
+			}
+			});
 
-// Handle file removal
-filePreview.addEventListener('click', function (e) {
-if (e.target.closest('button[data-index]')) {
-const index = e.target.closest('button').getAttribute('data-index');
-const dt = new DataTransfer();
-const files = Array.from(fileInput.files);
+			// Handle file removal
+			filePreview.addEventListener('click', function (e) {
+			if (e.target.closest('button[data-index]')) {
+			const index = e.target.closest('button').getAttribute('data-index');
+			const dt = new DataTransfer();
+			const files = Array.from(fileInput.files);
 
-files.splice(index, 1);
-files.forEach(file => dt.items.add(file));
-fileInput.files = dt.files;
+			files.splice(index, 1);
+			files.forEach(file => dt.items.add(file));
+			fileInput.files = dt.files;
 
-// Trigger change event to update preview
-const event = new Event('change');
-fileInput.dispatchEvent(event);
-}
-});
+			// Trigger change event to update preview
+			const event = new Event('change');
+			fileInput.dispatchEvent(event);
+			}
+			});
 
-// Form submission loading state
-const form = document.getElementById('secure-note-form');
-const submitBtn = document.getElementById('submit-btn');
-const btnText = document.getElementById('btn-text');
-const spinner = document.getElementById('loading-spinner');
+			// Form submission loading state
+			const form = document.getElementById('secure-note-form');
+			const submitBtn = document.getElementById('submit-btn');
+			const btnText = document.getElementById('btn-text');
+			const spinner = document.getElementById('loading-spinner');
 
-form.addEventListener('submit', function () {
-submitBtn.disabled = true;
-btnText.textContent = '{{ "Processing..."|trans }}';
-spinner.classList.remove('hidden');
-});
-});
+			form.addEventListener('submit', function () {
+			submitBtn.disabled = true;
+			btnText.textContent = '{{ "Processing..."|trans }}';
+			spinner.classList.remove('hidden');
+			});
+			});
+
+			document.addEventListener('DOMContentLoaded', function() {
+				const burnCheckbox = document.getElementById('{{ form.burnAfterReading.vars.id }}');
+				const minutesSelect = document.getElementById('{{ form.minutes.vars.id }}');
+
+				if (!burnCheckbox || !minutesSelect) return;
+
+				// Fonction pour activer ou désactiver minutes selon checkbox
+				function toggleMinutes() {
+					minutesSelect.disabled = !burnCheckbox.checked;
+				}
+
+				// Initialisation au chargement
+				toggleMinutes();
+
+				// Écoute le changement sur la checkbox
+				burnCheckbox.addEventListener('change', toggleMinutes);
+			});
 		</script>
 	{% endif %}
 {% endblock %}
