@@ -6,11 +6,11 @@
 {% endblock %}
 
 {% block body %}
-	<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 mt-16">
+	<div class="w-full">
 		<div
-			class="max-w-7xl mx-auto">
+			class=" mx-auto">
 			<!-- Header -->
-			<div class="text-center mb-8">
+				<div class="text-center mb-4 p-8">
 				<h1 class="text-3xl font-bold text-gray-900 tracking-tight ">
 					{{ 'Choose Your Plan'|trans }}
 				</h1>
@@ -21,7 +21,7 @@
 
 			<!-- Current Plan Status -->
 			{% if currentPlan %}
-				<div class="mb-12 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+				<div class="mb-12 bg-white  shadow-sm border border-gray-200 overflow-hidden">
 					<div class="px-6 py-5 bg-gray-50 border-b border-gray-200">
 						<h2 class="text-lg font-medium text-gray-900">
 							{{ 'Your Current Plan'|trans }}
@@ -69,7 +69,7 @@
 							<h3 class="text-2xl font-bold text-gray-900 mb-2">{{ plan.name | trans }}</h3>
 							<p class="text-gray-600 mb-2">{{ plan.description|default('') }}</p>
 							<div class="flex justify-between items-center mb-6 border-b border-gray-300 pb-2">
-								<dt class="text-md font-thin text-trash_bold">{{ 'Number of Notes' | trans }}</dt>
+								<dt class="text-sm font-thin text-trash_bold">{{ 'Number of Notes per month' | trans }}</dt>
 								<dd class="flex items-center space-x-2 text-md font-light text-gray-900">
                                     {% if plan.numberNotes is not null and plan.numberNotes == 0 %}
                                         <span class="inline-flex items-center px-3 py-1 rounded-full bg-trash_bold text-white text-sm font-thin shadow-xl">
@@ -110,12 +110,12 @@
 
 						<div class="p-8 bg-gray-50 border-t border-gray-200">
 							{% if currentPlan and plan.id == currentPlan.subscriptionPlan.id %}
-								<button class="w-full bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium cursor-not-allowed" disabled>
+								<button class="w-full bg-gray-200 text-gray-700 py-3 px-4  font-medium cursor-not-allowed" disabled>
 									{{ 'Current Plan'|trans }}
 								</button>
 							{% else %}
 								<a href="{{ path('app_client_subscription_recap', { slug: plan.slug }) }}"
-									class="block w-full bg-trash hover:bg-trash_bold text-white py-3 px-4 rounded-lg font-medium text-center transition-colors duration-200">
+									class="block w-full bg-trash hover:bg-trash_bold text-white py-3 px-4  font-medium text-center transition-colors duration-200">
 										{{ 'Get Started'|trans }}
 									</a>
 							{% endif %}

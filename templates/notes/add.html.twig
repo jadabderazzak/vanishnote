@@ -5,30 +5,10 @@
 {% endblock %}
 
 {% block body %}
-	<!-- Back Button -->
-	<div class="max-w-6xl mx-6 md:mx-auto  mt-24">
-
-		<a href="{{ path('app_notes') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white transition-all duration-300 shadow-sm group">
-			<svg class="h-5 w-5 text-gray-500 group-hover:text-white transition duration-300" fill="none" viewbox="0 0 24 24" stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-			</svg>
-			<span class="text-sm font-thin tracking-wide">{{ 'Back to notes'|trans }}</span>
-		</a>
-
-
-	</div>
-	<!-- Floating action buttons -->
-	<div class="fixed bottom-6 right-6 z-50 flex flex-col space-y-3">
-
-		<a href="{{ path('app_notes') }}" class="w-12 h-12 rounded-full bg-gray-800 shadow-lg flex items-center justify-center text-white hover:bg-gray-900 transition-transform hover:scale-110">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewbox="0 0 24 24" stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-			</svg>
-		</a>
-	</div>
-	<div class="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+	
+	<div class="bg-gray-50 flex items-center justify-center  w-full">
 		<div
-			class="w-full max-w-6xl bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row border border-gray-200">
+			class="bg-white  shadow-md overflow-hidden flex flex-col md:flex-row border border-gray-200">
 			{# Left Column - Form #}
 			<div class="w-full md:w-2/3 p-8 md:p-10">
 				<div class="flex items-center mb-8">
@@ -212,7 +192,7 @@
 
 				{# Submit Button #}
 				<div class="pt-8">
-					<button type="submit" id="submit-btn" class="w-full flex justify-center items-center py-3 px-6 rounded-lg bg-trash hover:bg-trash_bold text-white font-medium shadow-sm transition-all duration-200 transform hover:-translate-y-0.5">
+					<button type="submit" id="submit-btn" class="w-full flex justify-center items-center py-3 px-6  bg-trash hover:bg-trash_bold text-white font-medium shadow-sm transition-all duration-200 transform hover:-translate-y-0.5">
 						<span id="btn-text">{{ 'Generate Secure Link'|trans }}</span>
 						<svg id="loading-spinner" class="hidden ml-3 h-5 w-5 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24">
 							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

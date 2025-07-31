@@ -8,7 +8,7 @@
 	{% set months = months is defined ? months : 1 %}
 	{% set total = (plan.price * months) | number_format(2, '.', ',') %}
 	<div
-		class="max-w-3xl mx-auto my-8 p-8 bg-white border border-gray-300 mt-24">
+		class="w-full mx-auto p-8 bg-white border border-gray-300 ">
 		<!-- En-tête de facture -->
 		<div class="flex justify-between items-start mb-12">
 			<div>

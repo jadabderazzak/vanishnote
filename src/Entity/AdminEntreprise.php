@@ -63,6 +63,21 @@ class AdminEntreprise
     #[ORM\Column(nullable: true)]
     private ?bool $showLogoOnInvoice = null;
 
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "No Reply email should not be blank.")]
+    #[Assert\Email(message: "Please provide a valid email address.")]
+    private ?string $noReplyEmail = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Support email should not be blank.")]
+    #[Assert\Email(message: "Please provide a valid email address.")]
+    private ?string $supportEmail = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Contact email should not be blank.")]
+    #[Assert\Email(message: "Please provide a valid email address.")]
+    private ?string $contactEmail = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -196,6 +211,42 @@ class AdminEntreprise
     public function setShowLogoOnInvoice(?bool $showLogoOnInvoice): static
     {
         $this->showLogoOnInvoice = $showLogoOnInvoice;
+
+        return $this;
+    }
+
+    public function getNoReplyEmail(): ?string
+    {
+        return $this->noReplyEmail;
+    }
+
+    public function setNoReplyEmail(?string $noReplyEmail): static
+    {
+        $this->noReplyEmail = $noReplyEmail;
+
+        return $this;
+    }
+
+    public function getSupportEmail(): ?string
+    {
+        return $this->supportEmail;
+    }
+
+    public function setSupportEmail(string $supportEmail): static
+    {
+        $this->supportEmail = $supportEmail;
+
+        return $this;
+    }
+
+    public function getContactEmail(): ?string
+    {
+        return $this->contactEmail;
+    }
+
+    public function setContactEmail(string $contactEmail): static
+    {
+        $this->contactEmail = $contactEmail;
 
         return $this;
     }

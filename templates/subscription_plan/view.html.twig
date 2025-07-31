@@ -9,7 +9,7 @@
 
 {% block body %}
 	<div
-		class="max-w-5xl mx-auto px-4 py-8 mt-20">
+		class="w-full mx-auto p-8">
 		<!-- Header with breadcrumb -->
 		<div class="mb-6 flex flex-row items-center justify-between gap-4">
 			<div>
@@ -17,14 +17,14 @@
 				<h1 class="text-2xl font-bold tracking-tight text-gray-900">{{ plan.name }}</h1>
 			</div>
 			<div class="flex space-x-3">
-				<a href="{{ path('app_subscription_plan_update', {slug: plan.slug}) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+				<a href="{{ path('app_subscription_plan_update', {slug: plan.slug}) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
 					{{ 'Edit' | trans }}
 				</a>
 			</div>
 		</div>
 
 		<!-- Main content -->
-		<div class="bg-white shadow rounded-lg overflow-hidden">
+		<div class="bg-white shadow-md overflow-hidden">
 			<div class="px-4 py-5 sm:px-6 border-b border-gray-200">
 				<h3 class="text-lg leading-6 font-medium text-gray-900">{{ 'Plan Details' | trans }}</h3>
 			</div>
@@ -137,7 +137,7 @@
 								<p class="text-xs text-red-600 mb-3">
 									{{ 'Deactivating this plan will make it unavailable for new subscriptions. This action can be reversed.' | trans }}
 								</p>
-								<a href="{{ path('app_subscription_plan_desactivate', {'slug': plan.slug}) }}" onclick="return confirm('{{ 'Are you sure you want to deactivate this plan?' | trans }}');" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+								<a href="{{ path('app_subscription_plan_desactivate', {'slug': plan.slug}) }}" onclick="return confirm('{{ 'Are you sure you want to deactivate this plan?' | trans }}');" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium  text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
 									{{ 'Deactivate Plan' | trans }}
 								</a>
 							</div>
@@ -148,7 +148,7 @@
 								<p class="text-xs text-green-700 mb-3">
 									{{ 'This subscription plan is inactive and cannot be selected by new users.' | trans }}
 								</p>
-								<a href="{{ path('app_subscription_plan_reactivate', {'slug': plan.slug}) }}" onclick="return confirm('{{ 'Are you sure you want to reactivate this plan?' | trans }}');" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+								<a href="{{ path('app_subscription_plan_reactivate', {'slug': plan.slug}) }}" onclick="return confirm('{{ 'Are you sure you want to reactivate this plan?' | trans }}');" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium  text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
 									{{ 'Reactivate Plan' | trans }}
 								</a>
 							</div>

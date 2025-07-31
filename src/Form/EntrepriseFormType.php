@@ -93,11 +93,7 @@ class EntrepriseFormType extends AbstractType
                         ]),
                     ],
                 ])
-            ->add('defaultCurrency', TextType::class, [
-                'label' => $this->translator->trans('Default Currency'),
-                'attr' => ['placeholder' => $this->translator->trans('ISO currency code for invoice amounts, e.g. EUR')],
-                'required' => true,
-            ])
+           
             ->add('invoicePrefix', TextType::class, [
                 'label' => $this->translator->trans('Invoice Prefix'),
                 'attr' => ['placeholder' => $this->translator->trans('Prefix for invoice numbers, e.g. INV-')],
@@ -115,6 +111,21 @@ class EntrepriseFormType extends AbstractType
                         'mimeTypesMessage' => $this->translator->trans('Please upload a valid PNG or JPG image'),
                     ]),
                 ],
+            ])
+            ->add('noReplyEmail', TextType::class, [
+                'label' => $this->translator->trans('No-reply email address'),
+                'attr' => ['placeholder' => $this->translator->trans('Email address used to send automated emails')],
+                'required' => false,
+            ])
+            ->add('supportEmail', TextType::class, [
+                'label' => $this->translator->trans('Support email address'),
+                'attr' => ['placeholder' => $this->translator->trans('Email address used to reply to user support requests')],
+                'required' => false,
+            ])
+             ->add('contactEmail', TextType::class, [
+                'label' => $this->translator->trans('Contact email address'),
+                'attr' => ['placeholder' => $this->translator->trans('Email address used to receive messages from users')],
+                'required' => false,
             ])
         ;
     }

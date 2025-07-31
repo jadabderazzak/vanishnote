@@ -91,6 +91,9 @@ class Logs
     #[ORM\OneToMany(targetEntity: LogsIps::class, mappedBy: 'log')]
     private Collection $logsIps;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $noteTitle = null;
+
     public function __construct()
     {
         $this->logsIps = new ArrayCollection();
@@ -218,6 +221,18 @@ class Logs
                  $logsIp->setLog(null);
              }
          }
+
+         return $this;
+     }
+
+     public function getNoteTitle(): ?string
+     {
+         return $this->noteTitle;
+     }
+
+     public function setNoteTitle(?string $noteTitle): static
+     {
+         $this->noteTitle = $noteTitle;
 
          return $this;
      }

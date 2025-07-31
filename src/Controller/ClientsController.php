@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ClientsType;
+use App\Repository\NotesRepository;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,14 +42,18 @@ final class ClientsController extends AbstractController
      * @return Response Rendered profile view with the client data.
      */
     #[Route('/clients/profile', name: 'app_clients_profile')]
-    public function profile(ClientRepository $repoClient): Response
+    public function profile(ClientRepository $repoClient,NotesRepository $repoNotes,): Response
     {
         $client = $repoClient->findOneBy([
             'user' => $this->getUser()
         ]);
-
+        $notesCreated = $repoNotes->count([
+            'user' => $this->getUser()
+        ]);
+    
         return $this->render('clients/profile.html.twig', [
             'client' => $client,
+            'notesCreated' => $notesCreated
         ]);
     }
 

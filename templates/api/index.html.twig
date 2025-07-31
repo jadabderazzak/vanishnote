@@ -3,14 +3,14 @@
 {% block title %}{{ 'API Credentials' | trans }}{% endblock %}
 
 {% block body %}
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-16 md:mt-24">
-    <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+<div class="w-full mx-auto ">
+    <div class="bg-white shadow-md overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-start md:justify-between items-start md:items-center gap-4">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800">{{ 'API Credentials' | trans }}</h1>
                 <p class="text-gray-600 mt-1">{{ 'Manage all API credentials in the system' | trans }}</p>
             </div>
-            <a href="{{ path('app_api_credential_add') }}" class="inline-flex items-center px-4 py-2 bg-trash border border-transparent text-sm rounded-md font-thin text-white hover:bg-trash_bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-150">
+            <a href="{{ path('app_api_credential_add') }}" class="inline-flex items-center px-4 py-2 bg-trash border border-transparent text-sm  font-thin text-white hover:bg-trash_bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-150">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                 </svg>
@@ -26,7 +26,7 @@
                 <h3 class="mt-2 text-lg font-medium text-gray-900">{{ 'No API credentials found' | trans }}</h3>
                 <p class="mt-1 text-gray-500">{{ 'Get started by adding your first API credentials' | trans }}</p>
                 <div class="mt-6">
-                    <a href="{{ path('app_api_credential_add') }}" class="inline-flex items-center px-4 py-2 text-sm bg-trash border border-transparent rounded-md font-thin text-white hover:bg-trash_bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <a href="{{ path('app_api_credential_add') }}" class="inline-flex items-center px-4 py-2 text-sm bg-trash border border-transparent  font-thin text-white hover:bg-trash_bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         {{ 'Add Credentials' | trans }}
                     </a>
                 </div>
@@ -79,8 +79,8 @@
                                 {% endif %}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right">
-                                <a href="{{ path('app_api_credential_update', {id: credential.id}) }}" class="px-3 py-2 text-xs font-medium text-center text-white bg-trash rounded-lg hover:bg-trash_bold focus:ring-4 focus:outline-none focus:ring-blue-300">{{ 'Edit' | trans }}</a>
-                                <a href="{{ path('app_api_credential_test', {id: credential.id}) }}" class="px-3 py-2 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                <a href="{{ path('app_api_credential_update', {id: credential.id}) }}" class="px-3 py-2 text-xs font-medium text-center text-white bg-trash  hover:bg-trash_bold focus:ring-4 focus:outline-none focus:ring-blue-300">{{ 'Edit' | trans }}</a>
+                                <a href="{{ path('app_api_credential_test', {id: credential.id}) }}" class="px-3 py-2 text-xs font-medium text-white bg-blue-600  hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300">
                                     {{ 'Test API' | trans }}
                                 </a>
                             </td>

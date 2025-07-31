@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Your note has been read</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #f4f4f4;
+				color: #333;
+				padding: 20px;
+			}
+
+			.email-wrapper {
+				max-width: 600px;
+				margin: 0 auto;
+				background-color: #ffffff;
+				padding: 30px;
+				border-radius: 10px;
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+			}
+
+			.header {
+				text-align: center;
+				padding-bottom: 20px;
+			}
+
+			.header img {
+				max-width: 150px;
+				margin-bottom: 20px;
+			}
+
+			h1 {
+				font-size: 24px;
+				color: #007BFF;
+				font-weight: bold;
+			}
+
+			.content {
+				text-align: left;
+				padding: 20px;
+			}
+
+			.details {
+				font-size: 16px;
+				color: #555;
+				line-height: 1.6;
+			}
+
+			.footer {
+				text-align: center;
+				font-size: 12px;
+				color: #888;
+				margin-top: 30px;
+			}
+
+			.footer a {
+				color: #007BFF;
+				text-decoration: none;
+			}
+
+			@media(max-width: 600px) {
+				.email-wrapper {
+					width: 100%;
+					padding: 15px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+
+		<div class="email-wrapper">
+			<div class="header">
+				<img src="{{ absolute_url(asset('template/logo/logo.png')) }}" alt="{{ companyName }}"/>
+				<h1>Your note has been read</h1>
+			</div>
+
+			<div class="content">
+				<p class="details">
+					Dear
+					{{ clientName }},<br><br>
+
+					We would like to inform you that the note you shared has just been accessed.<br><br>
+					<strong>({{noteTitle}})</strong><br/><br/>
+					<strong>IP Address:</strong>
+					{{ ipAdress }}<br/>
+					<strong>Device Information:</strong>
+					{{ userAgent }}<br><br>
+
+					Please do not hesitate to contact us if you have any questions or concerns.<br><br>
+
+					This message was sent automatically for your information.
+				</p>
+			</div>
+
+			<div class="footer">
+				This is an automated message from
+				{{ companyName }}. If you have any questions, please contact
+				<a href="mailto:{{ supportEmail }}" style="color: #007BFF; text-decoration: none;">support</a>.
+			</div>
+		</div>
+
+	</body>
+</html>

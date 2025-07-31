@@ -48,7 +48,7 @@
 			</script>
 		{% endblock %}
 	</head>
-	<body class="bg-gray-50 md:ml-[320px] p-4 pt-20 md:pt-2">
+	<body class="bg-gray-50 sm:mx-0 md:mx-6 mt-6">
 		{% if app.user %}
 			{{ render(controller('App\\Controller\\MenuController::authenticated')) }}
 		{% else %}

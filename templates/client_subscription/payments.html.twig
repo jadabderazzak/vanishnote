@@ -3,8 +3,17 @@
 {% block title %}{{ 'Payments' | trans }}{% endblock %}
 
 {% block body %}
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-16 md:mt-24">
-    <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+<div class="w-full  mx-auto ">
+<!-- Header -->
+        <div class="text-center mb-4  p-8">
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">
+                {{ 'Payment history'|trans }}
+            </h1>
+            <p class="mt-4 text-md text-gray-600 max-w-3xl mx-auto">
+                {{ 'Here are your completed payments.'|trans }}
+            </p>
+        </div>
+    <div class="bg-white shadow-md  overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-start md:justify-between items-start md:items-center gap-4">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800">{{ 'Payments' | trans }}</h1>
@@ -84,7 +93,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right">
                             {% if payment.status == 'succeeded' %}
-                                <a href="{{ path('payment_invoice', {slug: payment.slug}) }}" target="_blank" class="px-3 py-2 text-xs font-medium text-center text-white bg-trash rounded-lg hover:bg-trash_bold focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                <a href="{{ path('payment_invoice', {slug: payment.slug}) }}" target="_blank" class="px-3 py-2 text-xs font-medium text-center text-white bg-trash hover:bg-trash_bold focus:ring-4 focus:outline-none focus:ring-blue-300">
                                     {{ 'Show Invoice' | trans }}
                                 </a>
                             {% endif %}

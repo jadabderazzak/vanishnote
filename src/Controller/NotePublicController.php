@@ -8,19 +8,25 @@ use DateTimeZone;
 use App\Entity\Notes;
 use DateTimeInterface;
 use App\Entity\LogsIps;
+use App\Message\sendReadNote;
 use App\Repository\LogsRepository;
 use App\Repository\NotesRepository;
+use App\Repository\ClientRepository;
 use App\Service\SecureEncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AttachementsRepository;
 use Symfony\Component\Filesystem\Filesystem;
+use App\Repository\AdminEntrepriseRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 final class NotePublicController extends AbstractController
 {
@@ -28,9 +34,10 @@ final class NotePublicController extends AbstractController
      * Translator service for translating user-facing messages.
      */
     public function __construct(private readonly TranslatorInterface $translator,
-      private readonly EntityManagerInterface $manager,
-       private readonly Filesystem $filesystem,
-       private readonly AttachementsRepository $repoAttachment)
+    private readonly EntityManagerInterface $manager,
+    private readonly Filesystem $filesystem,
+    private readonly AttachementsRepository $repoAttachment,
+    private readonly LoggerInterface $logger)
     {}
     #[Route('/note/public', name: 'app_note_public')]
     public function index(): Response
@@ -67,9 +74,12 @@ public function view(
     AttachementsRepository $repoAttachment,
     LogsRepository $repoLog,
     RequestStack $requestStack,
-    EntityManagerInterface $manager
+    EntityManagerInterface $manager,
+    MessageBusInterface $messageBus,
+    ClientRepository $repoClient,
+    AdminEntrepriseRepository $repoEntreprise
 ): Response {
-    $user = $this->getUser();
+    
     $session = $request->getSession();
     $slug = $request->get('slug');
 
@@ -79,30 +89,23 @@ public function view(
         $this->addFlash('danger', $this->translator->trans('Note not found or access denied.'));
         return $this->redirectToRoute('app_notes');
     }
-   
 
-   
     $aad = $note->getEncryptionMetadata();
-
     $passwordEncrypted = $note->getPassword();
     $passwordRequired = !empty($passwordEncrypted);
     $unlockedNotes = $session->get('unlocked_notes', []);
 
     $failedAttempts = $session->get('failed_password_attempts', []);
 
-        // ⚠️ Bloquer si dépasse 3 tentatives
-        if (isset($failedAttempts[$slug]) && $failedAttempts[$slug] >= 3) {
-            $this->addFlash('danger', 'Cette note est bloquée après 3 tentatives. Veuillez réessayer plus tard.');
-            return $this->render('note_public/password_prompt.html.twig', [
-                'noteSlug' => $slug,
-                'locked' => true,
-            ]);
-        }
-
-        
-        
-
-    // 🔐 Si la note est protégée et pas encore déverrouillée
+    // ⚠️ Block if more than 3 attempts are exceeded
+    if (isset($failedAttempts[$slug]) && $failedAttempts[$slug] >= 3) {
+        $this->addFlash('danger', 'This note is locked after 3 attempts. Please try again later.');
+        return $this->render('note_public/password_prompt.html.twig', [
+            'noteSlug' => $slug,
+            'locked' => true,
+        ]);
+    }
+    // 🔐 If the note is protected and not yet unlocked
     if ($passwordRequired && !in_array($slug, $unlockedNotes)) {
         if ($request->isMethod('POST')) {
             $submittedPassword = trim($request->request->get('note_password'));
@@ -110,7 +113,7 @@ public function view(
             try {
                 $decryptedPassword = $encryptionService->decrypt($passwordEncrypted, $aad);
             } catch (\Exception $e) {
-                $this->addFlash('danger', 'Note inaccessible. Veuillez réessayer plus tard.');
+                $this->addFlash('danger', 'The note is inaccessible. Please try again later.');
                 return $this->redirectToRoute('app_home');
             }
 
@@ -123,7 +126,7 @@ public function view(
             } else {
                 $failedAttempts[$slug] = ($failedAttempts[$slug] ?? 0) + 1;
                 $session->set('failed_password_attempts', $failedAttempts);
-                $this->addFlash('danger', 'Mot de passe incorrect.');
+                $this->addFlash('danger', 'Incorrect password.');
             }
         }
 
@@ -173,16 +176,18 @@ public function view(
             $log = $repoLog->findOneBy([
                 'note' => $note
             ]);
+            
             // Retrieve the current HTTP request from the request stack
             $requestInfo = $requestStack->getCurrentRequest();
+            $ipAAdress = $requestInfo?->getClientIp();
+            $userAgent = $requestInfo?->headers->get('User-Agent');
             $logIps = new LogsIps();
             $logIps->setLog($log);
-            $logIps->setIpAdress($requestInfo?->getClientIp());
-            $logIps->setUserAgent($requestInfo?->headers->get('User-Agent'));
+            $logIps->setIpAdress($ipAAdress);
+            $logIps->setUserAgent($userAgent);
             
             $manager->persist($logIps);
             $manager->flush();
-
 
 
     try {
@@ -190,8 +195,47 @@ public function view(
         $decryptedContent = trim($encryptionService->decrypt($note->getContent(), $aad));
     } catch (\Exception $e) {
         $this->addFlash('danger', 'Unable to decrypt note.');
+        $this->logger->error('Unable to decrypt note: ' . $e->getMessage());
         return $this->redirectToRoute('app_home');
     }
+
+                /******************* Update logs with note title */
+                $truncatedTitle = mb_substr($decryptedTitle, 0, 49);
+                $log->setNoteTitle($truncatedTitle);
+                $manager->flush();
+
+            try {
+                $user = $note->getUser();
+                /** @var string $email */
+                $email = $user->getEmail();
+
+                // ************* Get Client name
+                /** @var Client|null $clientInfos */
+                $clientInfos = $repoClient->findOneBy([
+                    'user' => $user
+                ]);
+
+                // ********************* Get infos adminEntreprise
+               
+                $adminEntreprise = $repoEntreprise->findOneBy([
+                    'id' => 1
+                ]);
+
+                // Création et dispatch du message
+                $message = new sendReadNote(
+                    $email,
+                    $ipAAdress,
+                    $userAgent,
+                    $clientInfos ? $clientInfos->getName() : 'Unknown Client',
+                    $decryptedTitle,
+                    $adminEntreprise
+                );
+
+                $messageBus->dispatch($message);
+
+            } catch (TransportExceptionInterface $e) {
+                $this->logger->error('Email sending failed: ' . $e->getMessage());
+            }
 
     // Decrypt attachments metadata (not contents)
     $decryptedAttachments = [];
@@ -212,12 +256,7 @@ public function view(
         }
     }
 
-    // Optionally mark the note as read (currently commented out)
-    // if (!$note->getReadAt()) {
-    //     $note->setReadAt(new \DateTime());
-    //     $entityManager->flush();
-    // }
-
+   
     $response = $this->render('note_public/index.html.twig', [
         'note' => [
             'title' => $decryptedTitle,
@@ -314,7 +353,7 @@ public function view(
     public function logout(Request $request): Response
     {
         $session = $request->getSession();
-
+       
         // Remove unlocked notes and failed attempts to force re-authentication
         $session->remove('unlocked_notes');
         $session->remove('failed_password_attempts');
@@ -384,7 +423,7 @@ private function deleteAllAttachmentsForNote(?Notes $note): void
 public function burn(
     NotesRepository $repoNotes,
     Request $request,
-    LogsRepository $repoLog
+    LogsRepository $repoLog,
 ): JsonResponse {
     $user = $this->getUser();
     $slug = $request->get('slug');

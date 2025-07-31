@@ -1,0 +1,54 @@
+{% if pageCount > 1 %}
+<div class="max-w-8xl mx-auto px-4 py-6">
+    <div class="flex items-center justify-between">
+        {% if previous is defined %}
+            <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}" 
+               class="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-trash hover:text-white hover:border-trash transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                {{"Previous" | trans}}
+            </a>
+        {% else %}
+            <span class="flex text-xs items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-200 text-gray-400 cursor-not-allowed">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                {{"Previous" | trans}}
+            </span>
+        {% endif %}
+
+        <div class="flex items-center gap-1">
+            {% for page in pagesInRange %}
+                {% if page != current %}
+                    <a href="{{ path(route, query|merge({(pageParameterName): page})) }}"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium text-trash_bold hover:bg-trash hover:text-white transition-colors">
+                        {{ page }}
+                    </a>
+                {% else %}
+                    <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-trash_bold text-white text-sm font-medium">
+                        {{ page }}
+                    </span>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {% if next is defined %}
+            <a href="{{ path(route, query|merge({(pageParameterName): next})) }}" 
+               class="flex items-center text-xs gap-1 px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-trash hover:text-white hover:border-trash transition-colors">
+                {{"Next" | trans}}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+            </a>
+        {% else %}
+            <span class="flex items-center text-xs gap-1 px-3 py-1.5 rounded-lg border border-gray-200 text-gray-400 cursor-not-allowed">
+                {{"Next" | trans}}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+            </span>
+        {% endif %}
+    </div>
+</div>
+{% endif %}

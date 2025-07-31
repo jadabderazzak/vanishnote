@@ -10,12 +10,13 @@ use App\Entity\Attachements;
 use App\Entity\Subscriptions;
 use App\Service\HtmlSanitizer;
 use Symfony\Component\Uid\Uuid;
+use App\Repository\LogsRepository;
 use App\Repository\NotesRepository;
+use App\Repository\LogsIpsRepository;
 use App\Service\SecureEncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AttachementsRepository;
-use App\Repository\LogsIpsRepository;
-use App\Repository\LogsRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,12 +58,13 @@ final class NotesController extends AbstractController
      * @return Response The rendered HTML response containing the list of decrypted notes.
      */
     #[Route('/notes', name: 'app_notes')]
-    public function index(NotesRepository $repoNotes, SecureEncryptionService $encryptionService): Response
+    public function index(NotesRepository $repoNotes, SecureEncryptionService $encryptionService, Request $request, PaginatorInterface $paginator): Response
     {
         $notes = $repoNotes->findBy([
             'user' => $this->getUser()
         ]);
-      
+        
+        
         $decryptedNotes = [];
 
         foreach ($notes as $note) {
@@ -88,38 +90,48 @@ final class NotesController extends AbstractController
                 continue;
             }
         }
+
+        $paginatedNotes = $paginator->paginate($decryptedNotes, $request->query->getInt('page', 1), 15); 
  
         return $this->render('notes/index.html.twig', [
-            'notes' => $decryptedNotes
+            'notes' => $paginatedNotes
         ]);
     }
 
 
-   /**
- * Displays the list of logs related to the current user's notes.
- *
- * Retrieves all log entries associated with the authenticated user and
- * renders them in the 'notes/burned.html.twig' template.
- *
- * @Route("/notes/logs", name="app_notes_logs")
- *
- * @param LogsRepository $repoLog Repository to fetch log entries.
- *
- * @return Response Rendered view displaying the user's note logs.
- */
-
+ /**
+     * Displays paginated logs related to the current user's notes.
+     *
+     * Fetches all log entries linked to the authenticated user and paginates them.
+     * The results are rendered using the 'notes/burned.html.twig' template.
+     *
+     * Pagination is handled via KnpPaginatorBundle, showing 15 logs per page.
+     *
+     * @Route("/notes/logs", name="app_notes_logs")
+     *
+     * @param LogsRepository $repoLog Repository to retrieve log entries.
+     * @param Request $request HTTP request to get the current page.
+     * @param PaginatorInterface $paginator Service used to paginate results.
+     *
+     * @return Response Rendered HTML response containing paginated user logs.
+     */
     #[Route('/notes/logs', name: 'app_notes_logs')]
-    public function logs(LogsRepository $repoLog): Response
+    public function logs(LogsRepository $repoLog, Request $request, PaginatorInterface $paginator): Response
     {
         $logs = $repoLog->findBy([
             'user' => $this->getUser(),
-           
+        ],[
+            'id'=> 'DESC'
         ]);
 
-        
- 
+        $paginatedLogs = $paginator->paginate(
+            $logs,
+            $request->query->getInt('page', 1), // Current page number from query string
+            15 // Items per page
+        );
+
         return $this->render('notes/burned.html.twig', [
-            'logs' => $logs
+            'logs' => $paginatedLogs
         ]);
     }
 
@@ -301,7 +313,8 @@ public function new(
     EntityManagerInterface $entityManager,
     HtmlSanitizer $sanitizer,
     SecureEncryptionService $encryptionService,
-    RequestStack $requestStack
+    RequestStack $requestStack,
+    NotesRepository $repoNotes,
 ): Response {
     $user = $this->getUser();
     if (!$user) {
@@ -322,6 +335,32 @@ public function new(
         $this->addFlash('danger', $this->translator->trans('Subscription plan not found. Contact support.'));
         return $this->redirectToRoute('app_menu_authenticated');
     }
+
+    /**************************************
+     * Check the number of notes the user has created this month.
+     * Retrieve the current month and year.
+     * Count how many notes the user has created in this period.
+     *
+     * Get the maximum number of notes allowed by the user's subscription plan.
+     *
+     * If there is a limit (non-zero), verify if the user has exceeded it.
+     * If exceeded, display an error message and redirect to the subscription page.
+     **************************************/
+    $month = (int) date('n'); 
+    $year = (int) date('Y');
+    $notesbymounth  = $repoNotes->countUserNotesByMonthAndYear($this->getUser(), $year, $month);
+
+    $numberOfNotes = $subscription->getSubscriptionPlan()->getNumberNotes();
+
+    if ($numberOfNotes !== 0) {
+        if ($notesbymounth > $numberOfNotes) {
+            $this->addFlash('danger', $this->translator->trans('You have reached the limit of notes that can be created this month.'));
+            return $this->redirectToRoute('app_client_subscription');
+        }
+    }
+
+    
+    /********************************************************************* */
 
     $features = $plan->getFeatures() ?? [];
     $now =  new DateTime();

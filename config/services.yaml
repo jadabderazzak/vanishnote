@@ -8,6 +8,7 @@ parameters:
     notes_attachments_directory : '%kernel.project_dir%/public/template/notes'
     app.locales : ['en', 'fr', 'es', 'de']
     default_locale: '%app.locales%'
+    app.timezone: 'GMT'
 
 services:
     # default configuration for services in *this* file

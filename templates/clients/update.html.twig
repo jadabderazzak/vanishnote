@@ -2,19 +2,19 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{{ (update ? 'Edit Your Profile' : 'Add New Client') | trans }}
+	{{ (update ? 'Edit Your Profile' : '') | trans }}
 {% endblock %}
 
 {% block body %}
-	<div class="max-w-3xl mx-auto p-8 bg-white rounded-xl shadow-lg mt-12 border border-gray-100 mt-24">
+	<div class="w-full mx-auto p-8 bg-white  shadow-md ">
 		<div class="text-center mb-10">
 			<div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-50">
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewbox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
 				</svg>
 			</div>
-			<h1 class="text-2xl font-bold text-gray-800 mt-4">{{ (update ? 'Edit Client' : 'Add New Client') | trans }}</h1>
-			<p class="text-gray-500 mt-2">{{ (update ? 'Update client details' : 'Create new client record') | trans }}</p>
+			<h1 class="text-2xl font-bold text-gray-800 mt-4">{{ (update ? 'Edit Your Profile' : '') | trans }}</h1>
+			<p class="text-gray-500 mt-2">{{ (update ? 'Update your details' : '') | trans }}</p>
 		</div>
 
 		{{ form_start(form) }}
@@ -104,14 +104,14 @@
 
 			<!-- Actions -->
 			<div class="flex items-center justify-between pt-6">
-				<a href="{{ path('app_clients_profile') }}" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+				<a href="{{ path('app_clients_profile') }}" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
 					{{ 'Cancel' | trans }}
 				</a>
-				<button type="submit" class="px-6 py-2.5 bg-trash text-sm text-white font-medium rounded-lg shadow-sm hover:bg-trash_bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out flex items-center">
+				<button type="submit" class="px-6 py-2.5 bg-trash text-sm text-white font-medium  shadow-sm hover:bg-trash_bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out flex items-center">
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewbox="0 0 20 20" fill="currentColor">
 						<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
 					</svg>
-					{{ (update ? 'Update Client' : 'Create Client') | trans }}
+					{{ (update ? 'Update' : 'Create') | trans }}
 				</button>
 			</div>
 		</div>

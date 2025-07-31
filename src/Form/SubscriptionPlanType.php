@@ -54,7 +54,7 @@ class SubscriptionPlanType extends AbstractType
                 ])
             ->add('numberNotes', NumberType::class, [
                 'required' => false,
-                'label' => $this->translator->trans('Number of Notes'),
+                'label' => $this->translator->trans('Number of Notes per month'),
                
                 'attr' => [
                     'min' => 0,

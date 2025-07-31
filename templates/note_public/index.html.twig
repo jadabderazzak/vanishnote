@@ -1,5 +1,5 @@
 {# templates/notes/view.html.twig #}
-{% extends 'base.html.twig' %}
+{% extends 'base_home.html.twig' %}
 
 {% block title %}{{ note.title }} | {{ 'Note Details'|trans }}{% endblock %}
 
@@ -7,7 +7,7 @@
 {% block body %}
 <div class="relative">
     {# Logout button #}
-    <div class="max-w-4xl mx-auto pt-24 pb-4 px-4 sm:px-6 lg:px-8 ">
+    <div class="max-w-7xl mx-auto pt-24 pb-4 px-4 sm:px-6 lg:px-8 ">
     {# Burn timer #}
     <div class="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4 w-full ">
     {% if note.burning and note.minutes is defined and note.minutes > 0 %}
@@ -52,8 +52,8 @@
 
 
     {# Main note content #}
-    <div id="note-container" class="max-w-4xl mx-auto pb-16 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto bg-amber-50 border border-amber-200 text-amber-800 p-4 mb-5 rounded text-center text-sm font-medium">
+    <div id="note-container" class="max-w-7xl mx-auto pb-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto bg-amber-50 border border-amber-200 text-amber-800 p-4 mb-5 rounded text-center text-sm font-medium">
     {{ 'For security and confidentiality reasons, your IP address will be recorded when viewing this private note.'|trans }}
 </div>
         <div class="relative burning-note">
@@ -61,11 +61,13 @@
             <div class="burn-effect"></div>
             
             <!-- The note card -->
-            <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700 transform transition-all hover:scale-[1.01] note-content">
+            <div class="relative bg-white dark:bg-gray-800 shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 transform transition-all hover:scale-[1.01] note-content">
                 <!-- Note header -->
                 <div class="px-6 py-5 bg-gradient-to-r from-indigo-500 to-purple-600">
-                    <div class="flex justify-between items-center">
-                        <h1 class="text-2xl font-bold text-white truncate">{{ note.title }}</h1>
+                    <div class="flex flex-col md:flex-row justify-start md:justify-between items-center gap-4 p-4 md:p-0">
+                       <h1 class="text-2xl font-bold text-white whitespace-normal sm:whitespace-nowrap overflow-visible sm:overflow-hidden break-words sm:truncate ">
+                            {{ note.title }}
+                        </h1>
                         <div class="flex space-x-2">
                             {% if note.burning %}
                             <span class="flex items-center px-2 py-1 rounded-full text-xs font-bold bg-white/20 text-white">
