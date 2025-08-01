@@ -32,10 +32,10 @@
 			margin-right: 0.5rem;
 		}
 	</style>
-	<div class="w-full ">
+	<div class="w-full p-2">
 
-		<div class="w-full grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
-			<div class="bg-white shadow p-4 sm:p-6 xl:p-8 2xl:col-span-2" id="chartElement">
+		<div class="w-full grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-2">
+			<div class="bg-white p-4 sm:p-6 xl:p-8 2xl:col-span-2" id="chartElement">
 				<div class="flex items-center justify-between mb-4">
 					<div class="flex-shrink-0">
 						<span class="text-xl leading-none font-bold text-gray-900">{{"Notes Analytics" | trans}}</span>
@@ -85,7 +85,7 @@
 					<canvas id="notesChart" style="display: none;"></canvas>
 				</div>
 			</div>
-			<div class="bg-white shadow p-4 sm:p-6 xl:p-8 ">
+			<div class="bg-gray-50  p-4 sm:p-6 xl:p-8 ">
 				<div class="mb-4 flex items-center justify-between">
 					<div>
 						<h3 class="text-xl font-bold text-gray-900 mb-1">{{"Latest Burned Notes" | trans}}</h3>
@@ -100,19 +100,11 @@
 						<div class="align-middle inline-block min-w-full">
 							<div class="shadow overflow-hidden">
 								<table class="min-w-full divide-y divide-gray-200 border border-gray-100">
-									<thead class="bg-gray-50">
-										<tr>
-											<th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-												{{"Title" | trans}}
-											</th>
-
-
-										</tr>
-									</thead>
+									
 									<tbody class="bg-white">
 										{% for log in logs %}
 											<tr>
-												<td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
+												<td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900 border-b border-gray-50">
 													{{ log.noteTitle | u.truncate(50, '...')}}
 													<div class="text-gray-500 text-xs">
 														{{"Deleted At" | trans}}
@@ -134,10 +126,11 @@
 			<div class="bg-gradient-to-br from-blue-50 to-white p-6  border border-blue-100 shadow-sm hover:shadow-md transition-all">
 				<div class="flex items-center gap-4">
 					<div class="p-3 bg-blue-100/20 rounded-full">
-						
-                  <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewbox="0 0 24 24">
-							<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+
+						<svg class="w-6 h-6 text-blue-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9V4a1 1 0 0 0-1-1H8.914a1 1 0 0 0-.707.293L4.293 7.207A1 1 0 0 0 4 7.914V20a1 1 0 0 0 1 1h4M9 3v4a1 1 0 0 1-1 1H4m11 6v4m-2-2h4m3 0a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z"/>
 						</svg>
+
 					</div>
 					<div>
 						<p class="text-sm font-medium text-gray-500">{{"Monthly Created" | trans}}</p>
@@ -150,9 +143,11 @@
 			<div class="bg-gradient-to-br from-red-50 to-white p-6  border border-red-100 shadow-sm hover:shadow-md transition-all">
 				<div class="flex items-center gap-4">
 					<div class="p-3 bg-red-100/20 rounded-full">
-						<svg class="w-6 h-6 text-red-600" fill="currentColor" viewbox="0 0 24 24">
-							<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+					
+						<svg class="w-6 h-6 text-red-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.122 17.645a7.185 7.185 0 0 1-2.656 2.495 7.06 7.06 0 0 1-3.52.853 6.617 6.617 0 0 1-3.306-.718 6.73 6.73 0 0 1-2.54-2.266c-2.672-4.57.287-8.846.887-9.668A4.448 4.448 0 0 0 8.07 6.31 4.49 4.49 0 0 0 7.997 4c1.284.965 6.43 3.258 5.525 10.631 1.496-1.136 2.7-3.046 2.846-6.216 1.43 1.061 3.985 5.462 1.754 9.23Z"/>
 						</svg>
+
 					</div>
 					<div>
 						<p class="text-sm font-medium text-gray-500">{{"Monthly Burned" | trans}}</p>
@@ -165,9 +160,11 @@
 			<div class="bg-gradient-to-br from-green-50 to-white p-6  border border-green-100 shadow-sm hover:shadow-md transition-all">
 				<div class="flex items-center gap-4">
 					<div class="p-3 bg-green-100/20 rounded-full">
-						<svg class="w-6 h-6 text-green-600" fill="currentColor" viewbox="0 0 24 24">
-							<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+
+						<svg class="w-6 h-6 text-green-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+						<path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M15 4v3a1 1 0 0 1-1 1h-3m2 10v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7.13a1 1 0 0 1 .24-.65L6.7 8.35A1 1 0 0 1 7.46 8H9m-1 4H4m16-7v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H19a1 1 0 0 1 1 1Z"/>
 						</svg>
+
 					</div>
 					<div>
 						<p class="text-sm font-medium text-gray-500">{{"Total Created" | trans}}</p>
@@ -180,9 +177,11 @@
 			<div class="bg-gradient-to-br from-purple-50 to-white p-6  border border-purple-100 shadow-sm hover:shadow-md transition-all">
 				<div class="flex items-center gap-4">
 					<div class="p-3 bg-purple-100/20 rounded-full">
-						<svg class="w-6 h-6 text-purple-600" fill="currentColor" viewbox="0 0 24 24">
-							<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+				
+						<svg class="w-6 h-6 text-red-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+						<path d="M8.597 3.2A1 1 0 0 0 7.04 4.289a3.49 3.49 0 0 1 .057 1.795 3.448 3.448 0 0 1-.84 1.575.999.999 0 0 0-.077.094c-.596.817-3.96 5.6-.941 10.762l.03.049a7.73 7.73 0 0 0 2.917 2.602 7.617 7.617 0 0 0 3.772.829 8.06 8.06 0 0 0 3.986-.975 8.185 8.185 0 0 0 3.04-2.864c1.301-2.2 1.184-4.556.588-6.441-.583-1.848-1.68-3.414-2.607-4.102a1 1 0 0 0-1.594.757c-.067 1.431-.363 2.551-.794 3.431-.222-2.407-1.127-4.196-2.224-5.524-1.147-1.39-2.564-2.3-3.323-2.788a8.487 8.487 0 0 1-.432-.287Z"/>
 						</svg>
+
 					</div>
 					<div>
 						<p class="text-sm font-medium text-gray-500">{{"Total Burned"  | trans}}</p>

@@ -7,6 +7,7 @@ use App\Repository\LogsRepository;
 use App\Repository\NotesRepository;
 use App\Repository\ClientRepository;
 use App\Repository\PaymentRepository;
+use App\Repository\SubscriptionsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -103,7 +104,7 @@ public function notesStatistics(NotesRepository $notesRepository): JsonResponse
      * @return Response Rendered profile view with the client data.
      */
     #[Route('/clients/profile', name: 'app_clients_profile')]
-    public function profile(ClientRepository $repoClient,NotesRepository $repoNotes,): Response
+    public function profile(ClientRepository $repoClient,NotesRepository $repoNotes,SubscriptionsRepository $repoSub): Response
     {
         $client = $repoClient->findOneBy([
             'user' => $this->getUser()
@@ -111,10 +112,16 @@ public function notesStatistics(NotesRepository $notesRepository): JsonResponse
         $notesCreated = $repoNotes->count([
             'user' => $this->getUser()
         ]);
+
+        $accountType = $repoSub->findOneBy([
+            'user' => $this->getUser(),
+            'status' => true
+        ]);
     
         return $this->render('clients/profile.html.twig', [
             'client' => $client,
-            'notesCreated' => $notesCreated
+            'notesCreated' => $notesCreated,
+            'accountType' => $accountType->getSubscriptionPlan()->getName()
         ]);
     }
 

@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block body %}
-	<div class="">
+	<div class="bg-white mb-6">
 		<div
 			class="w-full mx-auto ">
 			<!-- Header -->
@@ -20,7 +20,7 @@
 			</div>
 
 			<!-- Notes Table -->
-			<div class="bg-white shadow-sm border border-gray-200 overflow-hidden w-full">
+			<div class="bg-white border border-gray-200 overflow-hidden w-full">
 				<div class="px-6 py-5 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
 					<h2 class="text-lg font-medium text-gray-900">
 						{{ 'Notes List'|trans }}
@@ -206,7 +206,7 @@
 					{{ knp_pagination_render(notes) }}
 				</div>
 			<!-- Additional Info -->
-			<div class="mt-16 text-center">
+			<div class="mt-16  text-center">
 				<h3 class="text-lg font-medium text-gray-900">{{ 'Need help?'|trans }}</h3>
 				<p class="mt-2 text-gray-600 max-w-2xl mx-auto">
 					{{ 'Contact our support team if you have any questions about your notes.'|trans }}
