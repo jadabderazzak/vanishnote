@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+
 /**
  * Service providing AES-256-CBC encryption and decryption.
  * 
@@ -13,7 +15,7 @@ class EncryptionService
     /**
      * @var string The secret encryption key (32 bytes for AES-256).
      */
-    private string $key;
+    private readonly string $key;
 
     /**
      * Constructor.
@@ -21,10 +23,10 @@ class EncryptionService
      * Initializes the encryption key.
      * Note: The key length must match the cipher requirements (32 bytes for AES-256).
      */
-    public function __construct()
+    public function __construct(ParameterBagInterface $params)
     {
-        // La clé doit être de la bonne taille (ex: 32 bytes pour AES-256)
-        $this->key = "K8d9jN2fR5mX7vTb4QwZyH3pLsEjUaF0";
+        // The key must be the correct size (e.g., 32 bytes for AES-256)
+        $this->key = $_ENV['APP_ENCRYPTION_KEY'] ?? '';
     }
 
     /**

@@ -95,4 +95,195 @@ public function countUserNotesByMonthAndYear(User $user, int $year, int $month):
         ->getSingleScalarResult();
 }
 
+
+
+/**
+ * Retrieves monthly statistics of notes created in the past year.
+ *
+ * This method fetches all notes created within the last 12 months,
+ * groups them by month (formatted as "YYYY-MM"), and counts the number
+ * of notes created and the number of notes marked as "burned" for each month.
+ *
+ * @return array<int, array<string, mixed>> Returns an indexed array of monthly stats.
+ * Each element is an associative array containing:
+ *   - 'month' (string): The year and month in "YYYY-MM" format.
+ *   - 'created' (int): The total number of notes created in that month.
+ *   - 'burned' (int): The total number of notes marked as burned in that month.
+ */
+public function getMonthlyStats(User $user): array
+{
+    $results = $this->createQueryBuilder('n')
+        ->select([
+            'n.id',
+            'n.createdAt',
+            'n.burned'
+        ])
+        ->where('n.createdAt >= :startDate')
+        ->andWhere('n.user = :user')
+        ->setParameter('user', $user)
+        ->setParameter('startDate', new \DateTime('-1 year'))
+        ->orderBy('n.createdAt', 'ASC')
+        ->getQuery()
+        ->getResult();
+
+    $stats = [];
+    foreach ($results as $note) {
+        $month = $note['createdAt']->format('Y-m');
+        if (!isset($stats[$month])) {
+            $stats[$month] = ['month' => $month, 'created' => 0, 'burned' => 0];
+        }
+        $stats[$month]['created']++;
+        if ($note['burned']) {
+            $stats[$month]['burned']++;
+        }
+    }
+
+    return array_values($stats);
+}
+
+
+/**
+ * Calculates the percentage growth in note creation between the last two months for a given user.
+ *
+ * This function retrieves the number of notes created by the specified user in each of the last two full months,
+ * and returns the percentage growth from the previous month to the current one.
+ *
+ * Example: If 50 notes were created in June and 75 in July, returns 50.0.
+ *
+ * @param User $user The user for whom the growth is calculated.
+ * @return float|null The growth percentage, or null if insufficient data or division by zero.
+ */
+public function getMonthlyGrowthRate(User $user): ?float
+{
+    $results = $this->createQueryBuilder('n')
+        ->select('n.createdAt')
+        ->where('n.createdAt >= :startDate')
+        ->andWhere('n.user = :user')
+        ->setParameter('startDate', new \DateTime('-2 months'))
+        ->setParameter('user', $user)
+        ->orderBy('n.createdAt', 'ASC')
+        ->getQuery()
+        ->getResult();
+
+    $monthlyCounts = [];
+
+    foreach ($results as $row) {
+        $month = $row['createdAt']->format('Y-m');
+        if (!isset($monthlyCounts[$month])) {
+            $monthlyCounts[$month] = 0;
+        }
+        $monthlyCounts[$month]++;
+    }
+
+    $months = array_keys($monthlyCounts);
+    $count = count($months);
+
+    if ($count < 2) {
+        return null; // Pas assez de données
+    }
+
+    $previousMonth = $months[$count - 2];
+    $currentMonth = $months[$count - 1];
+
+    $previousCount = $monthlyCounts[$previousMonth];
+    $currentCount = $monthlyCounts[$currentMonth];
+
+    if ($previousCount === 0) {
+        return null; // Pas de division par zéro
+    }
+
+    $growth = (($currentCount - $previousCount) / $previousCount) * 100;
+
+    return round($growth, 2);
+}
+
+
+/**
+ * Counts the number of notes burned by the specified user during the current month.
+ *
+ * This method counts notes where the 'burned' flag is true and the deletion date
+ * falls within the current calendar month.
+ *
+ * @param User $user The user whose burned notes count is being calculated.
+ *
+ * @return int The total number of burned notes for the current month.
+ */
+public function countBurnedNotesThisMonthByUser(User $user): int
+{
+    $now = new \DateTimeImmutable();
+    $year = (int) $now->format('Y');
+    $month = (int) $now->format('m');
+
+    $startDate = new \DateTimeImmutable(sprintf('%04d-%02d-01 00:00:00', $year, $month));
+    $endDate = $startDate->modify('first day of next month');
+
+    return (int) $this->createQueryBuilder('n')
+        ->select('COUNT(n.id)')
+        ->where('n.user = :user')
+        ->andWhere('n.burned = :burned')
+        ->andWhere('n.deletedAt >= :start')
+        ->andWhere('n.deletedAt < :end')
+        ->setParameter('user', $user)
+        ->setParameter('burned', true)
+        ->setParameter('start', $startDate)
+        ->setParameter('end', $endDate)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
+/**
+ * Counts the total number of notes created by the specified user.
+ *
+ * @param User $user The user whose notes are being counted.
+ * @return int Total count of notes created by the user.
+ */
+public function countTotalNotesByUser(User $user): int
+{
+    return (int) $this->createQueryBuilder('n')
+        ->select('COUNT(n.id)')
+        ->where('n.user = :user')
+        ->setParameter('user', $user)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
+/**
+ * Counts the total number of notes burned by the specified user.
+ *
+ * @param User $user The user whose burned notes are being counted.
+ * @return int Total count of burned notes by the user.
+ */
+public function countTotalBurnedNotesByUser(User $user): int
+{
+    return (int) $this->createQueryBuilder('n')
+        ->select('COUNT(n.id)')
+        ->where('n.user = :user')
+        ->andWhere('n.burned = :burned')
+        ->setParameter('user', $user)
+        ->setParameter('burned', true)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
+ /**
+     * Finds the 5 most recent notes that have not been burned yet.
+     *
+     * This method returns notes ordered by their creation date descending,
+     * filtered to only include notes where 'burned' is false or null.
+     *
+     * @return Notes[] Returns an array of Notes entities
+     */
+    public function findLast5NotBurned(User $user): array
+    {
+        return $this->createQueryBuilder('n')
+            ->where('n.user = :user')
+            ->andWhere('n.burned = false OR n.burned IS NULL')
+            ->setParameter('user', $user)
+            ->orderBy('n.createdAt', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
+
+
 }

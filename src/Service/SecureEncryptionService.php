@@ -3,27 +3,25 @@
 namespace App\Service;
 
 use Exception;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * Service for encrypting and decrypting data using AES-256-GCM with Additional Authenticated Data (AAD).
  */
 class SecureEncryptionService
 {
-    private string $key;
+    private readonly string $key;
 
     /**
      * @param string $key 32-byte (256-bit) encryption key, must be kept secret.
      *
      * @throws Exception if key length is invalid.
      */
-     public function __construct()
+     public function __construct(ParameterBagInterface $params)
     {
-        // if (mb_strlen($key, '8bit') !== 32) {
-        //     throw new \InvalidArgumentException("Encryption key must be exactly 32 bytes.");
-        // }
-        $this->key = "1e35b13eb225cd21c85230785569b1dea5f8eec7c4e7d08e6022b45ff42d56ce";
-    }
+         $this->key = $_ENV['APP_ENCRYPTION_KEY_DOCS'] ?? '';
 
+    }
     /**
      * Encrypt plaintext data with AES-256-GCM including Additional Authenticated Data (AAD).
      *

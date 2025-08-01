@@ -118,11 +118,7 @@ final class NotesController extends AbstractController
     #[Route('/notes/logs', name: 'app_notes_logs')]
     public function logs(LogsRepository $repoLog, Request $request, PaginatorInterface $paginator): Response
     {
-        $logs = $repoLog->findBy([
-            'user' => $this->getUser(),
-        ],[
-            'id'=> 'DESC'
-        ]);
+        $logs = $repoLog->findAllLogsByUserOrderedDesc($this->getUser());
 
         $paginatedLogs = $paginator->paginate(
             $logs,

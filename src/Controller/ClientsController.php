@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Form\ClientsType;
+use App\Repository\LogsRepository;
 use App\Repository\NotesRepository;
 use App\Repository\ClientRepository;
+use App\Repository\PaymentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,16 +28,74 @@ final class ClientsController extends AbstractController
     /**
      * Displays the clients dashboard page.
      *
-     * @return Response Rendered dashboard view.
+     * This action renders the dashboard view for the currently authenticated user (client),
+     * and includes the monthly growth rate of notes created over the last two months.
+     *
+     * The growth rate is calculated using the NotesRepository::getMonthlyGrowthRate()
+     * method and is passed to the Twig template for display.
+     *
+     * @param NotesRepository $notesRepository The repository used to fetch user note statistics.
+     *
+     * @return Response The rendered dashboard view with optional growth rate data.
      */
     #[Route('/clients/dashboard', name: 'app_clients_dashboard')]
-    public function index(): Response
+    public function index(NotesRepository $repoNotes, LogsRepository $repoLogs,PaymentRepository $repoPayment): Response
     {
+        $user = $this->getUser();
+        $growthRate = $repoNotes->getMonthlyGrowthRate($user);
+        $logs = $repoLogs->findLastFiveUniqueNotesByUser($user);
+        $month = (new \DateTime())->format('m');
+        $year = (new \DateTime())->format('Y');
+        $currentMonthNoteCount = $repoNotes->countUserNotesByMonthAndYear($user, $year,$month);
+        $burnedNotesCurrentMonth = $repoNotes->countBurnedNotesThisMonthByUser($user);
+        $totalnotes = $repoNotes->countTotalNotesByUser($user);
+        $totalBurned = $repoNotes->countTotalBurnedNotesByUser($user);
+        $last5NotesNotBurned =  $repoNotes->findLast5NotBurned($user);
+        $payments = $repoPayment->findBy([
+            'user' => $this->getUser(),
+            'status' => "succeeded"
+        ]);
         return $this->render('clients/index.html.twig', [
-            'controller_name' => 'ClientsController',
+            'growthRate' => $growthRate,
+            'logs' => $logs,
+            'currentMonthNoteCount' => $currentMonthNoteCount,
+            'burnedNotesCurrentMonth' => $burnedNotesCurrentMonth,
+            'totalnotes' => $totalnotes,
+            'totalBurned' => $totalBurned,
+            'last5NotesNotBurned' => $last5NotesNotBurned,
+            'payments' => $payments,
         ]);
     }
 
+#[Route('/dashboard/statistics', name: 'dashboard_notes_stats')]
+public function notesStatistics(NotesRepository $notesRepository): JsonResponse
+{
+    // Get raw statistics data from repository
+    $monthlyStats = $notesRepository->getMonthlyStats($this->getUser());
+
+    // Transform data for Chart.js
+    $chartData = [
+        'labels' => array_column($monthlyStats, 'month'),
+        'datasets' => [
+            [
+                'label' => 'Notes Created',
+                'data' => array_column($monthlyStats, 'created'),
+                'backgroundColor' => 'rgba(58, 138, 192, 0.1)',
+                'borderColor' => 'rgba(58, 138, 192, 1)',
+                'borderWidth' => 2
+            ],
+            [
+                'label' => 'Notes Burned',
+                'data' => array_column($monthlyStats, 'burned'),
+                'backgroundColor' => 'rgba(239, 68, 68, 0.1)',
+                'borderColor' => 'rgba(239, 68, 68, 1)',
+                'borderWidth' => 2
+            ]
+        ]
+    ];
+
+    return new JsonResponse($chartData);
+}
     /**
      * Displays the profile page of the currently logged-in client.
      *

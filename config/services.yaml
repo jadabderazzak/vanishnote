@@ -20,8 +20,14 @@ services:
             - '@App\Service\HtmlSanitizer'
         public: true
     App\Service\SecureEncryptionService:
-        arguments:
+        bind:
+            $key: '%env(APP_ENCRYPTION_KEY_DOCS)%'
+    App\Service\EncryptionService:
+        bind:
             $key: '%env(APP_ENCRYPTION_KEY)%'
+    App\Command\BurnExpiredNotesCommand:
+        arguments:
+            $attachmentsDirectory: '%notes_attachments_directory%'
 
     
 

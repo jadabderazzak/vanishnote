@@ -34,6 +34,7 @@ Encore
     .enablePostCssLoader()
     
     .addEntry('note', './assets/js/note.js')
+    .addEntry('chart', './assets/js/chart.js')
     /*
      * FEATURE CONFIG
      *

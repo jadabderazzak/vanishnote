@@ -1,20 +1,293 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ClientsController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	<style>
+		#notesChart {
+			font-family: 'Inter', system-ui, -apple-system, sans-serif;
+			--tw-ring-opacity: 0.05;
+			min-height: 320px;
+			background: white;
+			border-radius: 0.75rem;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+		}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+		.chart-legend {
+			display: flex;
+			gap: 1rem;
+			margin-top: 1.5rem;
+		}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/xampp/htdocs/trashphone/src/Controller/ClientsController.php</code></li>
-        <li>Your template at <code>C:/xampp/htdocs/trashphone/templates/clients/index.html.twig</code></li>
-    </ul>
-</div>
+		.legend-item {
+			display: flex;
+			align-items: center;
+			font-size: 0.875rem;
+			color: #4B5563;
+		}
+
+		.legend-color {
+			width: 12px;
+			height: 12px;
+			border-radius: 3px;
+			margin-right: 0.5rem;
+		}
+	</style>
+	<div class="w-full ">
+
+		<div class="w-full grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
+			<div class="bg-white shadow p-4 sm:p-6 xl:p-8 2xl:col-span-2" id="chartElement">
+				<div class="flex items-center justify-between mb-4">
+					<div class="flex-shrink-0">
+						<span class="text-xl leading-none font-bold text-gray-900">{{"Notes Analytics" | trans}}</span>
+						<h3 class="text-md font-normal text-gray-500">{{"Monthly creation & burn rate" | trans}}</h3>
+					</div>
+					<div class="flex items-center justify-end flex-1 text-green-500 font-bold">
+						{% if growthRate is not null %}
+							{# round to 1 decimal place #}
+							{% set rounded = growthRate|round(1) %}
+
+							{# limit the maximum displayed value #}
+							{% if rounded > 200 %}
+								{% set displayValue = '200%+' %}
+								{% set displaySign = '' %}
+							{% else %}
+								{% set displayValue = rounded ~ '%' %}
+								{% set displaySign = (rounded > 0 and rounded <= 200) ? '+' : '' %}
+							{% endif %}
+
+							{% set color = rounded > 0 ? 'text-green-600' : (rounded < 0 ? 'text-red-600' : 'text-gray-500') %}
+
+							<span class="inline-flex items-center gap-1 font-semibold {{ color }}">
+								{% if rounded > 0 and rounded <= 200 %}
+									<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+										<path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+									</svg>
+								{% endif %}
+								{{ displaySign }}{{ displayValue }}
+							</span>
+						{% else %}
+							<span class="text-gray-400 font-medium">N/A</span>
+						{% endif %}
+
+					</div>
+				</div>
+				<div
+					class="h-80 relative">
+					<!-- Loading message -->
+					<div id="chartLoading" class="absolute inset-0 flex items-center justify-center bg-white rounded-lg">
+						<div class="text-center">
+							<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mx-auto mb-2"></div>
+							<p class="text-gray-600 text-sm">Loading data...</p>
+						</div>
+					</div>
+
+					<!-- Chart (hidden initially) -->
+					<canvas id="notesChart" style="display: none;"></canvas>
+				</div>
+			</div>
+			<div class="bg-white shadow p-4 sm:p-6 xl:p-8 ">
+				<div class="mb-4 flex items-center justify-between">
+					<div>
+						<h3 class="text-xl font-bold text-gray-900 mb-1">{{"Latest Burned Notes" | trans}}</h3>
+						<span class="text-xs font-normal text-gray-500">{{"This is a list of latest Burned Notes" | trans}}</span>
+					</div>
+					<div class="flex-shrink-0">
+						<a href="{{ path('app_notes_logs')}}" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 p-2">{{"View all" | trans}}</a>
+					</div>
+				</div>
+				<div class="flex flex-col mt-8">
+					<div class="overflow-x-auto ">
+						<div class="align-middle inline-block min-w-full">
+							<div class="shadow overflow-hidden">
+								<table class="min-w-full divide-y divide-gray-200 border border-gray-100">
+									<thead class="bg-gray-50">
+										<tr>
+											<th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+												{{"Title" | trans}}
+											</th>
+
+
+										</tr>
+									</thead>
+									<tbody class="bg-white">
+										{% for log in logs %}
+											<tr>
+												<td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
+													{{ log.noteTitle | u.truncate(50, '...')}}
+													<div class="text-gray-500 text-xs">
+														{{"Deleted At" | trans}}
+														{{ log.deletedAt|format_datetime(pattern='MMMM d, y HH:mm:ss', locale=app.request.locale) }}
+													</div>
+												</td>
+
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="mt-4 w-full grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
+			<div class="bg-gradient-to-br from-blue-50 to-white p-6  border border-blue-100 shadow-sm hover:shadow-md transition-all">
+				<div class="flex items-center gap-4">
+					<div class="p-3 bg-blue-100/20 rounded-full">
+						
+                  <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewbox="0 0 24 24">
+							<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+						</svg>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-500">{{"Monthly Created" | trans}}</p>
+						<p class="text-2xl font-semibold text-gray-800">{{currentMonthNoteCount}}</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Monthly Burned -->
+			<div class="bg-gradient-to-br from-red-50 to-white p-6  border border-red-100 shadow-sm hover:shadow-md transition-all">
+				<div class="flex items-center gap-4">
+					<div class="p-3 bg-red-100/20 rounded-full">
+						<svg class="w-6 h-6 text-red-600" fill="currentColor" viewbox="0 0 24 24">
+							<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+						</svg>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-500">{{"Monthly Burned" | trans}}</p>
+						<p class="text-2xl font-semibold text-gray-800">{{burnedNotesCurrentMonth}}</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Total Notes -->
+			<div class="bg-gradient-to-br from-green-50 to-white p-6  border border-green-100 shadow-sm hover:shadow-md transition-all">
+				<div class="flex items-center gap-4">
+					<div class="p-3 bg-green-100/20 rounded-full">
+						<svg class="w-6 h-6 text-green-600" fill="currentColor" viewbox="0 0 24 24">
+							<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+						</svg>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-500">{{"Total Created" | trans}}</p>
+						<p class="text-2xl font-semibold text-gray-800">{{totalnotes}}</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Total Burned -->
+			<div class="bg-gradient-to-br from-purple-50 to-white p-6  border border-purple-100 shadow-sm hover:shadow-md transition-all">
+				<div class="flex items-center gap-4">
+					<div class="p-3 bg-purple-100/20 rounded-full">
+						<svg class="w-6 h-6 text-purple-600" fill="currentColor" viewbox="0 0 24 24">
+							<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+						</svg>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-500">{{"Total Burned"  | trans}}</p>
+						<p class="text-2xl font-semibold text-gray-800">{{totalBurned}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="grid grid-cols-1 2xl:grid-cols-2 xl:gap-4 my-4">
+			<div class="bg-white shadow mb-4 p-4 sm:p-6 h-full">
+				<div class="flex items-center justify-between mb-4">
+					<h3 class="text-xl font-bold leading-none text-gray-900">{{"5 latest active notes" | trans}}</h3>
+					<a href="{{ path('app_notes')}}" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 inline-flex items-center p-2">
+						{{"View all" | trans}}
+					</a>
+				</div>
+				<div class="flow-root">
+					<ul role="list" class="divide-y divide-gray-200">
+               {% for note in last5NotesNotBurned %}
+						<li class="py-3 sm:py-4">
+							<div class="flex items-center space-x-4">
+							
+								<div class="flex-1 min-w-0">
+									<p class="text-sm font-medium text-gray-900">
+										{{ note.title | u.truncate(30,'...')}}
+									</p>
+									<p class="text-sm text-gray-500 truncate">
+										<a href="javascript:;">[{{"Note protected" | trans}}]</a>
+									</p>
+								</div>
+								<div class="inline-flex items-center text-base font-semibold text-gray-900">
+									<!-- View Button -->
+										<a href="{{ path('app_notes_view', { slug: note.slug }) }}" class="inline-flex items-center px-3 py-1.5  bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all duration-200 group text-xs font-medium shadow-xs border border-blue-100">
+											<svg class="w-4 h-4 mr-1.5" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z"/>
+											</svg>
+											<span>{{ 'View'|trans }}</span>
+										</a>
+
+										<!-- Edit Button -->
+										<a href="{{ path('app_notes_update', { slug: note.slug }) }}" class="inline-flex items-center px-3 py-1.5  bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all duration-200 group text-xs font-medium shadow-xs border border-emerald-100">
+											<svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+												<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 5V4a1 1 0 0 0-1-1H8.914a1 1 0 0 0-.707.293L4.293 7.207A1 1 0 0 0 4 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5M9 3v4a1 1 0 0 1-1 1H4m11.383.772 2.745 2.746m1.215-3.906a2.089 2.089 0 0 1 0 2.953l-6.65 6.646L9 17.95l.739-3.692 6.646-6.646a2.087 2.087 0 0 1 2.958 0Z"/>
+											</svg>
+											<span>{{ 'Edit'|trans }}</span>
+										</a>
+								</div>
+							</div>
+						</li>
+                  {% endfor %}
+						
+					</ul>
+				</div>
+			</div>
+			<div class="bg-white shadow p-4 sm:p-6 xl:p-6 ">
+				<div class="flex items-center justify-between mb-4">
+                  <h3 class="text-xl font-bold leading-none text-gray-900">{{ 'Payment history'|trans }}</h3>
+                     <a href="{{ path('app_client_payments')}}" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 inline-flex items-center p-2">
+                        {{"View all" | trans}}
+                     </a>
+				   </div>
+				<div class="block w-full overflow-x-auto">
+					<table class="items-center w-full bg-transparent border-collapse">
+						<thead>
+							<tr>
+								<th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap"> {{ 'Subscription Plan' | trans }}</th>
+								<th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap"> {{ 'Amount' | trans }}</th>
+								<th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap min-w-140-px"></th>
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-gray-100">
+
+                   {% for payment in payments %}
+							<tr class="text-gray-500">
+								<th class="border-t-0 px-4 align-middle text-sm font-normal whitespace-nowrap p-4 text-left">
+                        <div class="text-sm font-medium text-gray-900">{{ payment.subscriptionPlan.name | trans }}</div>
+                        </th>
+								<td class="border-t-0 px-4 align-middle text-xs font-medium text-gray-900 whitespace-nowrap p-4">
+                        {{ payment.amount | format_number(locale=app.request.locale) }} {{ payment.currency }}
+                        </td>
+								 <td class="px-6 py-4 whitespace-nowrap text-right">
+                            {% if payment.status == 'succeeded' %}
+                              
+                                <a href="{{ path('payment_invoice', {slug: payment.slug}) }}" class="inline-flex items-center px-3 py-1.5  bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all duration-200 group text-xs font-medium shadow-xs border border-emerald-100">
+                                 <svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 17v-5h1.5a1.5 1.5 0 1 1 0 3H5m12 2v-5h2m-2 3h2M5 10V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1v6M5 19v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1M10 3v4a1 1 0 0 1-1 1H5m6 4v5h1.375A1.627 1.627 0 0 0 14 15.375v-1.75A1.627 1.627 0 0 0 12.375 12H11Z"/>
+                                 </svg>
+
+											<span> {{ 'Show Invoice' | trans }}</span>
+										</a>
+                            {% endif %}
+                            </td>
+							</tr>
+							 {% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+{% endblock %}
+{% block javascripts %}
+	{{ parent()}}
+	<script src="{{ asset('template/js/chartjs.min.js')}}"></script>
+	<script src="{{ asset('build/chart.js') }}"></script>
 {% endblock %}
