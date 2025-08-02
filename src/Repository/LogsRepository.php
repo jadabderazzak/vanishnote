@@ -64,4 +64,20 @@ public function findAllLogsByUserOrderedDesc(User $user): array
         ->getQuery()
         ->getResult();
 }
+/**
+     * Retrieves all Logs with their related Note and User entities to avoid the N+1 problem.
+     *
+     * @return Logs[] Returns an array of Logs objects
+     */
+    public function getAllLogs(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->leftJoin('l.note', 'n')
+            ->leftJoin('l.user','u')
+            ->leftJoin('l.logsIps','lip')
+            ->addSelect('n','u','lip')
+            ->orderBy('l.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

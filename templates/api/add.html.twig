@@ -3,7 +3,7 @@
 {% block title %}{{ (update ? 'Edit API Credentials' : 'Add New API Credentials') | trans }}{% endblock %}
 
 {% block body %}
-<div class="w-full mx-auto p-8 bg-white shadow-md border border-gray-100">
+<div class="w-full mx-auto p-8 bg-white  border border-gray-100">
     <div class="text-center mb-8">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
@@ -11,7 +11,7 @@
         <h1 class="text-2xl font-bold text-gray-800 mt-4">{{ (update ? 'Edit API Credentials' : 'Add New API Credentials') | trans }}</h1>
         <p class="text-gray-500 mt-2">{{ (update ? 'Update API credentials' : 'Fill in the details to add new API credentials') | trans }}</p>
     </div>
-
+  <div class="bg-gray-50 p-6 shadow-sm">
     {{ form_start(form) }}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="space-y-6">
@@ -82,5 +82,6 @@
             </button>
         </div>
     {{ form_end(form) }}
+</div>
 </div>
 {% endblock %}

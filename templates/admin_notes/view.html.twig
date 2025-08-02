@@ -1,0 +1,255 @@
+{# templates/notes/view.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ note.title }}
+	|
+	{{ 'Note Details'|trans }}
+{% endblock %}
+
+{% block body %}
+
+	<div
+		class="w-full mx-auto">
+		<!-- Note Card -->
+		<div class="bg-white shadow-sm  overflow-hidden mb-8">
+			<div class="py-5 bg-gray-50">
+
+				<div class="flex flex-col md:flex-row justify-center  items-center gap-2">
+					<button data-modal-target="burn-note-modal" data-modal-toggle="burn-note-modal" class="flex w-full w-[200px] justify-center items-center space-x-2 px-5 py-2 bg-red-500 hover:bg-red-700  font-thin text-white rounded-sm transition-all">
+
+						<svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.122 17.645a7.185 7.185 0 0 1-2.656 2.495 7.06 7.06 0 0 1-3.52.853 6.617 6.617 0 0 1-3.306-.718 6.73 6.73 0 0 1-2.54-2.266c-2.672-4.57.287-8.846.887-9.668A4.448 4.448 0 0 0 8.07 6.31 4.49 4.49 0 0 0 7.997 4c1.284.965 6.43 3.258 5.525 10.631 1.496-1.136 2.7-3.046 2.846-6.216 1.43 1.061 3.985 5.462 1.754 9.23Z"/>
+						</svg>
+						<span class="text-sm font-thin tracking-wide">{{ 'Burn This Note'|trans }}</span>
+					</button>
+					<a href="{{path('app_admin_clients_view',{slug: note.client_slug})}}" class="flex w-[200px] justify-center items-center space-x-2 px-5 py-2 bg-trash hover:bg-trash_bold  font-thin text-white rounded-sm transition-all">
+
+						<svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M10 19H5a1 1 0 0 1-1-1v-1a3 3 0 0 1 3-3h2m10 1a3 3 0 0 1-3 3m3-3a3 3 0 0 0-3-3m3 3h1m-4 3a3 3 0 0 1-3-3m3 3v1m-3-4a3 3 0 0 1 3-3m-3 3h-1m4-3v-1m-2.121 1.879-.707-.707m5.656 5.656-.707-.707m-4.242 0-.707.707m5.656-5.656-.707.707M12 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+						</svg>
+
+						<span class="text-sm font-thin tracking-wide">{{ 'Owner'|trans }}</span>
+					</a>
+					<button data-modal-target="block-client-modal" data-modal-toggle="block-client-modal" class="flex w-[200px] justify-center items-center space-x-2 px-5 py-2 bg-red-500 hover:bg-red-600  font-thin text-white rounded-sm transition-all">
+
+						<svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m6 6 12 12m3-6a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+						</svg>
+						<span class="text-sm font-thin tracking-wide">{{ 'Block'|trans }}</span>
+					</button>
+
+				</div>
+			</div>
+
+			<div class="px-6 pb-4 bg-gray-50 border-b border-gray-200 flex flex-col md:flex-row justify-start md:justify-between items-center gap-2">
+				<h1 class="text-xl font-bold text-gray-900">{{ note.title }}</h1>
+			</div>
+
+
+			<!-- Block Client Modal -->
+			<div id="block-client-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-900 bg-opacity-50">
+				<div class="relative p-4 w-full max-w-md max-h-full">
+					<div class="relative bg-white rounded-lg shadow">
+						<button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="block-client-modal">
+							<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 14 14">
+								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+							</svg>
+							<span class="sr-only">{{ 'Close modal' | trans }}</span>
+						</button>
+						<div class="p-6 text-center">
+							<svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 20 20">
+								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+							</svg>
+							<h3 class="mb-4 text-lg font-normal text-gray-700">{{ 'Are you sure you want to block this client?' | trans }}</h3>
+							<p class="mb-6 text-sm text-gray-500">{{ 'Blocking will prevent the client from accessing the system.' | trans }}</p>
+							<div class="flex justify-center space-x-4">
+								<a href="{{ path('app_admin_client_access_block', {slug : note.client_slug})}}" data-modal-hide="block-client-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg border border-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 transition-colors">
+									{{ 'Yes, block access' | trans }}
+								</a>
+								<button data-modal-hide="block-client-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 rounded-lg border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 transition-colors">
+									{{ 'No, cancel' | trans }}
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Burn Note Modal -->
+			<div id="burn-note-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-900 bg-opacity-50">
+				<div class="relative p-4 w-full max-w-md max-h-full">
+					<div class="relative bg-white rounded-lg shadow">
+						<button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="burn-note-modal">
+							<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 14 14">
+								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+							</svg>
+							<span class="sr-only">{{ 'Close modal' | trans }}</span>
+						</button>
+						<div class="p-6 text-center">
+							<svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 20 20">
+								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+							</svg>
+							<h3 class="mb-4 text-lg font-normal text-gray-700">{{ 'Are you sure you want to burn this Note?' | trans }}</h3>
+							<p class="mb-6 text-sm text-gray-500">{{ 'Burning is a permanent action and the note will be lost forever.' | trans }}</p>
+							<div class="flex justify-center space-x-4">
+								<a href="{{ path('app_admin_notes_burn', {slug : note.slug})}}" data-modal-hide="burn-note-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg border border-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 transition-colors">
+									{{ 'Yes, burn this note' | trans }}
+								</a>
+								<button data-modal-hide="burn-note-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 rounded-lg border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 transition-colors">
+									{{ 'No, cancel' | trans }}
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Metadata -->
+			<div class="px-6 py-4 border-b border-gray-200">
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+					<div class="flex items-center">
+						<svg class="flex-shrink-0 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+							<path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+						</svg>
+						<span>
+							<span class="font-medium">{{ 'Created'|trans }}:</span>
+							{{ note.createdAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+
+						</div>
+						<div class="flex items-center">
+							<svg class="flex-shrink-0 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+								<path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+							</svg>
+							<span>
+								<span class="font-medium">{{ 'Last Updated'|trans }}:</span>
+
+								{{ note.updatedAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+							</span>
+						</div>
+						<div class="flex items-center">
+							<svg class="flex-shrink-0 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+								<path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"/>
+							</svg>
+							<span>
+								<span class="font-medium">{{ 'Characters'|trans }}:</span>
+								{{ note.characterCount|default(0) }}</span>
+						</div>
+						{% if note.expirationDate %}
+							<div class="flex items-center">
+								<svg class="flex-shrink-0 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+								</svg>
+								<span>
+									<span class="font-medium">{{ 'Expires'|trans }}:</span>
+
+									{{ note.expirationDate ? note.expirationDate|format_datetime(pattern='MMMM d, y HH:mm:ss', locale=app.request.locale) : '-' }}</span>
+							</div>
+						{% endif %}
+
+						{% if note.detetionDate %}
+							<div class="flex items-center">
+								<svg class="flex-shrink-0 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+								</svg>
+								<span>
+									<span class="font-medium">{{ 'Deleted At'|trans }}:</span>
+
+									{{ note.detetionDate ? note.detetionDate|format_datetime(pattern='MMMM d, y', locale=app.request.locale) : '-' }}</span>
+							</div>
+						{% endif %}
+
+						{% if note.burning %}
+							<div class="flex items-center">
+								<svg class="flex-shrink-0 mr-2 h-5 w-5 text-red-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewbox="0 0 24 24">
+									<path d="M8.597 3.2A1 1 0 0 0 7.04 4.289a3.49 3.49 0 0 1 .057 1.795 3.448 3.448 0 0 1-.84 1.575.999.999 0 0 0-.077.094c-.596.817-3.96 5.6-.941 10.762l.03.049a7.73 7.73 0 0 0 2.917 2.602 7.617 7.617 0 0 0 3.772.829 8.06 8.06 0 0 0 3.986-.975 8.185 8.185 0 0 0 3.04-2.864c1.301-2.2 1.184-4.556.588-6.441-.583-1.848-1.68-3.414-2.607-4.102a1 1 0 0 0-1.594.757c-.067 1.431-.363 2.551-.794 3.431-.222-2.407-1.127-4.196-2.224-5.524-1.147-1.39-2.564-2.3-3.323-2.788a8.487 8.487 0 0 1-.432-.287Z"/>
+								</svg>
+								<span>
+									<span class="font-medium">{{ 'Burn After Reading'|trans }}:</span>
+									{{ note.burning | trans}}</span>
+							</div>
+						{% endif %}
+						{% if note.password %}
+							<div class="flex items-center">
+
+								<svg class="flex-shrink-0 mr-2 h-5 w-5 text-trash_bold" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewbox="0 0 24 24">
+									<path fill-rule="evenodd" d="M8 10V7a4 4 0 1 1 8 0v3h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1Zm2-3a2 2 0 1 1 4 0v3h-4V7Zm2 6a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Z" clip-rule="evenodd"/>
+								</svg>
+
+								<span>
+									<span class="font-medium">{{ 'Password protected'|trans }}</span>
+								</span>
+							</div>
+						{% else %}
+							<div class="flex items-center">
+
+								<svg class="flex-shrink-0 mr-2 h-5 w-5 text-trash_bold" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewbox="0 0 24 24">
+									<path fill-rule="evenodd" d="M15 7a2 2 0 1 1 4 0v4a1 1 0 1 0 2 0V7a4 4 0 0 0-8 0v3H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2V7Zm-5 6a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Z" clip-rule="evenodd"/>
+								</svg>
+
+
+								<span>
+									<span class="font-medium">{{ 'No Password detected'|trans }}</span>
+								</span>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+
+				<!-- Content -->
+				<div class="p-6 prose max-w-none whitespace-pre-line tracking-widest leading-8">
+					{{ note.content  }}
+				</div>
+			</div>
+
+			<!-- Attachments -->
+			{% if attachments|length > 0 %}
+				<div class="bg-white shadow-sm  overflow-hidden">
+					<div class="px-6 py-5 bg-gray-50 border-b border-gray-200">
+						<h2 class="text-lg font-medium text-gray-900">{{ 'Attachments'|trans }}
+							({{ attachments|length }})</h2>
+					</div>
+					<div class="divide-y divide-gray-200">
+						{% for attachment in attachments %}
+							<div class="p-4 hover:bg-gray-50 transition-colors duration-150 flex items-center space-x-4">
+
+								<div class="flex-1 min-w-0">
+									<p class="text-sm font-medium text-gray-900 truncate">{{ attachment.filename }}</p>
+									<p class="text-sm text-gray-500">{{ attachment.mimeType }}
+										•
+										{{ (attachment.size / 1024)|number_format(1) }}
+										KB</p>
+									<p class="text-sm text-gray-400">{{ attachment.uploadedAt ? attachment.uploadedAt|date('d/m/Y H:i') : '' }}</p>
+								</div>
+								<div>
+									<a href="{{ path('app_attachment_download', { slug: attachment.slug }) }}" target="_blank" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-trash_bold bg-gray-100 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-trash">
+										{{ 'Download'|trans }}
+									</a>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+
+			<!-- Burn After Reading -->
+			{% if note.burnAfterReading is defined and note.burnAfterReading %}
+				<div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-md">
+					<div class="flex">
+						<div class="flex-shrink-0">
+							<svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+								<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+							</svg>
+						</div>
+						<div class="ml-3">
+							<h3 class="text-sm font-medium text-yellow-800">{{ 'Important'|trans }}</h3>
+							<div class="mt-2 text-sm text-yellow-700">
+								<p>{{ 'This note is set to "Burn After Reading". It will be automatically deleted after being viewed once.'|trans }}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+
+		</div>
+	{% endblock %}

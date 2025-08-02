@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="w-full mx-auto ">
-    <div class="bg-white shadow-md overflow-hidden">
+    <div class="bg-gray-50  shadow-md overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-start md:justify-between items-start md:items-center gap-4">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800">{{ 'API Credentials' | trans }}</h1>
@@ -58,7 +58,7 @@
                         {% for credential in credentials %}
                         <tr class="hover:bg-gray-50 transition-colors duration-150">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ credential.service }}</div>
+                                <div class="text-sm font-medium text-gray-900">{{ credential.service | capitalize}}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-500 font-mono truncate max-w-xs">{{ credential.secretKeyEncrypted ? '••••••••' ~ credential.secretKeyEncrypted|slice(-4) : '-' | trans }}</div>

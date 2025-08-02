@@ -32,13 +32,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class NotesController extends AbstractController
 {
     /**
-     * Translator service for translating user-facing messages.
+     * Constructor.
+     *
+     * @param TranslatorInterface $translator Translator service for translating user-facing messages.
+     * @param EntityManagerInterface $manager Doctrine entity manager for database operations.
+     * @param Filesystem $filesystem Service for filesystem operations.
+     * @param AttachementsRepository $repoAttachment Repository for managing attachments.
      */
-    public function __construct(private readonly TranslatorInterface $translator,
-      private readonly EntityManagerInterface $manager,
-       private readonly Filesystem $filesystem,
-       private readonly AttachementsRepository $repoAttachment)
-    {}
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly EntityManagerInterface $manager,
+        private readonly Filesystem $filesystem,
+        private readonly AttachementsRepository $repoAttachment
+    ) {}
 
 
 

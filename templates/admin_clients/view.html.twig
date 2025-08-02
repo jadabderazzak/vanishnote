@@ -1,0 +1,330 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ client.name }}
+	|
+	{{ 'Client Profile' | trans }}
+{% endblock %}
+
+{% block body %}
+	<div
+		class="w-full bg-gray-50 mx-auto px-4 sm:px-6 lg:px-8 py-8">
+		<!-- Profile Header -->
+		<div class="flex flex-col md:flex-row items-start md:items-center gap-8 mb-8">
+			<div class="hidden md:block">
+				<div class="w-32 h-32 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 text-5xl font-light">
+					{{ client.name|first|upper }}
+				</div>
+			</div>
+			<div class="flex-1">
+				<div class="flex flex-col md:flex-row md:items-center w-full md:justify-between gap-4">
+					<div>
+						<h1 class="text-2xl font-semibold text-gray-900">{{ client.name }}</h1>
+						{% if client.company %}
+							<p class="text-gray-600 mt-1">{{ client.company }}</p>
+						{% endif %}
+						<div class="flex flex-row justifystart md:justify-center items-center gap-4 mt-2">
+							<span class="px-3 py-1 rounded-md text-xs font-medium
+							{% if client.isCompany %}bg-blue-50 text-blue-700 border border-blue-100{% else %}bg-purple-50 text-purple-700 border border-purple-100{% endif %}">
+								{% if client.isCompany %}
+									{{ 'Company' | trans }}
+								{% else %}
+									{{ 'Individual' | trans }}
+								{% endif %}
+							</span>
+                           
+							<span class="px-3 py-1 rounded-md text-xs font-medium bg-gray-50 text-gray-700 border border-gray-200">
+								{{ notesCount }}
+								{{ 'Notes' | trans }}
+							</span>
+                             {% set colorStatus = client.user.hasAccess ? "bg-green-500" :"bg-red-400" %}
+                            <span class="px-3 py-1 rounded-md text-xs font-medium {{colorStatus}} text-white border border-white">
+								
+								{{ (client.user.hasAccess ? "Active" : "Blocked") | trans }}
+							</span>
+						</div>
+					</div>
+
+				
+				<div class="border border-gray-200 rounded-lg bg-white shadow-sm p-5">
+					<div class="flex items-center justify-between">
+						<div>
+							<p class="text-sm text-gray-500">{{ 'Total Amount Paid' | trans }}</p>
+							<p class="mt-1 text-2xl font-semibold text-gray-900">
+								{{ amountPayed|number_format(2, '.', ',') }} <span class="text-green-600">{{ currency|default('USD') }}</span>
+							</p>
+						</div>
+					
+					</div>
+				</div>
+		
+
+				</div>
+
+				<div class="mt-6 grid grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+					<div>
+						<p class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'Contact' | trans }}</p>
+						<p class="mt-1 text-sm text-gray-900">{{ client.phone ?? 'N/A' | trans }}</p>
+					</div>
+
+					{% if client.country %}
+						<div>
+							<p class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'Country' | trans }}</p>
+							<p class="mt-1 text-sm text-gray-900">{{ client.country.name }}</p>
+						</div>
+					{% endif %}
+
+					{% if client.isCompany and client.vatNumber %}
+						<div>
+							<p class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'VAT Number' | trans }}</p>
+							<p class="mt-1 text-sm text-gray-900">{{ client.vatNumber }}</p>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+
+		<!-- Main Content -->
+		<div
+			class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+			<!-- Left Column -->
+			<div
+				class="lg:col-span-2 space-y-6">
+				<!-- Company Details Card -->
+				{% if client.isCompany %}
+					<div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+						<div class="px-5 py-4 border-b border-gray-200">
+							<h2 class="text-lg font-medium text-gray-900 flex items-center">
+								<svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+								</svg>
+								{{ 'Company Details' | trans }}
+							</h2>
+						</div>
+						<div class="px-5 py-4">
+							<div class="space-y-4">
+								<div>
+									<p class="text-sm font-medium text-gray-500">{{ 'Address' | trans }}</p>
+									<p class="mt-1 text-sm text-gray-900">{{ client.companyAdress ?? 'N/A' | trans }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endif %}
+
+				<!-- Subscription Card -->
+				<div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+					<div class="px-5 py-4 border-b border-gray-200">
+						<div class="flex items-center justify-between">
+							<h2 class="text-lg font-medium text-gray-900 flex items-center">
+								<svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+								</svg>
+								{{ 'Subscription' | trans }}
+							</h2>
+
+							{% if subscriptions|length > 0 %}
+								{% set subscription = subscriptions|first %}
+								<span class="px-2.5 py-0.5 rounded-full text-xs font-medium
+																				                    {{ subscription.status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+									{{ subscription.status ? 'Active' | trans : 'Inactive' | trans }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="px-5 py-4">
+						{% if subscriptions|length > 0 %}
+							{% set subscription = subscriptions|first %}
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+								<div>
+									<p class="text-sm font-medium text-gray-500">{{ 'Plan Name' | trans }}</p>
+									<p class="mt-1 text-sm text-gray-900">{{ subscription.subscriptionPlan.name }}</p>
+								</div>
+								<div>
+									<p class="text-sm font-medium text-gray-500">{{ 'Started' | trans }}</p>
+									<p class="mt-1 text-sm text-gray-900">
+										{{ subscription.startedAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+									</p>
+								</div>
+								<div>
+									<p class="text-sm font-medium text-gray-500">{{ 'Expires' | trans }}</p>
+									<p class="mt-1 text-sm text-gray-900">
+										{% if subscription.endsAt %}
+											{{ subscription.endsAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+										{% else %}
+											{{ 'N/A' | trans }}
+										{% endif %}
+									</p>
+								</div>
+							</div>
+						{% else %}
+							<div class="text-center py-6">
+								<svg class="mx-auto h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+								</svg>
+								<h3 class="mt-2 text-sm font-medium text-gray-900">{{ 'No subscription' | trans }}</h3>
+								<p class="mt-1 text-sm text-gray-500">{{ 'This client has no active subscription' | trans }}</p>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+
+			</div>
+
+			<!-- Right Column -->
+			<div
+				class="space-y-6">
+				<!-- Recent Payments -->
+				<div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+					<div class="px-5 py-4 border-b border-gray-200">
+						<h2 class="text-lg font-medium text-gray-900 flex items-center">
+							<svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+							</svg>
+							{{ 'Recent Payments' | trans }}
+						</h2>
+					</div>
+					<div class="divide-y divide-gray-200">
+						{% if client.user.payments|length > 0 %}
+							{% for payment in client.user.payments|slice(0, 3) %}
+								<div class="px-5 py-3">
+									<div class="flex items-center justify-between">
+										<div>
+											<p class="text-sm font-medium text-gray-900">{{ payment.subscriptionPlan.name | trans}}</p>
+											<p class="text-xs text-gray-500 mt-1">
+												{{ payment.createdAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+											</p>
+										</div>
+										<div class="text-right">
+											<p class="text-sm font-medium text-gray-900">
+												{{ payment.amount|format_number(locale=app.request.locale) }}
+												{{ payment.currency }}
+											</p>
+											<span class="mt-1 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
+                                            {% if payment.status == 'completed' or payment.status == 'succeeded' %}bg-green-100 text-green-800
+                                            {% elseif payment.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                            {% else %}bg-red-100 text-red-800{% endif %}">
+												{{ payment.status |trans | capitalize }}
+											</span>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+							{% if client.user.payments|length > 3 %}
+								<div class="px-5 py-3 text-center border-t border-gray-200">
+									<a href="#" class="text-sm font-medium text-blue-600 hover:text-blue-500">
+										{{ 'View all payments' | trans }}
+										→
+									</a>
+								</div>
+							{% endif %}
+						{% else %}
+							<div class="px-5 py-6 text-center">
+								<svg class="mx-auto h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+								</svg>
+								<h3 class="mt-2 text-sm font-medium text-gray-900">{{ 'No payments' | trans }}</h3>
+								<p class="mt-1 text-sm text-gray-500">{{ 'This client has no payment history' | trans }}</p>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+
+
+				<div class="w-full text-center">
+
+                    {% if client.user.hasAccess %}
+					<button data-modal-target="block-client-modal" data-modal-toggle="block-client-modal" class="inline-flex justify-center items-center px-3 py-2.5 w-full bg-red-500 text-white hover:bg-red-600 transition-all duration-200 group text-md font-semibol shadow-xs border border-red-100">
+
+						<svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m6 6 12 12m3-6a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+						</svg>
+
+						<span>{{ 'Block Access' | trans }}</span>
+					</button>
+
+                     {% else %}
+                    <button data-modal-target="allow-client-modal" data-modal-toggle="allow-client-modal" class="inline-flex justify-center items-center px-3 py-2.5 w-full bg-trash text-white hover:bg-trash_bold transition-all duration-200 group text-md font-semibol shadow-xs border border-trash">
+                    
+                        <svg class="w-54 h-5 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8.032 12 1.984 1.984 4.96-4.96m4.55 5.272.893-.893a1.984 1.984 0 0 0 0-2.806l-.893-.893a1.984 1.984 0 0 1-.581-1.403V7.04a1.984 1.984 0 0 0-1.984-1.984h-1.262a1.983 1.983 0 0 1-1.403-.581l-.893-.893a1.984 1.984 0 0 0-2.806 0l-.893.893a1.984 1.984 0 0 1-1.403.581H7.04A1.984 1.984 0 0 0 5.055 7.04v1.262c0 .527-.209 1.031-.581 1.403l-.893.893a1.984 1.984 0 0 0 0 2.806l.893.893c.372.372.581.876.581 1.403v1.262a1.984 1.984 0 0 0 1.984 1.984h1.262c.527 0 1.031.209 1.403.581l.893.893a1.984 1.984 0 0 0 2.806 0l.893-.893a1.985 1.985 0 0 1 1.403-.581h1.262a1.984 1.984 0 0 0 1.984-1.984V15.7c0-.527.209-1.031.581-1.403Z"/>
+                        </svg>
+
+                        <span>{{'Allow Access'|trans }}</span>
+                    </button>
+                    {% endif %}
+
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Block Client Modal -->
+	<div id="block-client-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-900 bg-opacity-50">
+		<div class="relative p-4 w-full max-w-md max-h-full">
+			<div class="relative bg-white rounded-lg shadow">
+				<button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="block-client-modal">
+					<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 14 14">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+					</svg>
+					<span class="sr-only">{{ 'Close modal' | trans }}</span>
+				</button>
+				<div class="p-6 text-center">
+					<svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 20 20">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+					</svg>
+					<h3 class="mb-4 text-lg font-normal text-gray-700">{{ 'Are you sure you want to block this client?' | trans }}</h3>
+					<p class="mb-6 text-sm text-gray-500">{{ 'Blocking will prevent the client from accessing the system.' | trans }}</p>
+					<div class="flex justify-center space-x-4">
+						<a href="{{ path('app_admin_client_access_block', {slug : client.slug})}}" data-modal-hide="block-client-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg border border-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 transition-colors">
+							{{ 'Yes, block access' | trans }}
+						</a>
+						<button data-modal-hide="block-client-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 rounded-lg border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 transition-colors">
+                        {{ 'No, cancel' | trans }}
+                    </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+         <!-- Allow Client Modal -->
+<div id="allow-client-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-900 bg-opacity-50">
+<div class="relative p-4 w-full max-w-md max-h-full">
+    <div class="relative bg-white rounded-lg shadow">
+        <!-- Close button -->
+        <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="allow-client-modal">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+            </svg>
+            <span class="sr-only">{{ 'Close modal' | trans }}</span>
+        </button>
+
+        <!-- Modal content -->
+        <div class="p-6 text-center">
+            <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+            </svg>
+        <h3 class="mb-4 text-lg font-normal text-gray-700 text-wrap break-words max-w-md mx-auto">
+                {{ 'Are you sure you want to allow this client access again?' | trans }}
+            </h3>
+            <p class="mb-6 text-sm text-gray-500">
+                {{ 'Allowing access will let the client use the system again.' | trans }}
+            </p>
+            <div class="flex justify-center space-x-4">
+                    <a href="{{ path('app_admin_client_access_allow', {slug : client.slug})}}" data-modal-hide="allow-client-modal{{ client.id }}" type="button" class="px-5 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg border border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 transition-colors">
+                    {{ 'Yes, allow access' | trans }}
+                </a>
+                <button data-modal-hide="allow-client-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 rounded-lg border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 transition-colors">
+                    {{ 'No, cancel' | trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

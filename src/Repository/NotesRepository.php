@@ -286,4 +286,22 @@ public function countTotalBurnedNotesByUser(User $user): int
     }
 
 
+    /**
+     * Returns a list of notes that are not marked as burned.
+     *
+     * A note is considered "not burned" if the 'burned' field is either NULL or false.
+     *
+     * @return Notes[] Returns an array of non-burned Notes entities
+     */
+    public function findNotBurnedNotes(): array
+    {
+        return $this->createQueryBuilder('n')
+            ->where('n.burned IS NULL OR n.burned != :burned')
+            ->setParameter('burned', true)
+            ->orderBy('n.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
 }

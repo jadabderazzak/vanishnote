@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Payment;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Payment>
@@ -34,5 +35,20 @@ class PaymentRepository extends ServiceEntityRepository
 
         return (int) $result; // will return 0 if null
     }
+
+    public function getTotalAmountPaidByUser(User $user): float
+{
+    $qb = $this->createQueryBuilder('p')
+        ->select('SUM(p.amount)')
+        ->where('p.user = :user')
+        ->andWhere('p.status = :status')
+        ->setParameter('user', $user)
+        ->setParameter('status', 'succeeded');
+
+    $result = $qb->getQuery()->getSingleScalarResult();
+
+    return $result !== null ? (float) $result : 0.0;
+}
+
 
 }

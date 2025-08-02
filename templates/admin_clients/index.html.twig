@@ -1,0 +1,247 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'Clients' | trans }}
+{% endblock %}
+
+{% block body %}
+	<div
+		class="w-full mx-auto">
+		
+		<div class="bg-gray-50 shadow-md overflow-hidden">
+			<div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-start md:justify-between items-start md:items-center gap-4 w-full">
+				<div class="w-full">
+					<h1 class="text-xl font-bold text-gray-800">{{ 'Clients' | trans }}</h1>
+					<p class="text-gray-600 mt-1 text-sm">{{ 'View and manage your clients' | trans }}</p>
+				</div>
+				<div class="flex flex-row justify-between md:justify-end items-center gap-2 w-full">
+					<a href="{{ path('app_admin_clients_companies') }}" class="flex items-center space-x-2 px-5 py-2 bg-trash hover:bg-trash_bold  font-thin text-white rounded-sm transition-all">
+
+						<svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 4h12M6 4v16M6 4H5m13 0v16m0-16h1m-1 16H6m12 0h1M6 20H5M9 7h1v1H9V7Zm5 0h1v1h-1V7Zm-5 4h1v1H9v-1Zm5 0h1v1h-1v-1Zm-3 4h2a1 1 0 0 1 1 1v4h-4v-4a1 1 0 0 1 1-1Z"/>
+						</svg>
+
+						<span class="text-sm">{{ 'Show Companies'|trans }}</span>
+					</a>
+					<a href="{{ path('app_admin_clients_individuals') }}" class="flex items-center space-x-2 px-5 py-2 bg-blue-600 hover:bg-blue-700  font-thin text-white rounded-sm transition-all">
+
+						<svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M16 19h4a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-2m-2.236-4a3 3 0 1 0 0-4M3 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+						</svg>
+
+						<span class="text-sm">{{ 'Show Individuals'|trans }}</span>
+					</a>
+				</div>
+			</div>
+
+			{% if clients is empty %}
+				<div class="px-6 py-12 text-center">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+					</svg>
+					<h3 class="mt-2 text-lg font-medium text-gray-900">{{ 'No clients found' | trans }}</h3>
+					<p class="mt-1 text-gray-500">{{ 'Your clients will appear here.' | trans }}</p>
+
+				</div>
+			{% else %}
+				<div class="overflow-x-auto">
+					<table class="min-w-full divide-y divide-gray-200">
+						<thead class="bg-gray-50">
+							<tr>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Name' | trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Type of client' | trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Subscription Plans' | trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Phone' | trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Status' | trans }}
+								</th>
+								<th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+									{{ 'Actions' | trans }}
+								</th>
+							</tr>
+						</thead>
+						<tbody class="bg-white divide-y divide-gray-200">
+							{% for client in clients %}
+								<tr class="hover:bg-gray-50 transition-colors duration-150">
+									<td class="px-6 py-4 whitespace-nowrap">
+										<div class="text-sm font-medium text-gray-900">{{ client.name }}</div>
+										{% if client.company %}
+											<div class="text-sm text-gray-500">{{ client.company }}</div>
+										{% endif %}
+                                        <div class="text-sm text-gray-900">{{ client.country.name }}</div>
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap">
+										{% if client.isCompany %}
+											<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+												{{ 'Company' | trans }}
+											</span>
+										{% else %}
+											<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+												{{ 'Individual' | trans }}
+											</span>
+										{% endif %}
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap">
+										{% if client.user.subscriptions|length > 0 %}
+											<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{ client.user.subscriptions[0].subscriptionPlan.name ?? 'N/A' }}
+                                            </span>
+										{% else %}
+											<span>{{ 'No active subscription'|trans }}</span>
+										{% endif %}
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap">
+										<div class="text-sm text-gray-500">{{ client.phone ?? 'N/A' | trans }}</div>
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap">
+										{% if client.user.hasAccess %}
+											<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+												{{ 'Active' | trans }}
+											</span>
+										{% else %}
+											<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+												{{ 'Blocked' | trans }}
+											</span>
+										{% endif %}
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+										<div class="flex justify-end space-x-2">
+
+											<a href="{{ path('app_admin_clients_view',{slug :client.slug})}}" class="inline-flex items-center px-3 py-1.5  bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all duration-200 group text-xs font-medium shadow-xs border border-emerald-100">
+												<svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+													<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 5V4a1 1 0 0 0-1-1H8.914a1 1 0 0 0-.707.293L4.293 7.207A1 1 0 0 0 4 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5M9 3v4a1 1 0 0 1-1 1H4m11.383.772 2.745 2.746m1.215-3.906a2.089 2.089 0 0 1 0 2.953l-6.65 6.646L9 17.95l.739-3.692 6.646-6.646a2.087 2.087 0 0 1 2.958 0Z"/>
+												</svg>
+												<span>{{ 'View'|trans }}</span>
+											</a>
+                                            {% if client.user.hasAccess %}
+											<button data-modal-target="block-client-modal{{client.id}}" data-modal-toggle="block-client-modal{{client.id}}" class="inline-flex items-center px-3 py-1.5  bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200 group text-xs font-medium shadow-xs border border-red-100">
+											    <svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m6 6 12 12m3-6a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                </svg>
+												<span>{{'Block Access'|trans }}</span>
+											</button>
+                                            {% else %}
+                                            <button data-modal-target="allow-client-modal{{client.id}}" data-modal-toggle="allow-client-modal{{client.id}}" class="inline-flex items-center px-3 py-1.5  bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all duration-200 group text-xs font-medium shadow-xs border border-blue-100">
+											
+                                                <svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8.032 12 1.984 1.984 4.96-4.96m4.55 5.272.893-.893a1.984 1.984 0 0 0 0-2.806l-.893-.893a1.984 1.984 0 0 1-.581-1.403V7.04a1.984 1.984 0 0 0-1.984-1.984h-1.262a1.983 1.983 0 0 1-1.403-.581l-.893-.893a1.984 1.984 0 0 0-2.806 0l-.893.893a1.984 1.984 0 0 1-1.403.581H7.04A1.984 1.984 0 0 0 5.055 7.04v1.262c0 .527-.209 1.031-.581 1.403l-.893.893a1.984 1.984 0 0 0 0 2.806l.893.893c.372.372.581.876.581 1.403v1.262a1.984 1.984 0 0 0 1.984 1.984h1.262c.527 0 1.031.209 1.403.581l.893.893a1.984 1.984 0 0 0 2.806 0l.893-.893a1.985 1.985 0 0 1 1.403-.581h1.262a1.984 1.984 0 0 0 1.984-1.984V15.7c0-.527.209-1.031.581-1.403Z"/>
+                                                </svg>
+
+												<span>{{'Allow Access'|trans }}</span>
+											</button>
+                                            {% endif %}
+
+                                <!-- Block Client Modal -->
+                                <div id="block-client-modal{{client.id}}" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-900 bg-opacity-50">
+                                    <div class="relative p-4 w-full max-w-md max-h-full">
+                                        <div class="relative bg-white rounded-lg shadow">
+                                            <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="block-client-modal{{client.id}}">
+                                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 14 14">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                </svg>
+                                                <span class="sr-only">{{ 'Close modal' | trans }}</span>
+                                            </button>
+                                            <div class="p-6 text-center">
+                                                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 20 20">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                </svg>
+                                                <h3 class="mb-4 text-lg font-normal text-gray-700">{{ 'Are you sure you want to block this client?' | trans }}</h3>
+                                                <p class="mb-6 text-sm text-gray-500">{{ 'Blocking will prevent the client from accessing the system.' | trans }}</p>
+                                                <div class="flex justify-center space-x-4">
+                                                   	<a href="{{ path('app_admin_client_access_block', {slug : client.slug})}}" data-modal-hide="block-client-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg border border-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 transition-colors">
+                                                        {{ 'Yes, block Access' | trans }}
+                                                    </a>
+                                                   <button data-modal-hide="block-client-modal{{client.id}}" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 rounded-lg border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 transition-colors">
+                                                        {{ 'No, cancel' | trans }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+										</div>
+                                       <!-- Allow Client Modal -->
+                                <div id="allow-client-modal{{ client.id }}" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-900 bg-opacity-50">
+                                    <div class="relative p-4 w-full max-w-md max-h-full">
+                                        <div class="relative bg-white rounded-lg shadow">
+                                            <!-- Close button -->
+                                            <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="allow-client-modal{{ client.id }}">
+                                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                </svg>
+                                                <span class="sr-only">{{ 'Close modal' | trans }}</span>
+                                            </button>
+
+                                            <!-- Modal content -->
+                                            <div class="p-6 text-center">
+                                                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                </svg>
+                                            <h3 class="mb-4 text-lg font-normal text-gray-700 text-wrap break-words max-w-md mx-auto">
+                                                    {{ 'Are you sure you want to allow this client access again?' | trans }}
+                                                </h3>
+                                                <p class="mb-6 text-sm text-gray-500">
+                                                    {{ 'Allowing access will let the client use the system again.' | trans }}
+                                                </p>
+                                                <div class="flex justify-center space-x-4">
+                                                    	<a href="{{ path('app_admin_client_access_allow', {slug : client.slug})}}" data-modal-hide="allow-client-modal{{ client.id }}" type="button" class="px-5 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg border border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 transition-colors">
+                                                        {{ 'Yes, allow access' | trans }}
+                                                    </a>
+                                                    <button data-modal-hide="allow-client-modal{{ client.id }}" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 rounded-lg border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 transition-colors">
+                                                        {{ 'No, cancel' | trans }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
+				{# Pagination would go here if needed #}
+				{# <div class="px-6 py-4 border-t border-gray-200">
+				                {{ knp_pagination_render(clients) }}
+				            </div> #}
+			{% endif %}
+		</div>
+	</div>
+
+	{# Block Client Modal #}
+	<div id="block-client-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+		<div class="relative p-4 w-full max-w-md max-h-full">
+			<div class="relative bg-white rounded-lg shadow">
+				<button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="block-client-modal">
+					<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 14 14">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+					</svg>
+					<span class="sr-only">{{ 'Close modal' | trans }}</span>
+				</button>
+				<div class="p-4 md:p-5 text-center">
+					<svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 20 20">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+					</svg>
+					<h3 class="mb-5 text-lg font-normal text-gray-500">{{ 'Are you sure you want to block this client?' | trans }}</h3>
+					<button data-modal-hide="block-client-modal" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2">
+						{{ 'Yes, block access' | trans }}
+					</button>
+					<button data-modal-hide="block-client-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">
+						{{ 'No, cancel' | trans }}
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

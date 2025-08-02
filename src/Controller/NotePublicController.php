@@ -31,14 +31,22 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 final class NotePublicController extends AbstractController
 {
    /**
-     * Translator service for translating user-facing messages.
+     * Constructor.
+     *
+     * @param TranslatorInterface $translator Translator service for translating user-facing messages.
+     * @param EntityManagerInterface $manager Doctrine entity manager for database operations.
+     * @param Filesystem $filesystem Filesystem service for file handling operations.
+     * @param AttachementsRepository $repoAttachment Repository for managing attachments.
+     * @param LoggerInterface $logger Logger service for logging application messages.
      */
-    public function __construct(private readonly TranslatorInterface $translator,
-    private readonly EntityManagerInterface $manager,
-    private readonly Filesystem $filesystem,
-    private readonly AttachementsRepository $repoAttachment,
-    private readonly LoggerInterface $logger)
-    {}
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly EntityManagerInterface $manager,
+        private readonly Filesystem $filesystem,
+        private readonly AttachementsRepository $repoAttachment,
+        private readonly LoggerInterface $logger
+    ) {}
+
     #[Route('/note/public', name: 'app_note_public')]
     public function index(): Response
     {
