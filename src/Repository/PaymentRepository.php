@@ -218,5 +218,18 @@ public function getMonthlyPaymentsByYear(int $year): array
     return $months;
 }
 
+/**
+     * Returns the total revenue (chiffre d'affaires global)
+     *
+     * @return float
+     */
+    public function getTotalRevenue(): float
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('SUM(p.amount)')
+            ->where('p.status = :status')
+            ->setParameter('status', 'succeeded'); // ou 'paid', selon ta logique
 
+        return (float) $qb->getQuery()->getSingleScalarResult();
+    }
 }

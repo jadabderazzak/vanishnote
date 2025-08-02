@@ -1,94 +1,96 @@
 /**
- * This script initializes and renders a responsive line chart using Chart.js
- * to display monthly payment totals for a given year.
- * 
- * It fetches payment data from the backend endpoint `/dashboard/statistics`
- * with a query parameter `year` (default is the current year).
- * 
- * The chart is displayed only if:
- * - The container element with id "chartElement" exists,
- * - And the fetched data contains at least one payment value > 0.
- * 
- * UI elements controlled by this script:
- * - #chartLoading: a loading spinner shown while fetching data,
- * - #notesChart: the canvas element where the chart is drawn,
- * - #noChartData: a placeholder message shown if there is no data.
- * 
- * Chart.js options are configured for a clean, responsive line chart with
- * TailwindCSS-friendly colors and smooth animations.
+ * Enhanced Professional Payment Chart
+ * - Clean modern design
+ * - Smooth animations
+ * - Professional tooltips
+ * - No unnecessary elements
  */
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Select the main container that wraps the chart - exit if not found (chart not needed)
-    const chartElement = document.getElementById('chartElement');
-    if (!chartElement) return;
+    const chartElementAdmin = document.getElementById('chartElementAdmin');
+    if (!chartElementAdmin) return;
 
-    // Cache references to key DOM elements
     const chartCanvas = document.getElementById('notesChart');
     const loadingElement = document.getElementById('chartLoading');
-    const noDataElement = document.getElementById('noChartData');
+    
+    // Create gradient for chart line
+    const createGradient = (ctx) => {
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.3)'); // indigo-500
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0.05)');
+        return gradient;
+    };
 
-    // Determine the year to display data for (current year by default)
+    // Format currency tooltip
+    const formatCurrency = (value) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        }).format(value);
+    };
+
     const year = new Date().getFullYear();
 
-    // Fetch payment data for the selected year from backend API
-    fetch(`/dashboard/statistics?year=${year}`)
+    fetch(`/admin/dashboard/statistics?year=${year}`)
         .then(response => {
-            // Check if HTTP response status is OK (status 200-299)
             if (!response.ok) throw new Error('Network error');
-            // Parse response JSON body
             return response.json();
         })
         .then(apiData => {
-            // Find the dataset labeled "Payments" in the fetched data
-            const paymentsDataset = apiData.datasets.find(ds => ds.label === 'Payments');
-            // Check if the payments dataset contains at least one positive value
-            const hasData = paymentsDataset && paymentsDataset.data.some(value => value > 0);
-
-            // Hide loading spinner as data has arrived
+            const paymentsDataset = apiData.datasets.find(ds => 
+    ds.label === (window.translations?.payments) || ds.label === 'Payments'
+);
             loadingElement.style.display = 'none';
+            chartCanvas.style.display = 'block';
 
-            if (!hasData) {
-                // No data: show the "No data" placeholder and hide the canvas
-                noDataElement.classList.remove('hidden');
-                chartCanvas.style.display = 'none';
-                return;
-            } else {
-                // Data exists: hide the "No data" message and show the chart canvas
-                noDataElement.classList.add('hidden');
-                chartCanvas.style.display = 'block';
-            }
-
-            // Chart.js configuration object
-            const config = {
+            const ctx = chartCanvas.getContext('2d');
+            
+            new Chart(chartCanvas, {
                 type: 'line',
                 data: {
-                    labels: apiData.labels, // e.g. ['January', 'February', ...]
-                    datasets: [
-                        {
-                            label: 'Payments',      // Dataset label shown in tooltip and legend
-                            data: paymentsDataset.data,  // Array of payment amounts per month
-                            backgroundColor: 'rgba(58, 138, 192, 0.1)', // Light blue fill
-                            borderColor: 'rgba(58, 138, 192, 1)',       // Blue line
-                            borderWidth: 2,
-                            tension: 0.3,               // Smooth line curves
-                            pointBackgroundColor: 'rgba(58, 138, 192, 1)',
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            fill: true                  // Fill area under the line
-                        }
-                    ]
+                    labels: apiData.labels,
+                    datasets: [{
+                        label: window.translations?.monthlyPayments || 'Monthly Payments',
+                        data: paymentsDataset ? paymentsDataset.data : [],
+                        backgroundColor: createGradient(ctx),
+                        borderColor: 'rgba(99, 102, 241, 1)', // indigo-500
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: 'white',
+                        pointBorderColor: 'rgba(99, 102, 241, 1)',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        fill: true
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     layout: {
-                        padding: { top: 20, right: 20, left: 10, bottom: 10 }
+                        padding: {
+                            top: 20,
+                            right: 20,
+                            left: 10,
+                            bottom: 10
+                        }
                     },
                     plugins: {
-                        legend: { display: true },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#6B7280',
+                                font: {
+                                    family: "'Inter', sans-serif",
+                                    size: 13,
+                                    weight: '500'
+                                },
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
                         tooltip: {
-                            backgroundColor: '#111827',
+                            backgroundColor: 'rgba(17, 24, 39, 0.95)',
                             titleColor: '#F9FAFB',
                             bodyColor: '#E5E7EB',
                             borderColor: '#1F2937',
@@ -98,32 +100,38 @@ document.addEventListener('DOMContentLoaded', () => {
                             displayColors: true,
                             usePointStyle: true,
                             callbacks: {
-                                // Custom tooltip label formatting
-                                label: (context) => `${context.dataset.label}: ${context.formattedValue}`
+                                label: (context) => {
+                                    return `${context.dataset.label}: ${formatCurrency(context.raw)}`;
+                                }
                             }
                         }
                     },
                     scales: {
                         x: {
-                            grid: { display: false, drawBorder: false },
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
                             ticks: {
-                                color: '#6B7280', // Tailwind gray-500
-                                font: { family: "'Inter', sans-serif", size: 12 }
+                                color: '#9CA3AF',
+                                font: {
+                                    family: "'Inter', sans-serif",
+                                    size: 12
+                                }
                             }
                         },
                         y: {
                             beginAtZero: true,
                             grid: {
-                                color: '#F3F4F6', // Tailwind gray-100
+                                color: 'rgba(243, 244, 246, 0.5)',
                                 drawBorder: false,
                                 borderDash: [4],
                                 tickLength: 12
                             },
                             ticks: {
-                                color: '#6B7280',
+                                color: '#9CA3AF',
                                 padding: 8,
-                                // Show only integer ticks on Y axis
-                                callback: (value) => Number.isInteger(value) ? value : ''
+                                callback: (value) => formatCurrency(value)
                             }
                         }
                     },
@@ -132,26 +140,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         mode: 'index'
                     },
                     animation: {
-                        duration: 800,
+                        duration: 1000,
                         easing: 'easeOutQuart'
                     }
                 }
-            };
-
-            // Initialize the Chart.js chart instance on the canvas element
-            new Chart(chartCanvas, config);
+            });
         })
         .catch(error => {
-            // On error, log to console and display user-friendly message in loading element
             console.error('Error:', error);
-            loadingElement.innerHTML = `
-                <div class="p-4 bg-red-50 text-red-600 rounded text-center">
-                    <svg class="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    Error loading chart data
-                </div>
-            `;
+            if (loadingElement) {
+                loadingElement.innerHTML = `
+                    <div class="p-4 bg-red-50 text-red-600 rounded-lg text-center">
+                        <svg class="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <p class="font-medium">${window.translations?.dataLoadingError || 'Data loading error'}</p>
+                        <p class="text-sm mt-1">${window.translations?.networkError || error.message}</p>
+                    </div>
+                `;
+            }
         });
 });

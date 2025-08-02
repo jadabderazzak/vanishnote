@@ -43,16 +43,16 @@
 						<h3 class="text-xs font-normal text-gray-500 ">{{"Total payments received this week" | trans}}</h3>
 					</div>
 					<div class="ml-5 w-0 flex items-center justify-end flex-1 text-sm font-bold
-                  {% if weeklyPaymentStats.percentageGain is not null %}
-                        {% if weeklyPaymentStats.percentageGain >= 0 %}
-                           text-green-500
-                        {% else %}
-                           text-red-500
-                        {% endif %}
-                  {% else %}
-                        text-gray-400
-                  {% endif %}
-               ">
+						{% if weeklyPaymentStats.percentageGain is not null %}
+							{% if weeklyPaymentStats.percentageGain >= 0 %}
+								text-green-500
+							{% else %}
+								text-red-500
+							{% endif %}
+						{% else %}
+							text-gray-400
+						{% endif %}
+					">
 						{% if weeklyPaymentStats.percentageGain is not null %}
 							{{ weeklyPaymentStats.percentageGain|number_format(2, '.', ',') }}%
 
@@ -81,16 +81,16 @@
 						<h3 class="text-xs font-normal text-gray-500">{{"Total payments received this month" | trans}}</h3>
 					</div>
 					<div class="ml-5 w-0 flex items-center justify-end flex-1 text-sm font-bold
-                  {% if monthlyPaymentStats.percentageGain is not null %}
-                        {% if monthlyPaymentStats.percentageGain >= 0 %}
-                           text-green-500
-                        {% else %}
-                           text-red-500
-                        {% endif %}
-                  {% else %}
-                        text-gray-400
-                  {% endif %}
-               ">
+						{% if monthlyPaymentStats.percentageGain is not null %}
+							{% if monthlyPaymentStats.percentageGain >= 0 %}
+								text-green-500
+							{% else %}
+								text-red-500
+							{% endif %}
+						{% else %}
+							text-gray-400
+						{% endif %}
+					">
 						{% if monthlyPaymentStats.percentageGain is not null %}
 							{{ monthlyPaymentStats.percentageGain|number_format(2, '.', ',') }}%
 
@@ -120,16 +120,16 @@
 						<h3 class="text-xs font-normal text-gray-500">{{"Total new clients acquired this week" | trans}}</h3>
 					</div>
 					<div class="ml-5 w-0 flex items-center justify-end flex-1 text-sm font-bold
-               {% if weeklyUserInscription.percentageGain is not null %}
-                     {% if weeklyUserInscription.percentageGain >= 0 %}
-                        text-green-500
-                     {% else %}
-                        text-red-500
-                     {% endif %}
-               {% else %}
-                     text-gray-400
-               {% endif %}
-            ">
+						{% if weeklyUserInscription.percentageGain is not null %}
+								{% if weeklyUserInscription.percentageGain >= 0 %}
+								text-green-500
+								{% else %}
+								text-red-500
+								{% endif %}
+						{% else %}
+								text-gray-400
+						{% endif %}
+					">
 						{% if weeklyUserInscription.percentageGain is not null %}
 							{{ weeklyUserInscription.percentageGain|number_format(2, '.', ',') }}%
 
@@ -159,16 +159,16 @@
 						<h3 class="text-xs font-normal text-gray-500">{{"Total new clients acquired this month" | trans}}</h3>
 					</div>
 					<div class="ml-5 w-0 flex items-center justify-end flex-1 text-sm font-bold
-                  {% if monthlyUserInscription.percentageGain is not null %}
-                        {% if monthlyUserInscription.percentageGain >= 0 %}
-                           text-green-500
-                        {% else %}
-                           text-red-500
-                        {% endif %}
-                  {% else %}
-                        text-gray-400
-                  {% endif %}
-               ">
+							                  {% if monthlyUserInscription.percentageGain is not null %}
+							                        {% if monthlyUserInscription.percentageGain >= 0 %}
+							                           text-green-500
+							                        {% else %}
+							                           text-red-500
+							                        {% endif %}
+							                  {% else %}
+							                        text-gray-400
+							                  {% endif %}
+							               ">
 						{% if monthlyUserInscription.percentageGain is not null %}
 							{{ monthlyUserInscription.percentageGain|number_format(2, '.', ',') }}%
 
@@ -190,44 +190,41 @@
 
 		</div>
 		<div class="w-full grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
-			<div class="bg-white p-4 sm:p-6 xl:p-8 2xl:col-span-2" id="chartElement">
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex-shrink-0">
-                <span class="text-xl leading-none font-bold text-gray-900">{{ "Payments Analytics" | trans }}</span>
-                <h3 class="text-md font-normal text-gray-500">{{ "Monthly payments by year" | trans }}</h3>
-            </div>
-            {# Optionnel : bouton ou select pour changer l'année #}
-        </div>
+			<div class="bg-white p-4 sm:p-6 xl:p-8 2xl:col-span-2" id="chartElementAdmin">
+				<div class="flex flex-col md:flex-row items-center justify-start md:justify-between mb-4 gap-4">
+					<div class="flex-shrink-0">
+						<span class="text-xl leading-none font-bold text-gray-900">{{ "Payments Analytics" | trans }}</span>
+						<h3 class="text-md font-normal text-gray-500">{{ "Monthly payments by year" | trans }}</h3>
+					</div>
+					<div class="flex-shrink-0">
+						<div class="flex items-center justify-between">
+						<div>
+							<p class="text-sm text-gray-500">{{ 'Total Revenue' | trans }}</p>
+							<p class="mt-1 text-4xl font-semibold text-gray-900">
+								{{ totalRevenue|number_format(2, '.', ',') }} <span class="text-green-600">{{ currency|default('USD') }}</span>
+							</p>
+						</div>
+					
+					</div>
+					</div>
+				</div>
 
-        <div class="h-80 relative">
-            <!-- Loading message -->
-            <div id="chartLoading" class="absolute inset-0 flex items-center justify-center bg-white rounded-lg">
-                <div class="text-center">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mx-auto mb-2"></div>
-                    <p class="text-gray-600 text-sm">{{ "Loading data..." | trans }}</p>
-                </div>
-            </div>
+				<div
+					class="h-80 relative">
+					<!-- Loading message -->
+					<div id="chartLoading" class="absolute inset-0 flex items-center justify-center bg-white rounded-lg">
+						<div class="text-center">
+							<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mx-auto mb-2"></div>
+							<p class="text-gray-600 text-sm">{{ "Loading data..." | trans }}</p>
+						</div>
+					</div>
 
-            <!-- Chart canvas, hidden initially -->
-            <canvas id="notesChart" style="display: none;"></canvas>
+					<!-- Chart canvas, hidden initially -->
+					<canvas id="notesChart" style="display: none;"></canvas>
 
-            <!-- No data message, hidden initially -->
-            <div id="noChartData" class="hidden absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-lg border border-dashed border-gray-300">
-                <div class="text-center px-4 py-6">
-                    <div class="mb-4">
-                        <div class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-gray-100">
-                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 17v-6h6v6m2 4H7a2 2 0 01-2-2V7a2 2 0 012-2h3l1-2h4l1 2h3a2 2 0 012 2v12a2 2 0 01-2 2z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <h3 class="text-gray-700 text-base font-semibold mb-1">{{ "No data found" | trans }}</h3>
-                    <p class="text-gray-500 text-sm">{{ "There are no payments to display for this year." | trans }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
+
+				</div>
+			</div>
 			<div class="bg-gray-50 shadow p-4 sm:p-2 xl:p-4 ">
 				<div class="mb-4 flex items-center justify-between">
 					<div>
@@ -382,5 +379,14 @@
 {% block javascripts %}
 	{{ parent()}}
 	<script src="{{ asset('template/js/chartjs.min.js')}}"></script>
+	<script>
+    window.translations = {
+        monthlyPayments: '{{ "Monthly Payments"|trans|e('js') }}',
+        payments: '{{ "Payments"|trans|e('js') }}',
+        dataLoadingError: '{{ "Data loading error"|trans|e('js') }}',
+        networkError: '{{ "Network error"|trans|e('js') }}'
+    };
+</script>
 	<script src="{{ asset('build/admin_chart.js') }}"></script>
+	
 {% endblock %}

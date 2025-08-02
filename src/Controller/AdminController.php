@@ -71,6 +71,8 @@ final class AdminController extends AbstractController
         $monthlyUserInscription = $repoUser->getMonthlyUserRegistrationsAndPercentageGain();
         //  5 last Clients
         $last5Clients = $repoClient->findLatestClients(5);
+        // Total Revenue 
+        $totalRevenue = $repoPayment->getTotalRevenue();
         return $this->render('admin/index.html.twig', [
             'payments' => $last5payments,
             'weeklyPaymentStats' => $weeklyPaymentStats,
@@ -78,12 +80,14 @@ final class AdminController extends AbstractController
             'monthlyPaymentStats' => $monthlyPaymentStats,
             'weeklyUserInscription' => $weeklyUserInscription,
             'monthlyUserInscription' => $monthlyUserInscription,
-            'last5Clients' => $last5Clients
+            'last5Clients' => $last5Clients,
+            'totalRevenue' => $totalRevenue,
+         
         ]);
     }
     
 
-  #[Route('/dashboard/statistics', name: 'dashboard_statistics', methods: ['GET'])]
+  #[Route('/admin/dashboard/statistics', name: 'admin_dashboard_statistics', methods: ['GET'])]
 public function statistics(Request $request, PaymentRepository $paymentRepository): JsonResponse
 {
     $year = (int) $request->get('year', date('Y'));
