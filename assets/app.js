@@ -10,6 +10,7 @@ import { German } from "flatpickr/dist/l10n/de.js";
 import { Spanish } from "flatpickr/dist/l10n/es.js";
 import './js/note';
 import './js/chart';
+import './js/admin_chart';
 // Make toastr globally accessible
 window.toastr = toastr;
 

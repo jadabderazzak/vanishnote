@@ -33,7 +33,74 @@
 		}
 	</style>
 	<div class="w-full p-2">
+		<div class="mt-4 w-full grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
+			<div class="bg-gradient-to-br from-blue-50 to-white p-6  border border-blue-100 shadow-sm hover:shadow-md transition-all">
+				<div class="flex items-center gap-4">
+					<div class="p-3 bg-blue-100/20 rounded-full">
 
+						<svg class="w-6 h-6 text-blue-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9V4a1 1 0 0 0-1-1H8.914a1 1 0 0 0-.707.293L4.293 7.207A1 1 0 0 0 4 7.914V20a1 1 0 0 0 1 1h4M9 3v4a1 1 0 0 1-1 1H4m11 6v4m-2-2h4m3 0a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z"/>
+						</svg>
+
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-500">{{"Monthly Created" | trans}}</p>
+						<p class="text-2xl font-semibold text-gray-800">{{currentMonthNoteCount}}</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Monthly Burned -->
+			<div class="bg-gradient-to-br from-red-50 to-white p-6  border border-red-100 shadow-sm hover:shadow-md transition-all">
+				<div class="flex items-center gap-4">
+					<div class="p-3 bg-red-100/20 rounded-full">
+
+						<svg class="w-6 h-6 text-red-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.122 17.645a7.185 7.185 0 0 1-2.656 2.495 7.06 7.06 0 0 1-3.52.853 6.617 6.617 0 0 1-3.306-.718 6.73 6.73 0 0 1-2.54-2.266c-2.672-4.57.287-8.846.887-9.668A4.448 4.448 0 0 0 8.07 6.31 4.49 4.49 0 0 0 7.997 4c1.284.965 6.43 3.258 5.525 10.631 1.496-1.136 2.7-3.046 2.846-6.216 1.43 1.061 3.985 5.462 1.754 9.23Z"/>
+						</svg>
+
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-500">{{"Monthly Burned" | trans}}</p>
+						<p class="text-2xl font-semibold text-gray-800">{{burnedNotesCurrentMonth}}</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Total Notes -->
+			<div class="bg-gradient-to-br from-green-50 to-white p-6  border border-green-100 shadow-sm hover:shadow-md transition-all">
+				<div class="flex items-center gap-4">
+					<div class="p-3 bg-green-100/20 rounded-full">
+
+						<svg class="w-6 h-6 text-green-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M15 4v3a1 1 0 0 1-1 1h-3m2 10v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7.13a1 1 0 0 1 .24-.65L6.7 8.35A1 1 0 0 1 7.46 8H9m-1 4H4m16-7v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H19a1 1 0 0 1 1 1Z"/>
+						</svg>
+
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-500">{{"Total Created" | trans}}</p>
+						<p class="text-2xl font-semibold text-gray-800">{{totalnotes}}</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Total Burned -->
+			<div class="bg-gradient-to-br from-purple-50 to-white p-6  border border-purple-100 shadow-sm hover:shadow-md transition-all">
+				<div class="flex items-center gap-4">
+					<div class="p-3 bg-purple-100/20 rounded-full">
+
+						<svg class="w-6 h-6 text-red-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewbox="0 0 24 24">
+							<path d="M8.597 3.2A1 1 0 0 0 7.04 4.289a3.49 3.49 0 0 1 .057 1.795 3.448 3.448 0 0 1-.84 1.575.999.999 0 0 0-.077.094c-.596.817-3.96 5.6-.941 10.762l.03.049a7.73 7.73 0 0 0 2.917 2.602 7.617 7.617 0 0 0 3.772.829 8.06 8.06 0 0 0 3.986-.975 8.185 8.185 0 0 0 3.04-2.864c1.301-2.2 1.184-4.556.588-6.441-.583-1.848-1.68-3.414-2.607-4.102a1 1 0 0 0-1.594.757c-.067 1.431-.363 2.551-.794 3.431-.222-2.407-1.127-4.196-2.224-5.524-1.147-1.39-2.564-2.3-3.323-2.788a8.487 8.487 0 0 1-.432-.287Z"/>
+						</svg>
+
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-500">{{"Total Burned"  | trans}}</p>
+						<p class="text-2xl font-semibold text-gray-800">{{totalBurned}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="w-full grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-2">
 			<div class="bg-white p-4 sm:p-6 xl:p-8 2xl:col-span-2" id="chartElement">
 				<div class="flex items-center justify-between mb-4">
@@ -77,18 +144,34 @@
 					<div id="chartLoading" class="absolute inset-0 flex items-center justify-center bg-white rounded-lg">
 						<div class="text-center">
 							<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mx-auto mb-2"></div>
-							<p class="text-gray-600 text-sm">Loading data...</p>
+							<p class="text-gray-600 text-sm">{{"Loading data..." | trans}}</p>
 						</div>
 					</div>
 
 					<!-- Chart (hidden initially) -->
 					<canvas id="notesChart" style="display: none;"></canvas>
+					<!-- No data message (hidden initially) -->
+					<div id="noChartData" class="hidden absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-lg border border-dashed border-gray-300">
+						<div class="text-center px-4 py-6">
+							<div class="mb-4">
+								<div class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-gray-100">
+									<svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											d="M9 17v-6h6v6m2 4H7a2 2 0 01-2-2V7a2 2 0 012-2h3l1-2h4l1 2h3a2 2 0 012 2v12a2 2 0 01-2 2z" />
+									</svg>
+								</div>
+							</div>
+							<h3 class="text-gray-700 text-base font-semibold mb-1">{{ "No data found" | trans }}</h3>
+							<p class="text-gray-500 text-sm">{{ "There are no notes to display for this period." | trans }}</p>
+						</div>
+					</div>
+
 				</div>
 			</div>
-			<div class="bg-gray-50  p-4 sm:p-6 xl:p-8 ">
+			<div class="bg-gray-50 shadow p-4 sm:p-2 xl:p-4 ">
 				<div class="mb-4 flex items-center justify-between">
 					<div>
-						<h3 class="text-xl font-bold text-gray-900 mb-1">{{"Latest Burned Notes" | trans}}</h3>
+						<h3 class="text-xl font-bold text-gray-900 mb-1">{{"Activity Logs" | trans}}</h3>
 						<span class="text-xs font-normal text-gray-500">{{"This is a list of latest Burned Notes" | trans}}</span>
 					</div>
 					<div class="flex-shrink-0">
@@ -100,7 +183,7 @@
 						<div class="align-middle inline-block min-w-full">
 							<div class="shadow overflow-hidden">
 								<table class="min-w-full divide-y divide-gray-200 border border-gray-100">
-									
+
 									<tbody class="bg-white">
 										{% for log in logs %}
 											<tr>
@@ -122,74 +205,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="mt-4 w-full grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
-			<div class="bg-gradient-to-br from-blue-50 to-white p-6  border border-blue-100 shadow-sm hover:shadow-md transition-all">
-				<div class="flex items-center gap-4">
-					<div class="p-3 bg-blue-100/20 rounded-full">
 
-						<svg class="w-6 h-6 text-blue-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9V4a1 1 0 0 0-1-1H8.914a1 1 0 0 0-.707.293L4.293 7.207A1 1 0 0 0 4 7.914V20a1 1 0 0 0 1 1h4M9 3v4a1 1 0 0 1-1 1H4m11 6v4m-2-2h4m3 0a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z"/>
-						</svg>
-
-					</div>
-					<div>
-						<p class="text-sm font-medium text-gray-500">{{"Monthly Created" | trans}}</p>
-						<p class="text-2xl font-semibold text-gray-800">{{currentMonthNoteCount}}</p>
-					</div>
-				</div>
-			</div>
-
-			<!-- Monthly Burned -->
-			<div class="bg-gradient-to-br from-red-50 to-white p-6  border border-red-100 shadow-sm hover:shadow-md transition-all">
-				<div class="flex items-center gap-4">
-					<div class="p-3 bg-red-100/20 rounded-full">
-					
-						<svg class="w-6 h-6 text-red-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.122 17.645a7.185 7.185 0 0 1-2.656 2.495 7.06 7.06 0 0 1-3.52.853 6.617 6.617 0 0 1-3.306-.718 6.73 6.73 0 0 1-2.54-2.266c-2.672-4.57.287-8.846.887-9.668A4.448 4.448 0 0 0 8.07 6.31 4.49 4.49 0 0 0 7.997 4c1.284.965 6.43 3.258 5.525 10.631 1.496-1.136 2.7-3.046 2.846-6.216 1.43 1.061 3.985 5.462 1.754 9.23Z"/>
-						</svg>
-
-					</div>
-					<div>
-						<p class="text-sm font-medium text-gray-500">{{"Monthly Burned" | trans}}</p>
-						<p class="text-2xl font-semibold text-gray-800">{{burnedNotesCurrentMonth}}</p>
-					</div>
-				</div>
-			</div>
-
-			<!-- Total Notes -->
-			<div class="bg-gradient-to-br from-green-50 to-white p-6  border border-green-100 shadow-sm hover:shadow-md transition-all">
-				<div class="flex items-center gap-4">
-					<div class="p-3 bg-green-100/20 rounded-full">
-
-						<svg class="w-6 h-6 text-green-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-						<path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M15 4v3a1 1 0 0 1-1 1h-3m2 10v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7.13a1 1 0 0 1 .24-.65L6.7 8.35A1 1 0 0 1 7.46 8H9m-1 4H4m16-7v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H19a1 1 0 0 1 1 1Z"/>
-						</svg>
-
-					</div>
-					<div>
-						<p class="text-sm font-medium text-gray-500">{{"Total Created" | trans}}</p>
-						<p class="text-2xl font-semibold text-gray-800">{{totalnotes}}</p>
-					</div>
-				</div>
-			</div>
-
-			<!-- Total Burned -->
-			<div class="bg-gradient-to-br from-purple-50 to-white p-6  border border-purple-100 shadow-sm hover:shadow-md transition-all">
-				<div class="flex items-center gap-4">
-					<div class="p-3 bg-purple-100/20 rounded-full">
-				
-						<svg class="w-6 h-6 text-red-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-						<path d="M8.597 3.2A1 1 0 0 0 7.04 4.289a3.49 3.49 0 0 1 .057 1.795 3.448 3.448 0 0 1-.84 1.575.999.999 0 0 0-.077.094c-.596.817-3.96 5.6-.941 10.762l.03.049a7.73 7.73 0 0 0 2.917 2.602 7.617 7.617 0 0 0 3.772.829 8.06 8.06 0 0 0 3.986-.975 8.185 8.185 0 0 0 3.04-2.864c1.301-2.2 1.184-4.556.588-6.441-.583-1.848-1.68-3.414-2.607-4.102a1 1 0 0 0-1.594.757c-.067 1.431-.363 2.551-.794 3.431-.222-2.407-1.127-4.196-2.224-5.524-1.147-1.39-2.564-2.3-3.323-2.788a8.487 8.487 0 0 1-.432-.287Z"/>
-						</svg>
-
-					</div>
-					<div>
-						<p class="text-sm font-medium text-gray-500">{{"Total Burned"  | trans}}</p>
-						<p class="text-2xl font-semibold text-gray-800">{{totalBurned}}</p>
-					</div>
-				</div>
-			</div>
-		</div>
 		<div class="grid grid-cols-1 2xl:grid-cols-2 xl:gap-4 my-4">
 			<div class="bg-white shadow mb-4 p-4 sm:p-6 h-full">
 				<div class="flex items-center justify-between mb-4">
@@ -200,20 +216,21 @@
 				</div>
 				<div class="flow-root">
 					<ul role="list" class="divide-y divide-gray-200">
-               {% for note in last5NotesNotBurned %}
-						<li class="py-3 sm:py-4">
-							<div class="flex items-center space-x-4">
-							
-								<div class="flex-1 min-w-0">
-									<p class="text-sm font-medium text-gray-900">
-										{{ note.title | u.truncate(30,'...')}}
-									</p>
-									<p class="text-sm text-gray-500 truncate">
-										<a href="javascript:;">[{{"Note protected" | trans}}]</a>
-									</p>
-								</div>
-								<div class="inline-flex items-center text-base font-semibold text-gray-900">
-									<!-- View Button -->
+						{% for note in last5NotesNotBurned %}
+							<li class="py-3 sm:py-4">
+								<div class="flex items-center space-x-4">
+
+									<div class="flex-1 min-w-0">
+										<p class="text-sm font-medium text-gray-900">
+											{{ note.title | u.truncate(30,'...')}}
+										</p>
+										<p class="text-sm text-gray-500 truncate">
+											<a href="javascript:;">[{{"Note protected" | trans}}]</a>
+										</p>
+									</div>
+									<div
+										class="inline-flex items-center text-base font-semibold text-gray-900">
+										<!-- View Button -->
 										<a href="{{ path('app_notes_view', { slug: note.slug }) }}" class="inline-flex items-center px-3 py-1.5  bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all duration-200 group text-xs font-medium shadow-xs border border-blue-100">
 											<svg class="w-4 h-4 mr-1.5" fill="none" viewbox="0 0 24 24" stroke="currentColor">
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z"/>
@@ -228,54 +245,58 @@
 											</svg>
 											<span>{{ 'Edit'|trans }}</span>
 										</a>
+									</div>
 								</div>
-							</div>
-						</li>
-                  {% endfor %}
-						
+							</li>
+						{% endfor %}
+
 					</ul>
 				</div>
 			</div>
 			<div class="bg-white shadow p-4 sm:p-6 xl:p-6 ">
 				<div class="flex items-center justify-between mb-4">
-                  <h3 class="text-xl font-bold leading-none text-gray-900">{{ 'Payment history'|trans }}</h3>
-                     <a href="{{ path('app_client_payments')}}" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 inline-flex items-center p-2">
-                        {{"View all" | trans}}
-                     </a>
-				   </div>
+					<h3 class="text-xl font-bold leading-none text-gray-900">{{ 'Payment history'|trans }}</h3>
+					<a href="{{ path('app_client_payments')}}" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 inline-flex items-center p-2">
+						{{"View all" | trans}}
+					</a>
+				</div>
 				<div class="block w-full overflow-x-auto">
 					<table class="items-center w-full bg-transparent border-collapse">
 						<thead>
 							<tr>
-								<th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap"> {{ 'Subscription Plan' | trans }}</th>
-								<th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap"> {{ 'Amount' | trans }}</th>
+								<th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap">
+									{{ 'Subscription Plan' | trans }}</th>
+								<th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap">
+									{{ 'Amount' | trans }}</th>
 								<th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap min-w-140-px"></th>
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-gray-100">
 
-                   {% for payment in payments %}
-							<tr class="text-gray-500">
-								<th class="border-t-0 px-4 align-middle text-sm font-normal whitespace-nowrap p-4 text-left">
-                        <div class="text-sm font-medium text-gray-900">{{ payment.subscriptionPlan.name | trans }}</div>
-                        </th>
-								<td class="border-t-0 px-4 align-middle text-xs font-medium text-gray-900 whitespace-nowrap p-4">
-                        {{ payment.amount | format_number(locale=app.request.locale) }} {{ payment.currency }}
-                        </td>
-								 <td class="px-6 py-4 whitespace-nowrap text-right">
-                            {% if payment.status == 'succeeded' %}
-                              
-                                <a href="{{ path('payment_invoice', {slug: payment.slug}) }}" class="inline-flex items-center px-3 py-1.5  bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all duration-200 group text-xs font-medium shadow-xs border border-emerald-100">
-                                 <svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 17v-5h1.5a1.5 1.5 0 1 1 0 3H5m12 2v-5h2m-2 3h2M5 10V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1v6M5 19v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1M10 3v4a1 1 0 0 1-1 1H5m6 4v5h1.375A1.627 1.627 0 0 0 14 15.375v-1.75A1.627 1.627 0 0 0 12.375 12H11Z"/>
-                                 </svg>
+							{% for payment in payments %}
+								<tr class="text-gray-500">
+									<th class="border-t-0 px-4 align-middle text-sm font-normal whitespace-nowrap p-4 text-left">
+										<div class="text-sm font-medium text-gray-900">{{ payment.subscriptionPlan.name | trans }}</div>
+									</th>
+									<td class="border-t-0 px-4 align-middle text-xs font-medium text-gray-900 whitespace-nowrap p-4">
+										{{ payment.amount | format_number(locale=app.request.locale) }}
+										{{ payment.currency }}
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap text-right">
+										{% if payment.status == 'succeeded' %}
 
-											<span> {{ 'Show Invoice' | trans }}</span>
-										</a>
-                            {% endif %}
-                            </td>
-							</tr>
-							 {% endfor %}
+											<a href="{{ path('payment_invoice', {slug: payment.slug}) }}" class="inline-flex items-center px-3 py-1.5  bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all duration-200 group text-xs font-medium shadow-xs border border-emerald-100">
+												<svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+													<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 17v-5h1.5a1.5 1.5 0 1 1 0 3H5m12 2v-5h2m-2 3h2M5 10V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1v6M5 19v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1M10 3v4a1 1 0 0 1-1 1H5m6 4v5h1.375A1.627 1.627 0 0 0 14 15.375v-1.75A1.627 1.627 0 0 0 12.375 12H11Z"/>
+												</svg>
+
+												<span>
+													{{ 'Show Invoice' | trans }}</span>
+											</a>
+										{% endif %}
+									</td>
+								</tr>
+							{% endfor %}
 						</tbody>
 					</table>
 				</div>

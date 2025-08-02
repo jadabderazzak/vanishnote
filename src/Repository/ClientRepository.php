@@ -92,6 +92,18 @@ public function findAllWithLastActiveSubscriptionByType(bool $value): array
 
     return $qb->getQuery()->getResult();
 }
-
+/**
+ * Returns the 5 most recently added clients.
+ *
+ * @return Client[]
+ */
+public function findLatestClients(int $limit = 5): array
+{
+    return $this->createQueryBuilder('c')
+        ->orderBy('c.id', 'DESC')
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
+}
 
 }

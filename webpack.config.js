@@ -35,6 +35,7 @@ Encore
     
     .addEntry('note', './assets/js/note.js')
     .addEntry('chart', './assets/js/chart.js')
+    .addEntry('chart', './assets/js/admin_chart.js')
     /*
      * FEATURE CONFIG
      *

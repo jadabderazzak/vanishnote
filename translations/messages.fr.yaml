@@ -774,3 +774,32 @@ Parameters: Paramètres
 "Payment Information": "Informations de paiement"
 "This transaction was processed securely by Stripe. For any issues, please reference the Payment Intent ID.": "Cette transaction a été traitée en toute sécurité par Stripe. En cas de problème, veuillez vous référer à l'ID d'intention de paiement."
 "View Transaction Details": "Voir les détails de la transaction"
+"Latest Transactions": "Dernières transactions"
+"This is a list of latest transactions": "Ceci est une liste des dernières transactions"
+"Transaction": "Transaction"
+"Date & Time": "Date & heure"
+"Payment from": "Paiement de"
+"Total payments received this week": "Total des paiements effectués cette semaine"
+"Total payments received this month": "Total des paiements effectués ce mois-ci"
+"Client(s)": "Client(s)"
+"Total new clients acquired this week": "Nombre total de nouveaux clients cette semaine"
+"Total new clients acquired this month": "Nombre total de nouveaux clients ce mois-ci"
+"No data found": "Aucune donnée trouvée"
+"There are no notes to display for this period.": "Aucune note à afficher pour cette période."
+"Loading data...": "Chargement des données..."
+"Latest 5 Clients": "5 derniers clients"
+"System Logs": "Journaux système"
+January: Janvier
+February: Février
+March: Mars
+April: Avril
+May: Mai
+June: Juin
+July: Juillet
+August: Août
+September: Septembre
+October: Octobre
+November: Novembre
+December: Décembre
+"Payments Analytics": "Analyse des paiements"
+"Monthly payments by year": "Paiements mensuels par année"

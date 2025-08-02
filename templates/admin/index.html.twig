@@ -1,436 +1,386 @@
 {% extends 'base.html.twig' %}
 
 
-
 {% block body %}
-<style>
-#notesChart {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    --tw-ring-opacity: 0.05;
-    min-height: 320px;
-    background: white;
-    border-radius: 0.75rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
+	<style>
+		#notesChart {
+			font-family: 'Inter', system-ui, -apple-system, sans-serif;
+			--tw-ring-opacity: 0.05;
+			min-height: 320px;
+			background: white;
+			border-radius: 0.75rem;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+		}
 
-.chart-legend {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
+		.chart-legend {
+			display: flex;
+			gap: 1rem;
+			margin-top: 1.5rem;
+		}
 
-.legend-item {
-    display: flex;
-    align-items: center;
-    font-size: 0.875rem;
-    color: #4B5563;
-}
+		.legend-item {
+			display: flex;
+			align-items: center;
+			font-size: 0.875rem;
+			color: #4B5563;
+		}
 
-.legend-color {
-    width: 12px;
-    height: 12px;
-    border-radius: 3px;
-    margin-right: 0.5rem;
-}
-</style>
-<div class="w-full ">
-      
-           <div class="w-full grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
-                  <div class="bg-white shadow p-4 sm:p-6 xl:p-8 2xl:col-span-2" id="chartElement">
-                     <div class="flex items-center justify-between mb-4">
-                        <div class="flex-shrink-0">
-                              <span class="text-xl leading-none font-bold text-gray-900">{{"Notes Analytics" | trans}}</span>
-                              <h3 class="text-md font-normal text-gray-500">{{"Monthly creation & burn rate" | trans}}</h3>
+		.legend-color {
+			width: 12px;
+			height: 12px;
+			border-radius: 3px;
+			margin-right: 0.5rem;
+		}
+	</style>
+	<div class="w-full ">
+		<div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-4 p-2">
+			<div class="bg-gray-50 shadow p-4 ">
+				<div class="flex items-center">
+					<div class="flex-shrink-0  space-y-2">
+						<span class="text-2xl leading-none font-bold text-gray-900">
+							{{ currency }}{{ weeklyPaymentStats.currentWeekAmount|format_number(locale=app.request.locale) }}
+						</span>
+						<h3 class="text-xs font-normal text-gray-500 ">{{"Total payments received this week" | trans}}</h3>
+					</div>
+					<div class="ml-5 w-0 flex items-center justify-end flex-1 text-sm font-bold
+                  {% if weeklyPaymentStats.percentageGain is not null %}
+                        {% if weeklyPaymentStats.percentageGain >= 0 %}
+                           text-green-500
+                        {% else %}
+                           text-red-500
+                        {% endif %}
+                  {% else %}
+                        text-gray-400
+                  {% endif %}
+               ">
+						{% if weeklyPaymentStats.percentageGain is not null %}
+							{{ weeklyPaymentStats.percentageGain|number_format(2, '.', ',') }}%
+
+							{% if weeklyPaymentStats.percentageGain >= 0 %}
+								<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+								</svg>
+							{% else %}
+								<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+								</svg>
+							{% endif %}
+						{% else %}
+							<span class="text-gray-500">N/A</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+
+			<div class="bg-gray-50 shadow p-4 ">
+				<div class="flex items-center">
+					<div class="flex-shrink-0  space-y-2">
+						<span class="text-2xl leading-none font-bold text-gray-900">
+							{{ currency }}{{ monthlyPaymentStats.currentMonthAmount|format_number(locale=app.request.locale) }}
+						</span>
+						<h3 class="text-xs font-normal text-gray-500">{{"Total payments received this month" | trans}}</h3>
+					</div>
+					<div class="ml-5 w-0 flex items-center justify-end flex-1 text-sm font-bold
+                  {% if monthlyPaymentStats.percentageGain is not null %}
+                        {% if monthlyPaymentStats.percentageGain >= 0 %}
+                           text-green-500
+                        {% else %}
+                           text-red-500
+                        {% endif %}
+                  {% else %}
+                        text-gray-400
+                  {% endif %}
+               ">
+						{% if monthlyPaymentStats.percentageGain is not null %}
+							{{ monthlyPaymentStats.percentageGain|number_format(2, '.', ',') }}%
+
+							{% if monthlyPaymentStats.percentageGain >= 0 %}
+								<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+								</svg>
+							{% else %}
+								<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+								</svg>
+							{% endif %}
+						{% else %}
+							<span class="text-gray-500">N/A</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+
+			<div class="bg-gray-50 shadow p-4 ">
+				<div class="flex items-center">
+					<div class="flex-shrink-0  space-y-2">
+						<span class="text-2xl leading-none font-bold text-gray-900">
+							{{ weeklyUserInscription.currentWeekCount|format_number(locale=app.request.locale) }}
+							<span class="text-xs text-gray-500">{{"Client(s)" | trans}}</span>
+						</span>
+						<h3 class="text-xs font-normal text-gray-500">{{"Total new clients acquired this week" | trans}}</h3>
+					</div>
+					<div class="ml-5 w-0 flex items-center justify-end flex-1 text-sm font-bold
+               {% if weeklyUserInscription.percentageGain is not null %}
+                     {% if weeklyUserInscription.percentageGain >= 0 %}
+                        text-green-500
+                     {% else %}
+                        text-red-500
+                     {% endif %}
+               {% else %}
+                     text-gray-400
+               {% endif %}
+            ">
+						{% if weeklyUserInscription.percentageGain is not null %}
+							{{ weeklyUserInscription.percentageGain|number_format(2, '.', ',') }}%
+
+							{% if weeklyUserInscription.percentageGain >= 0 %}
+								<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+								</svg>
+							{% else %}
+								<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+								</svg>
+							{% endif %}
+						{% else %}
+							<span class="text-gray-500">N/A</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+
+			<div class="bg-gray-50 shadow p-4 ">
+				<div class="flex items-center">
+					<div class="flex-shrink-0  space-y-2">
+						<span class="text-2xl leading-none font-bold text-gray-900">
+							{{ monthlyUserInscription.currentMonthCount|format_number(locale=app.request.locale) }}
+							<span class="text-xs text-gray-500">{{"Client(s)" | trans}}</span>
+						</span>
+						<h3 class="text-xs font-normal text-gray-500">{{"Total new clients acquired this month" | trans}}</h3>
+					</div>
+					<div class="ml-5 w-0 flex items-center justify-end flex-1 text-sm font-bold
+                  {% if monthlyUserInscription.percentageGain is not null %}
+                        {% if monthlyUserInscription.percentageGain >= 0 %}
+                           text-green-500
+                        {% else %}
+                           text-red-500
+                        {% endif %}
+                  {% else %}
+                        text-gray-400
+                  {% endif %}
+               ">
+						{% if monthlyUserInscription.percentageGain is not null %}
+							{{ monthlyUserInscription.percentageGain|number_format(2, '.', ',') }}%
+
+							{% if monthlyUserInscription.percentageGain >= 0 %}
+								<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+								</svg>
+							{% else %}
+								<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+								</svg>
+							{% endif %}
+						{% else %}
+							<span class="text-gray-500">N/A</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="w-full grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
+			<div class="bg-white p-4 sm:p-6 xl:p-8 2xl:col-span-2" id="chartElement">
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex-shrink-0">
+                <span class="text-xl leading-none font-bold text-gray-900">{{ "Payments Analytics" | trans }}</span>
+                <h3 class="text-md font-normal text-gray-500">{{ "Monthly payments by year" | trans }}</h3>
+            </div>
+            {# Optionnel : bouton ou select pour changer l'année #}
+        </div>
+
+        <div class="h-80 relative">
+            <!-- Loading message -->
+            <div id="chartLoading" class="absolute inset-0 flex items-center justify-center bg-white rounded-lg">
+                <div class="text-center">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mx-auto mb-2"></div>
+                    <p class="text-gray-600 text-sm">{{ "Loading data..." | trans }}</p>
+                </div>
+            </div>
+
+            <!-- Chart canvas, hidden initially -->
+            <canvas id="notesChart" style="display: none;"></canvas>
+
+            <!-- No data message, hidden initially -->
+            <div id="noChartData" class="hidden absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-lg border border-dashed border-gray-300">
+                <div class="text-center px-4 py-6">
+                    <div class="mb-4">
+                        <div class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-gray-100">
+                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 17v-6h6v6m2 4H7a2 2 0 01-2-2V7a2 2 0 012-2h3l1-2h4l1 2h3a2 2 0 012 2v12a2 2 0 01-2 2z" />
+                            </svg>
                         </div>
-                        <div class="flex items-center justify-end flex-1 text-green-500 font-bold">
-                              <span id="growthRate">+12.5%</span>
-                              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                 <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                              </svg>
-                        </div>
-                     </div>
-                     <div class="h-80 relative">
-                        <!-- Loading message -->
-                        <div id="chartLoading" class="absolute inset-0 flex items-center justify-center bg-white rounded-lg">
-                              <div class="text-center">
-                                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mx-auto mb-2"></div>
-                                 <p class="text-gray-600 text-sm">Loading data...</p>
-                              </div>
-                        </div>
-                        
-                        <!-- Chart (hidden initially) -->
-                        <canvas id="notesChart" style="display: none;"></canvas>
-                     </div>
-                  </div>
-                  <div class="bg-white shadow p-4 sm:p-6 xl:p-8 ">
-                     <div class="mb-4 flex items-center justify-between">
-                        <div>
-                           <h3 class="text-xl font-bold text-gray-900 mb-2">Latest Transactions</h3>
-                           <span class="text-base font-normal text-gray-500">This is a list of latest transactions</span>
-                        </div>
-                        <div class="flex-shrink-0">
-                           <a href="#" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 p-2">View all</a>
-                        </div>
-                     </div>
-                     <div class="flex flex-col mt-8">
-                        <div class="overflow-x-auto rounded-lg">
-                           <div class="align-middle inline-block min-w-full">
-                              <div class="shadow overflow-hidden sm:rounded-lg">
-                                 <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                       <tr>
-                                          <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                             Transaction
-                                          </th>
-                                          <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                             Date & Time
-                                          </th>
-                                          <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                             Amount
-                                          </th>
-                                       </tr>
-                                    </thead>
-                                    <tbody class="bg-white">
-                                       <tr>
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                             Payment from <span class="font-semibold">Bonnie Green</span>
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                             Apr 23 ,2021
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                             $2300
-                                          </td>
-                                       </tr>
-                                       <tr class="bg-gray-50">
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900 rounded-left">
-                                             Payment refund to <span class="font-semibold">#00910</span>
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                             Apr 23 ,2021
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                             -$670
-                                          </td>
-                                       </tr>
-                                       <tr>
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                             Payment failed from <span class="font-semibold">#087651</span>
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                             Apr 18 ,2021
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                             $234
-                                          </td>
-                                       </tr>
-                                       <tr class="bg-gray-50">
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900 rounded-left">
-                                             Payment from <span class="font-semibold">Lana Byrd</span>
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                             Apr 15 ,2021
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                             $5000
-                                          </td>
-                                       </tr>
-                                       <tr>
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                             Payment from <span class="font-semibold">Jese Leos</span>
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                             Apr 15 ,2021
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                             $2300
-                                          </td>
-                                       </tr>
-                                       <tr class="bg-gray-50">
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900 rounded-left">
-                                             Payment from <span class="font-semibold">THEMESBERG LLC</span>
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                             Apr 11 ,2021
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                             $560
-                                          </td>
-                                       </tr>
-                                       <tr>
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                             Payment from <span class="font-semibold">Lana Lysle</span>
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                             Apr 6 ,2021
-                                          </td>
-                                          <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                             $1437
-                                          </td>
-                                       </tr>
-                                    </tbody>
-                                 </table>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="mt-4 w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                  <div class="bg-white shadow p-4 sm:p-6 xl:p-8 ">
-                     <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                           <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">2,340</span>
-                           <h3 class="text-base font-normal text-gray-500">New products this week</h3>
-                        </div>
-                        <div class="ml-5 w-0 flex items-center justify-end flex-1 text-green-500 text-base font-bold">
-                           14.6%
-                           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                              <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                           </svg>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="bg-white shadow p-4 sm:p-6 xl:p-8 ">
-                     <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                           <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">5,355</span>
-                           <h3 class="text-base font-normal text-gray-500">Visitors this week</h3>
-                        </div>
-                        <div class="ml-5 w-0 flex items-center justify-end flex-1 text-green-500 text-base font-bold">
-                           32.9%
-                           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                              <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                           </svg>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="bg-white shadow p-4 sm:p-6 xl:p-8 ">
-                     <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                           <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">385</span>
-                           <h3 class="text-base font-normal text-gray-500">User signups this week</h3>
-                        </div>
-                        <div class="ml-5 w-0 flex items-center justify-end flex-1 text-red-500 text-base font-bold">
-                           -2.7%
-                           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                              <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                           </svg>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="grid grid-cols-1 2xl:grid-cols-2 xl:gap-4 my-4">
-                  <div class="bg-white shadow mb-4 p-4 sm:p-6 h-full">
-                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-xl font-bold leading-none text-gray-900">Latest Customers</h3>
-                        <a href="#" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 inline-flex items-center p-2">
-                        View all
-                        </a>
-                     </div>
-                     <div class="flow-root">
-                        <ul role="list" class="divide-y divide-gray-200">
-                           <li class="py-3 sm:py-4">
-                              <div class="flex items-center space-x-4">
-                                 <div class="flex-shrink-0">
-                                    <img class="h-8 w-8 rounded-full" src="https://demo.themesberg.com/windster/images/users/neil-sims.png" alt="Neil image">
-                                 </div>
-                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">
-                                       Neil Sims
-                                    </p>
-                                    <p class="text-sm text-gray-500 truncate">
-                                       <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="17727a767e7b57607e7973646372653974787a">[email&#160;protected]</a>
-                                    </p>
-                                 </div>
-                                 <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                                    $320
-                                 </div>
-                              </div>
-                           </li>
-                           <li class="py-3 sm:py-4">
-                              <div class="flex items-center space-x-4">
-                                 <div class="flex-shrink-0">
-                                    <img class="h-8 w-8 rounded-full" src="https://demo.themesberg.com/windster/images/users/bonnie-green.png" alt="Neil image">
-                                 </div>
-                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">
-                                       Bonnie Green
-                                    </p>
-                                    <p class="text-sm text-gray-500 truncate">
-                                       <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d4b1b9b5bdb894a3bdbab0a7a0b1a6fab7bbb9">[email&#160;protected]</a>
-                                    </p>
-                                 </div>
-                                 <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                                    $3467
-                                 </div>
-                              </div>
-                           </li>
-                           <li class="py-3 sm:py-4">
-                              <div class="flex items-center space-x-4">
-                                 <div class="flex-shrink-0">
-                                    <img class="h-8 w-8 rounded-full" src="https://demo.themesberg.com/windster/images/users/michael-gough.png" alt="Neil image">
-                                 </div>
-                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">
-                                       Michael Gough
-                                    </p>
-                                    <p class="text-sm text-gray-500 truncate">
-                                       <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="57323a363e3b17203e3933242332257934383a">[email&#160;protected]</a>
-                                    </p>
-                                 </div>
-                                 <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                                    $67
-                                 </div>
-                              </div>
-                           </li>
-                           <li class="py-3 sm:py-4">
-                              <div class="flex items-center space-x-4">
-                                 <div class="flex-shrink-0">
-                                    <img class="h-8 w-8 rounded-full" src="https://demo.themesberg.com/windster/images/users/thomas-lean.png" alt="Neil image">
-                                 </div>
-                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">
-                                       Thomes Lean
-                                    </p>
-                                    <p class="text-sm text-gray-500 truncate">
-                                       <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="284d45494144685f41464c5b5c4d5a064b4745">[email&#160;protected]</a>
-                                    </p>
-                                 </div>
-                                 <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                                    $2367
-                                 </div>
-                              </div>
-                           </li>
-                           <li class="pt-3 sm:pt-4 pb-0">
-                              <div class="flex items-center space-x-4">
-                                 <div class="flex-shrink-0">
-                                    <img class="h-8 w-8 rounded-full" src="https://demo.themesberg.com/windster/images/users/lana-byrd.png" alt="Neil image">
-                                 </div>
-                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">
-                                       Lana Byrd
-                                    </p>
-                                    <p class="text-sm text-gray-500 truncate">
-                                       <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a2c7cfc3cbcee2d5cbccc6d1d6c7d08cc1cdcf">[email&#160;protected]</a>
-                                    </p>
-                                 </div>
-                                 <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                                    $367
-                                 </div>
-                              </div>
-                           </li>
-                        </ul>
-                     </div>
-                  </div>
-                  <div class="bg-white shadow p-4 sm:p-6 xl:p-8 ">
-                     <h3 class="text-xl leading-none font-bold text-gray-900 mb-10">Acquisition Overview</h3>
-                     <div class="block w-full overflow-x-auto">
-                        <table class="items-center w-full bg-transparent border-collapse">
-                           <thead>
-                              <tr>
-                                 <th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap">Top Channels</th>
-                                 <th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap">Users</th>
-                                 <th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap min-w-140-px"></th>
-                              </tr>
-                           </thead>
-                           <tbody class="divide-y divide-gray-100">
-                              <tr class="text-gray-500">
-                                 <th class="border-t-0 px-4 align-middle text-sm font-normal whitespace-nowrap p-4 text-left">Organic Search</th>
-                                 <td class="border-t-0 px-4 align-middle text-xs font-medium text-gray-900 whitespace-nowrap p-4">5,649</td>
-                                 <td class="border-t-0 px-4 align-middle text-xs whitespace-nowrap p-4">
-                                    <div class="flex items-center">
-                                       <span class="mr-2 text-xs font-medium">30%</span>
-                                       <div class="relative w-full">
-                                          <div class="w-full bg-gray-200 rounded-sm h-2">
-                                             <div class="bg-cyan-600 h-2 rounded-sm" style="width: 30%"></div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </td>
-                              </tr>
-                              <tr class="text-gray-500">
-                                 <th class="border-t-0 px-4 align-middle text-sm font-normal whitespace-nowrap p-4 text-left">Referral</th>
-                                 <td class="border-t-0 px-4 align-middle text-xs font-medium text-gray-900 whitespace-nowrap p-4">4,025</td>
-                                 <td class="border-t-0 px-4 align-middle text-xs whitespace-nowrap p-4">
-                                    <div class="flex items-center">
-                                       <span class="mr-2 text-xs font-medium">24%</span>
-                                       <div class="relative w-full">
-                                          <div class="w-full bg-gray-200 rounded-sm h-2">
-                                             <div class="bg-orange-300 h-2 rounded-sm" style="width: 24%"></div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </td>
-                              </tr>
-                              <tr class="text-gray-500">
-                                 <th class="border-t-0 px-4 align-middle text-sm font-normal whitespace-nowrap p-4 text-left">Direct</th>
-                                 <td class="border-t-0 px-4 align-middle text-xs font-medium text-gray-900 whitespace-nowrap p-4">3,105</td>
-                                 <td class="border-t-0 px-4 align-middle text-xs whitespace-nowrap p-4">
-                                    <div class="flex items-center">
-                                       <span class="mr-2 text-xs font-medium">18%</span>
-                                       <div class="relative w-full">
-                                          <div class="w-full bg-gray-200 rounded-sm h-2">
-                                             <div class="bg-teal-400 h-2 rounded-sm" style="width: 18%"></div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </td>
-                              </tr>
-                              <tr class="text-gray-500">
-                                 <th class="border-t-0 px-4 align-middle text-sm font-normal whitespace-nowrap p-4 text-left">Social</th>
-                                 <td class="border-t-0 px-4 align-middle text-xs font-medium text-gray-900 whitespace-nowrap p-4">1251</td>
-                                 <td class="border-t-0 px-4 align-middle text-xs whitespace-nowrap p-4">
-                                    <div class="flex items-center">
-                                       <span class="mr-2 text-xs font-medium">12%</span>
-                                       <div class="relative w-full">
-                                          <div class="w-full bg-gray-200 rounded-sm h-2">
-                                             <div class="bg-pink-600 h-2 rounded-sm" style="width: 12%"></div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </td>
-                              </tr>
-                              <tr class="text-gray-500">
-                                 <th class="border-t-0 px-4 align-middle text-sm font-normal whitespace-nowrap p-4 text-left">Other</th>
-                                 <td class="border-t-0 px-4 align-middle text-xs font-medium text-gray-900 whitespace-nowrap p-4">734</td>
-                                 <td class="border-t-0 px-4 align-middle text-xs whitespace-nowrap p-4">
-                                    <div class="flex items-center">
-                                       <span class="mr-2 text-xs font-medium">9%</span>
-                                       <div class="relative w-full">
-                                          <div class="w-full bg-gray-200 rounded-sm h-2">
-                                             <div class="bg-indigo-600 h-2 rounded-sm" style="width: 9%"></div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </td>
-                              </tr>
-                              <tr class="text-gray-500">
-                                 <th class="border-t-0 align-middle text-sm font-normal whitespace-nowrap p-4 pb-0 text-left">Email</th>
-                                 <td class="border-t-0 align-middle text-xs font-medium text-gray-900 whitespace-nowrap p-4 pb-0">456</td>
-                                 <td class="border-t-0 align-middle text-xs whitespace-nowrap p-4 pb-0">
-                                    <div class="flex items-center">
-                                       <span class="mr-2 text-xs font-medium">7%</span>
-                                       <div class="relative w-full">
-                                          <div class="w-full bg-gray-200 rounded-sm h-2">
-                                             <div class="bg-purple-500 h-2 rounded-sm" style="width: 7%"></div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </td>
-                              </tr>
-                           </tbody>
-                        </table>
-                     </div>
-                  </div>
-               </div>
-           
-     
-        
-      </div>
+                    </div>
+                    <h3 class="text-gray-700 text-base font-semibold mb-1">{{ "No data found" | trans }}</h3>
+                    <p class="text-gray-500 text-sm">{{ "There are no payments to display for this year." | trans }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+			<div class="bg-gray-50 shadow p-4 sm:p-2 xl:p-4 ">
+				<div class="mb-4 flex items-center justify-between">
+					<div>
+						<h3 class="text-lg font-bold text-gray-900 mb-2">{{"Latest Transactions" | trans}}</h3>
+						<span class="text-sm font-normal text-gray-500">{{"This is a list of latest transactions" | trans}}</span>
+					</div>
+					<div class="flex-shrink-0">
+						<a href="{{path('app_admin_payment')}}" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 p-2">{{"View all" | trans}}</a>
+					</div>
+				</div>
+				<div class="flex flex-col mt-8">
+					<div class="overflow-x-auto">
+						<div class="align-middle inline-block min-w-full">
+							<div class="shadow overflow-hidden ">
+								<table class="min-w-full divide-y divide-gray-200 shadow-md border border-gray-100">
+									<thead class="bg-gray-50">
+										<tr>
+											<th scope="col" class="p-4 text-left text-xs font-medium text-gray-500  tracking-wider">
+												{{"Transaction" | trans}}
+											</th>
+											<th scope="col" class="p-4 text-left text-xs font-medium text-gray-500  tracking-wider">
+												{{"Date & Time" | trans}}
+											</th>
+											<th scope="col" class="p-4 text-left text-xs font-medium text-gray-500  tracking-wider">
+												{{"Amount" | trans}}
+											</th>
+										</tr>
+									</thead>
+									<tbody class="bg-white divide-y divide-gray-200">
+										{% for payment in payments %}
+											<tr class="">
+												<td class="p-4 whitespace-nowrap text-xs font-normal text-gray-900">
+													{{"Payment from" | trans}}
+													<span class="font-semibold">{{ payment.clientName}}</span>
+												</td>
+												<td class="p-4 whitespace-nowrap text-xs font-normal text-gray-500">
+													{{ payment.createdAt|format_datetime(pattern='MMMM d, y', locale=app.request.locale) }}
+												</td>
+												<td class="p-4 whitespace-nowrap text-xs font-semibold text-gray-900">
+													{{ payment.amount | format_number(locale=app.request.locale) }}
+													{{ payment.currency }}
+												</td>
+											</tr>
+										{% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="grid grid-cols-1 2xl:grid-cols-2 xl:gap-4 my-4">
+			<div class="bg-white shadow mb-4 p-4 sm:p-6 h-full">
+				<div class="flex items-center justify-between mb-4">
+					<h3 class="text-xl font-bold leading-none text-gray-900">{{"Latest 5 Clients" | trans}}</h3>
+					<a href="{{path('app_admin_clients')}}" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 inline-flex items-center p-2">
+						{{"View all" |trans}}
+					</a>
+				</div>
+				<div class="flow-root">
+					<ul role="list" class="divide-y divide-gray-200">
+						{% for client in  last5Clients %}
+							<li class="py-3 sm:py-4">
+								<div class="flex items-center space-x-4">
+									<div class="flex-shrink-0">
+										<div class="h-8 w-8 rounded-full bg-trash_bold text-white flex items-center justify-center font-bold text-sm uppercase">
+											{{ client.name|slice(0, 1)|upper }}
+										</div>
+									</div>
+									<div class="flex-1 min-w-0">
+										<p class="text-sm font-medium text-gray-900 truncate">
+											{{ client.name | capitalize}}
+										</p>
+										<p class="text-sm text-gray-500 truncate">
+											{{ client.user.createdAt|format_datetime(pattern='MMMM d, y HH:mm', locale=app.request.locale) }}
+										</p>
+									</div>
+									<div class="inline-flex items-center text-base font-semibold text-gray-900">
+										<a href="{{ path('app_admin_clients_view',{slug :client.slug})}}" class="inline-flex items-center px-3 py-1.5  bg-trash text-white hover:bg-trash_bold transition-all duration-200 group text-xs font-medium shadow-xs border border-emerald-100">
+											<svg class="w-4 h-4 mr-1.5 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+												<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 5V4a1 1 0 0 0-1-1H8.914a1 1 0 0 0-.707.293L4.293 7.207A1 1 0 0 0 4 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5M9 3v4a1 1 0 0 1-1 1H4m11.383.772 2.745 2.746m1.215-3.906a2.089 2.089 0 0 1 0 2.953l-6.65 6.646L9 17.95l.739-3.692 6.646-6.646a2.087 2.087 0 0 1 2.958 0Z"/>
+											</svg>
+											<span>{{ 'View'|trans }}</span>
+										</a>
+									</div>
+								</div>
+							</li>
+						{% endfor %}
+
+					</ul>
+				</div>
+			</div>
+			<div class="bg-white shadow p-4 sm:p-6 xl:p-8">
+
+				<div class="flex items-center justify-between mb-4">
+					<h3 class="text-xl font-bold leading-none text-gray-900">{{"System Logs" | trans}}</h3>
+					<a href="{{path('app_admin_clients')}}" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 inline-flex items-center p-2">
+						{{"View all" |trans}}
+					</a>
+				</div>
+				<div class="block w-full overflow-x-auto">
+					<table class="items-center w-full bg-transparent border-collapse">
+						<thead>
+							<tr>
+								<th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap">Level</th>
+								<th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap">Message</th>
+								<th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap">Date</th>
+							</tr>
+						</thead>
+						<tbody
+							class="divide-y divide-gray-100">
+
+							<!-- Example 1: ERROR -->
+							<tr class="text-gray-500">
+								<td class="border-t-0 px-4 align-middle text-xs font-bold text-red-600 whitespace-nowrap p-4 text-left">
+									ERROR
+								</td>
+								<td class="border-t-0 px-4 align-middle text-sm text-gray-800 whitespace-nowrap p-4">
+									Database connection failed on production server.
+								</td>
+								<td class="border-t-0 px-4 align-middle text-sm text-gray-500 whitespace-nowrap p-4">
+									2025-08-02 15:24
+								</td>
+							</tr>
+
+							<!-- Example 2: DEBUG -->
+							<tr class="text-gray-500">
+								<td class="border-t-0 px-4 align-middle text-xs font-bold text-blue-500 whitespace-nowrap p-4 text-left">
+									DEBUG
+								</td>
+								<td class="border-t-0 px-4 align-middle text-sm text-gray-800 whitespace-nowrap p-4">
+									User registration payload received.
+								</td>
+								<td class="border-t-0 px-4 align-middle text-sm text-gray-500 whitespace-nowrap p-4">
+									2025-08-02 14:03
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+
+
+	</div>
 {% endblock %}
 {% block javascripts %}
-   {{ parent()}}
-    <script src="{{ asset('template/js/chartjs.min.js')}}"></script>
-   <script src="{{ asset('build/chart.js') }}"></script>
+	{{ parent()}}
+	<script src="{{ asset('template/js/chartjs.min.js')}}"></script>
+	<script src="{{ asset('build/admin_chart.js') }}"></script>
 {% endblock %}

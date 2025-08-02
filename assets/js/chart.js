@@ -146,7 +146,18 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hide the loading element and show the chart
             loadingElement.style.display = 'none';
             chartCanvas.style.display = 'block';
+            const hasData =
+            apiData.datasets &&
+            apiData.datasets.length === 2 &&
+            apiData.datasets[0].data.length > 0 &&
+            apiData.datasets[1].data.length > 0;
 
+        if (!hasData) {
+            // No data: show fallback message
+            loadingElement.style.display = 'none';
+            document.getElementById('noChartData').classList.remove('hidden');
+            return;
+        }
             // Render the chart using Chart.js
             new Chart(chartCanvas, config);
         })
