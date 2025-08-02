@@ -16,246 +16,261 @@
 
 <!-- Sidebar -->
 <aside id="sidebar" class="fixed top-0 left-0 z-40 w-[280px] h-screen border-r border-gray-100 transition-transform -translate-x-full md:translate-x-0 bg-gray-50  pt-0 md:pt-0">
-	<div
-		class="h-full px-3 py-4 overflow-y-auto flex flex-col">
-		<div class="flex-grow">
-		<!-- Logo -->
-		<div class="px-3 pb-4 mb-4 border-b border-gray-200 dark:border-gray-700 hidden md:block">
-			<a href="{{ path('app_home')}}" class="flex items-center w-full justify-center">
-				<img src="{{ asset('template/logo/logo.png')}}" class="w-[140px]" alt="Vanish Note"/>
-			</a>
-		</div>
-
-		<!-- Menu items -->
-		<ul class="space-y-2 mt-0 md:mt-0">
-			<li>
-
-				<a
-					href="{{ path('app_home')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-					<!-- Icône SVG Dashboard -->
-					<svg class="w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 22 21">
-						<path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
-						<path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
-					</svg>
-					<span class="ms-1">{{"Dashboard" | trans}}</span>
+	<div class="h-full px-3 py-4 overflow-y-auto flex flex-col">
+		<div
+			class="flex-grow">
+			<!-- Logo -->
+			<div class="px-3 pb-4 mb-4 border-b border-gray-200 dark:border-gray-700 hidden md:block">
+				<a href="{{ path('app_home')}}" class="flex items-center w-full justify-center">
+					<img src="{{ asset('template/logo/logo.png')}}" class="w-[140px]" alt="Vanish Note"/>
 				</a>
-			</li>
-
-			<li>
-	            <a
-					href="{{ path('app_admin_clients')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-					<!-- Icône SVG Dashboard -->
-                        <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd" d="M12 6a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm-1.5 8a4 4 0 0 0-4 4 2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-3Zm6.82-3.096a5.51 5.51 0 0 0-2.797-6.293 3.5 3.5 0 1 1 2.796 6.292ZM19.5 18h.5a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-1.1a5.503 5.503 0 0 1-.471.762A5.998 5.998 0 0 1 19.5 18ZM4 7.5a3.5 3.5 0 0 1 5.477-2.889 5.5 5.5 0 0 0-2.796 6.293A3.501 3.501 0 0 1 4 7.5ZM7.1 12H6a4 4 0 0 0-4 4 2 2 0 0 0 2 2h.5a5.998 5.998 0 0 1 3.071-5.238A5.505 5.505 0 0 1 7.1 12Z" clip-rule="evenodd"/>
-                    </svg>
-
-					<span class="ms-1">{{"Client Management" | trans}}</span>
-				</a>
-			</li>
-
-			<li>
-			
-				<a
-					href="{{ path('app_admin_notes')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-					<!-- Icône SVG Dashboard -->
-
-					<svg class="w-5 h-5 text-gray-500 transition " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11H4m15.5 5a.5.5 0 0 0 .5-.5V8a1 1 0 0 0-1-1h-3.75a1 1 0 0 1-.829-.44l-1.436-2.12a1 1 0 0 0-.828-.44H8a1 1 0 0 0-1 1M4 9v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-3.75a1 1 0 0 1-.829-.44L9.985 8.44A1 1 0 0 0 9.157 8H5a1 1 0 0 0-1 1Z"/>
-					</svg>
-
-
-					<span class="ms-1">{{"Notes Management" | trans}}</span>
-				</a>
-			</li>
-			<li>
-			
-				<a
-					href="{{ path('app_admin_payment')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-					<!-- Icône SVG Dashboard -->
-
-					<svg class="w-5 h-5 text-gray-500 transition" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M6 14h2m3 0h5M3 7v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Z"/>
-					</svg>
-					<span class="ms-1">{{"Payments" | trans}}</span>
-				</a>
-			</li>
-
-			<div class="inline-flex items-center justify-center w-full">
-				<hr class="w-64 h-px my-6 bg-gray-200 border-0 dark:bg-gray-700">
-				<span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-gray-50  left-1/2 text-sm">
-				{{"Parameters" | trans}}</span>
 			</div>
-			<!-- Subscription Plans Dropdown -->
-			<li>
-				<button
-					type="button" class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="subscriptions-dropdown" data-collapse-toggle="subscriptions-dropdown">
-	
-					<svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h2.429M7 8h3M8 8V4h4v2m4 0V5h-4m3 4v3a1 1 0 0 1-1 1h-3m9-3v9a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-6.397a1 1 0 0 1 .27-.683l2.434-2.603a1 1 0 0 1 .73-.317H19a1 1 0 0 1 1 1Z"/>
-					</svg>
-					<span class="flex-1 ms-1 text-left rtl:text-right whitespace-nowrap">{{"Subscription Plans" | trans}}</span>
-					
-					<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 10 6">
-						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-					</svg>
-				</button>
-				<ul id="subscriptions-dropdown" class="hidden py-2 space-y-2 bg-white p-2 mt-2 shadow-sm rounded-xl dark:bg-gray-800">
-					<li>
-						<a href="{{ path('app_subscription_plan_add')}}" class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-						
-							<svg class="w-3 h-3 mr-3 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 18 18">
-								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-							</svg>
-							{{"Add Subscription Plan" | trans}}
-						</a>
-						
-					</li>
-					<li>
-						<a
-							href="{{ path('app_subscription_plan')}}" class="flex items-center w-full p-2 text-sm  text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
 
-							<svg class="w-4 h-4 mr-3 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
-							</svg>
+			<!-- Menu items -->
+			<ul class="space-y-2 mt-0 md:mt-0">
+				<li>
 
-							{{"All Subscriptions" | trans}}
-						</a>
-					</li>
-				
-				</ul>
-			</li>
-			
+					<a
+						href="{{ path('app_home')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+						<!-- Icône SVG Dashboard -->
+						<svg class="w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 22 21">
+							<path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
+							<path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
+						</svg>
+						<span class="ms-1">{{"Dashboard" | trans}}</span>
+					</a>
+				</li>
 
-			<!-- Currency Dropdown -->
-		
-		
-			<li>
-				<button
-					type="button" class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="currency-dropdown" data-collapse-toggle="currency-dropdown">
+				<li>
+					<a
+						href="{{ path('app_admin_clients')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+						<!-- Icône SVG Dashboard -->
+						<svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewbox="0 0 24 24">
+							<path fill-rule="evenodd" d="M12 6a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm-1.5 8a4 4 0 0 0-4 4 2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-3Zm6.82-3.096a5.51 5.51 0 0 0-2.797-6.293 3.5 3.5 0 1 1 2.796 6.292ZM19.5 18h.5a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-1.1a5.503 5.503 0 0 1-.471.762A5.998 5.998 0 0 1 19.5 18ZM4 7.5a3.5 3.5 0 0 1 5.477-2.889 5.5 5.5 0 0 0-2.796 6.293A3.501 3.501 0 0 1 4 7.5ZM7.1 12H6a4 4 0 0 0-4 4 2 2 0 0 0 2 2h.5a5.998 5.998 0 0 1 3.071-5.238A5.505 5.505 0 0 1 7.1 12Z" clip-rule="evenodd"/>
+						</svg>
 
-					<svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17.345a4.76 4.76 0 0 0 2.558 1.618c2.274.589 4.512-.446 4.999-2.31.487-1.866-1.273-3.9-3.546-4.49-2.273-.59-4.034-2.623-3.547-4.488.486-1.865 2.724-2.899 4.998-2.31.982.236 1.87.793 2.538 1.592m-3.879 12.171V21m0-18v2.2"/>
-					</svg>
+						<span class="ms-1">{{"Client Management" | trans}}</span>
+					</a>
+				</li>
 
-					<span class="flex-1 ms-1 text-left rtl:text-right whitespace-nowrap">{{"Currency" | trans}}</span>
-					
-					<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 10 6">
-						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-					</svg>
-				</button>
-				<ul id="currency-dropdown" class="hidden py-2 space-y-2 bg-white p-2 mt-2 shadow-sm rounded-xl dark:bg-gray-800">
-					<li>
-						<a href="{{ path('app_currency_add')}}" class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-						
-							<svg class="w-3 h-3 mr-3 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 18 18">
-								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-							</svg>
-							{{"New Currency" | trans}}
-						</a>
-						
-					</li>
-					<li>
-						<a
-							href="{{ path('app_currency')}}" class="flex items-center w-full p-2 text-sm  text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+				<li>
 
-							<svg class="w-4 h-4 mr-3 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
-							</svg>
+					<a
+						href="{{ path('app_admin_notes')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+						<!-- Icône SVG Dashboard -->
 
-							{{"All Currencies" | trans}}
-						</a>
-					</li>
-				
-				</ul>
-			</li>
+						<svg class="w-5 h-5 text-gray-500 transition " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11H4m15.5 5a.5.5 0 0 0 .5-.5V8a1 1 0 0 0-1-1h-3.75a1 1 0 0 1-.829-.44l-1.436-2.12a1 1 0 0 0-.828-.44H8a1 1 0 0 0-1 1M4 9v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-3.75a1 1 0 0 1-.829-.44L9.985 8.44A1 1 0 0 0 9.157 8H5a1 1 0 0 0-1 1Z"/>
+						</svg>
 
-			<li>
-				<a href="{{ path('app_api_credential')}}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-					<span class="ms-3">{{"API Management" | trans}}</span>
-				</a>
-			</li>
 
-			<li>
-				<a href="{{ path('app_admin_entreprise_configuration')}}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-					<span class="ms-3">{{"Company Settings" |trans}}</span>
-				</a>
-			</li>
+						<span class="ms-1">{{"Notes Management" | trans}}</span>
+					</a>
+				</li>
+				<li>
 
-			<!-- Language Selector -->
-			<li>
-				<button type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="language-dropdown" data-collapse-toggle="language-dropdown">
-					<span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
-						{% set language = "English" %}
-						{% if app.request.locale == "fr" %}
-							{% set language = "Français" %}
-						{% elseif app.request.locale == "en" %}
+					<a
+						href="{{ path('app_admin_payment')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+						<!-- Icône SVG Dashboard -->
+
+						<svg class="w-5 h-5 text-gray-500 transition" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M6 14h2m3 0h5M3 7v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Z"/>
+						</svg>
+						<span class="ms-1">{{"Payments" | trans}}</span>
+					</a>
+				</li>
+
+				<div class="inline-flex items-center justify-center w-full">
+					<hr class="w-64 h-px my-6 bg-gray-200 border-0 dark:bg-gray-700">
+					<span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-gray-50  left-1/2 text-sm">
+						{{"Parameters" | trans}}</span>
+				</div>
+				<!-- Subscription Plans Dropdown -->
+				<li>
+					<button type="button" class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="subscriptions-dropdown" data-collapse-toggle="subscriptions-dropdown">
+
+						<svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h2.429M7 8h3M8 8V4h4v2m4 0V5h-4m3 4v3a1 1 0 0 1-1 1h-3m9-3v9a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-6.397a1 1 0 0 1 .27-.683l2.434-2.603a1 1 0 0 1 .73-.317H19a1 1 0 0 1 1 1Z"/>
+						</svg>
+						<span class="flex-1 ms-1 text-left rtl:text-right whitespace-nowrap">{{"Subscription Plans" | trans}}</span>
+
+						<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 10 6">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+						</svg>
+					</button>
+					<ul id="subscriptions-dropdown" class="hidden py-2 space-y-2 bg-white p-2 mt-2 shadow-sm rounded-xl dark:bg-gray-800">
+						<li>
+							<a href="{{ path('app_subscription_plan_add')}}" class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+
+								<svg class="w-3 h-3 mr-3 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 18 18">
+									<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+								</svg>
+								{{"Add Subscription Plan" | trans}}
+							</a>
+
+						</li>
+						<li>
+							<a href="{{ path('app_subscription_plan')}}" class="flex items-center w-full p-2 text-sm  text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+
+								<svg class="w-4 h-4 mr-3 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+									<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
+								</svg>
+
+								{{"All Subscriptions" | trans}}
+							</a>
+						</li>
+
+					</ul>
+				</li>
+
+
+				<!-- Currency Dropdown -->
+
+
+				<li>
+					<button type="button" class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="currency-dropdown" data-collapse-toggle="currency-dropdown">
+
+						<svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17.345a4.76 4.76 0 0 0 2.558 1.618c2.274.589 4.512-.446 4.999-2.31.487-1.866-1.273-3.9-3.546-4.49-2.273-.59-4.034-2.623-3.547-4.488.486-1.865 2.724-2.899 4.998-2.31.982.236 1.87.793 2.538 1.592m-3.879 12.171V21m0-18v2.2"/>
+						</svg>
+
+						<span class="flex-1 ms-1 text-left rtl:text-right whitespace-nowrap">{{"Currency" | trans}}</span>
+
+						<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 10 6">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+						</svg>
+					</button>
+					<ul id="currency-dropdown" class="hidden py-2 space-y-2 bg-white p-2 mt-2 shadow-sm rounded-xl dark:bg-gray-800">
+						<li>
+							<a href="{{ path('app_currency_add')}}" class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+
+								<svg class="w-3 h-3 mr-3 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 18 18">
+									<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+								</svg>
+								{{"New Currency" | trans}}
+							</a>
+
+						</li>
+						<li>
+							<a href="{{ path('app_currency')}}" class="flex items-center w-full p-2 text-sm  text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+
+								<svg class="w-4 h-4 mr-3 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+									<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
+								</svg>
+
+								{{"All Currencies" | trans}}
+							</a>
+						</li>
+
+					</ul>
+				</li>
+
+				<li>
+
+					<a href="{{ path('app_api_credential')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+
+						<svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"/>
+						</svg>
+
+						<span class="ms-1">{{"API Management" | trans}}</span>
+					</a>
+				</li>
+				<li>
+
+					<a href="{{ path('app_admin_entreprise_configuration')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+
+						<svg class="w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewbox="0 0 24 24">
+							<path fill-rule="evenodd" d="M4 4a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2v14a1 1 0 1 1 0 2H5a1 1 0 1 1 0-2V5a1 1 0 0 1-1-1Zm5 2a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H9Zm5 0a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-1Zm-5 4a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1H9Zm5 0a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1h-1Zm-3 4a2 2 0 0 0-2 2v3h2v-3h2v3h2v-3a2 2 0 0 0-2-2h-2Z" clip-rule="evenodd"/>
+						</svg>
+
+						<span class="ms-1">{{"Company Settings" | trans}}</span>
+					</a>
+				</li>
+
+				<!-- Language Selector -->
+				<li>
+					<button
+						type="button" class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="language-dropdown" data-collapse-toggle="language-dropdown">
+						<!-- Icône de langue -->
+
+						<svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m13 19 3.5-9 3.5 9m-6.125-2h5.25M3 7h7m0 0h2m-2 0c0 1.63-.793 3.926-2.239 5.655M7.5 6.818V5m.261 7.655C6.79 13.82 5.521 14.725 4 15m3.761-2.345L5 10m2.761 2.655L10.2 15"/>
+						</svg>
+
+						<span class="flex-1 ms-1 text-left rtl:text-right whitespace-nowrap">
 							{% set language = "English" %}
-						{% elseif app.request.locale == "de" %}
-							{% set language = "Deutsch" %}
-						{% elseif app.request.locale == "es" %}
-							{% set language = "Espagnole" %}
-						{% endif %}
-						{{ language | trans }}
-					</span>
-					<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 10 6">
-						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-					</svg>
-				</button>
-				<ul id="language-dropdown" class="hidden py-2 space-y-2">
-					<li>
-						<a href="javascript:;" onclick="onChangeLanguage('fr')" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-full me-2" viewbox="0 0 32 32">
-								<path fill="#fff" d="M10 4H22V28H10z"></path>
-								<path d="M5,4h6V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#092050"></path>
-								<path d="M25,4h6V28h-6c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 26 16)" fill="#be2a2c"></path>
-							</svg>
-							{{"French" |trans}}
-						</a>
-					</li>
-					<li>
-						<a href="javascript:;" onclick="onChangeLanguage('en')" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-full me-2" viewbox="0 0 512 512">
-								<path fill="#bd3d44" d="M0 0h247v10H0zM0 20h247v10H0zM0 40h247v10H0zM0 60h247v10H0zM0 80h247v10H0zM0 100h247v10H0zM0 120h247v10H0z" transform="scale(3.9385)"/>
-								<path fill="#fff" d="M0 10h247v10H0zM0 30h247v10H0zM0 50h247v10H0zM0 70h247v10H0zM0 90h247v10H0zM0 110h247v10H0z" transform="scale(3.9385)"/>
-								<path fill="#192f5d" d="M0 0h98.8v70H0z" transform="scale(3.9385)"/>
-							</svg>
-							{{"English" |trans}}
-						</a>
-					</li>
-					<li>
-						<a href="javascript:;" onclick="onChangeLanguage('es')" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-sm me-2" viewbox="0 0 3 2">
-								<rect width="3" height="2" y="0" fill="#AA151B"/>
-								<rect width="3" height="1" y="0.5" fill="#F1BF00"/>
-							</svg>
-							{{"Spanish" | trans}}
-						</a>
-					</li>
-					<li>
-						<a href="javascript:;" onclick="onChangeLanguage('de')" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-full me-2" viewbox="0 0 5 3">
-								<rect width="5" height="1" y="0" fill="#000"/>
-								<rect width="5" height="1" y="1" fill="#DD0000"/>
-								<rect width="5" height="1" y="2" fill="#FFCE00"/>
-							</svg>
-							{{"German" |trans}}
-						</a>
-					</li>
-				</ul>
-			</li>
+							{% if app.request.locale == "fr" %}
+								{% set language = "Français" %}
+							{% elseif app.request.locale == "en" %}
+								{% set language = "English" %}
+							{% elseif app.request.locale == "de" %}
+								{% set language = "Deutsch" %}
+							{% elseif app.request.locale == "es" %}
+								{% set language = "Espagnole" %}
+							{% endif %}
+							{{ language | trans }}
+						</span>
+						<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 10 6">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+						</svg>
+					</button>
+					<ul id="language-dropdown" class="hidden py-2 space-y-2">
+						<li>
+							<a href="javascript:;" onclick="onChangeLanguage('fr')" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-full me-2" viewbox="0 0 32 32">
+									<path fill="#fff" d="M10 4H22V28H10z"></path>
+									<path d="M5,4h6V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#092050"></path>
+									<path d="M25,4h6V28h-6c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 26 16)" fill="#be2a2c"></path>
+								</svg>
+								{{"French" |trans}}
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" onclick="onChangeLanguage('en')" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-full me-2" viewbox="0 0 512 512">
+									<path fill="#bd3d44" d="M0 0h247v10H0zM0 20h247v10H0zM0 40h247v10H0zM0 60h247v10H0zM0 80h247v10H0zM0 100h247v10H0zM0 120h247v10H0z" transform="scale(3.9385)"/>
+									<path fill="#fff" d="M0 10h247v10H0zM0 30h247v10H0zM0 50h247v10H0zM0 70h247v10H0zM0 90h247v10H0zM0 110h247v10H0z" transform="scale(3.9385)"/>
+									<path fill="#192f5d" d="M0 0h98.8v70H0z" transform="scale(3.9385)"/>
+								</svg>
+								{{"English" |trans}}
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" onclick="onChangeLanguage('es')" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-sm me-2" viewbox="0 0 3 2">
+									<rect width="3" height="2" y="0" fill="#AA151B"/>
+									<rect width="3" height="1" y="0.5" fill="#F1BF00"/>
+								</svg>
+								{{"Spanish" | trans}}
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" onclick="onChangeLanguage('de')" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-full me-2" viewbox="0 0 5 3">
+									<rect width="5" height="1" y="0" fill="#000"/>
+									<rect width="5" height="1" y="1" fill="#DD0000"/>
+									<rect width="5" height="1" y="2" fill="#FFCE00"/>
+								</svg>
+								{{"German" |trans}}
+							</a>
+						</li>
+					</ul>
+				</li>
 			</div>
-		
+
 			<!-- Logout -->
 			<div class="mt-auto">
-				<a href="{{ path('app_logout')}}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+				<a
+					href="{{ path('app_logout')}}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
 					<!-- Icône SVG Dashboard -->
-					<svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/>
+					<svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/>
 					</svg>
 					<span class="ms-2">{{"Logout" | trans}}</span>
 				</a>
 			</div>
-	
+
 		</ul>
 	</div>
 </aside>
@@ -264,7 +279,7 @@
 <div id="sidebar-backdrop" class="fixed inset-0 z-30 hidden bg-gray-900/50 dark:bg-gray-900/80 md:hidden"></div>
 
 
-<!-- Script pour gérer l'ouverture/fermeture du sidebar -->
+<!-- Script to manage the opening/closing of the sidebar -->
 <script>
 	document.addEventListener('DOMContentLoaded', function () {
 const sidebar = document.getElementById('sidebar');
@@ -321,4 +336,5 @@ window.addEventListener('resize', handleResize);
 // Initialisation au chargement
 handleResize();
 });
+
 </script>

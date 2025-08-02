@@ -44,11 +44,13 @@ final class AdminPaymentController extends AbstractController
                     'subscriptionPlan' => $payment->getSubscriptionPlan()->getName(),
                     'clientName' => $client->getName(),
                     'currency' => $payment->getCurrency(),
-                    'client_slug' => $client->getSlug()
+                    'client_slug' => $client->getSlug(),
+                    'stripePaymentIntentId' => $payment->getStripePaymentIntentId(),
+                    'stripeSessionId' => $payment->getStripeSessionId()
                     
                 ];
             } catch (\Exception $e) {
-                // Skip notes that cannot be decrypted
+               
                 continue;
             }
         }

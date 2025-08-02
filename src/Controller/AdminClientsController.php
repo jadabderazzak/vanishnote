@@ -110,12 +110,43 @@ final class AdminClientsController extends AbstractController
             'isPrimary' => true
         ]);
         $amountPayed = $repoPayment->getTotalAmountPaidByUser($user);
+        $Allpayments = $repoPayment->findBy([
+            'user' => $user
+        ]);
+        $payments = [];
+        foreach ($Allpayments as $payment) {
+         
+            try {
+                $user = $payment->getUSer();
+                $client = $repoClient->findOneBy([
+                    'user' => $user
+                ]);
+                $payments[] = [
+                    'id' => $payment->getId(),
+                    'slug' => $payment->getSlug(),
+                    'amount' => $payment->getAmount(),
+                    'status' => $payment->getStatus(),
+                    'createdAt' => $payment->getCreatedAt(),
+                    'subscriptionPlan' => $payment->getSubscriptionPlan()->getName(),
+                    'clientName' => $client->getName(),
+                    'currency' => $payment->getCurrency(),
+                    'client_slug' => $client->getSlug(),
+                    'stripePaymentIntentId' => $payment->getStripePaymentIntentId(),
+                    'stripeSessionId' => $payment->getStripeSessionId()
+                    
+                ];
+            } catch (\Exception $e) {
+             
+                continue;
+            }
+        }
         return $this->render('admin_clients/view.html.twig', [
             'client' => $client,
             'subscriptions' => $subscriptions,
             'notesCount' => $notesCount,
             'amountPayed' => $amountPayed,
-            'currency' => $currency->getCode()
+            'currency' => $currency->getCode(),
+            'payments' => $payments
 
         ]);
     }
