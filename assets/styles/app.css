@@ -20,7 +20,7 @@ html {
 
 /* Success toast: light blue background */
 .toast-success {
-  background-color: #4baddb !important;
+  background-color: #19cc28 !important;
   opacity: 1 !important;
   filter: none !important;
 }
@@ -37,4 +37,11 @@ html {
   background-color: #f39c12 !important;
   opacity: 1 !important;
   filter: none !important;
+}
+@media (min-width: 768px) {
+  .toast-success,
+  .toast-error,
+  .toast-warning {
+    width: 600px !important; /* ajuste la largeur selon ton besoin */
+  }
 }

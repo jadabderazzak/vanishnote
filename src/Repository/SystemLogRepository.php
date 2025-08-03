@@ -16,28 +16,20 @@ class SystemLogRepository extends ServiceEntityRepository
         parent::__construct($registry, SystemLog::class);
     }
 
-    //    /**
-    //     * @return SystemLog[] Returns an array of SystemLog objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?SystemLog
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+   /**
+     * Retrieves the five most recent system logs ordered by logged date (newest first).
+     *
+     * @return SystemLog[] Returns an array of SystemLog objects
+     */
+    public function findFiveMostRecentLogs(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.isHandled = :false')
+            ->setParameter('false', false)
+            ->orderBy('l.loggedAt', 'DESC')
+            ->setMaxResults(5)
+            ->orderBy('l.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

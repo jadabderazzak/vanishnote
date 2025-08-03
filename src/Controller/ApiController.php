@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Form\ApiType;
 use App\Entity\ApiCredential;
 use App\Service\EncryptionService;
+use App\Service\ApiTesterService;
+use App\Service\SystemLoggerService;
+use App\Enum\LogLevel;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ApiCredentialRepository;
-use App\Service\ApiTesterService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,45 +18,53 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * Controller managing API credentials CRUD operations and testing.
- * 
- * Requires ROLE_ADMIN to access all routes.
+ * Controller responsible for managing API credentials (CRUD + validation).
+ * Requires ROLE_ADMIN to access all actions.
  */
 #[IsGranted("ROLE_ADMIN")]
 final class ApiController extends AbstractController
 {
     /**
-     * @param TranslatorInterface $translator Translator service for flash messages.
+     * Constructor.
+     *
+     * @param TranslatorInterface $translator Service for translating flash messages
+     * @param SystemLoggerService $logger Service for recording logs in database
      */
-    public function __construct(private readonly TranslatorInterface $translator)
-    {}
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly SystemLoggerService $logger
+    ) {}
 
     /**
-     * Lists all API credentials.
+     * Displays all API credentials.
      *
-     * @param ApiCredentialRepository $repoCredential Repository for API credentials.
-     * @return Response The rendered credentials list view.
+     * @param ApiCredentialRepository $repoCredential
+     * @return Response
      */
     #[Route('/api', name: 'app_api_credential')]
     public function index(ApiCredentialRepository $repoCredential): Response
     {
-        $credentials = $repoCredential->findBy([]);
+        try {
+            $credentials = $repoCredential->findBy([]);
+        } catch (\Throwable $e) {
+            $this->logger->log(LogLevel::ERROR, 'Failed to fetch API credentials: ' . $e->getMessage());
+            $this->addFlash('danger', $this->translator->trans('Unable to load API credentials.'));
+            $credentials = [];
+        }
+
         return $this->render('api/index.html.twig', [
             'credentials' => $credentials,
         ]);
     }
 
     /**
-     * Handles adding a new API credential.
-     * 
-     * Encrypts secret and public keys before persisting.
+     * Handles creation of a new API credential with encryption.
      *
-     * @param Request $request The HTTP request.
-     * @param EncryptionService $encryptionService Service to encrypt API keys.
-     * @param EntityManagerInterface $manager Doctrine entity manager.
-     * @param ApiCredentialRepository $repoCredential Repository for API credentials.
-     * 
-     * @return Response The rendered form or redirect after success.
+     * @param Request $request
+     * @param EncryptionService $encryptionService
+     * @param EntityManagerInterface $manager
+     * @param ApiCredentialRepository $repoCredential
+     * @return Response
      */
     #[Route('/api/add', name: 'app_api_credential_add')]
     public function add(Request $request, EncryptionService $encryptionService, EntityManagerInterface $manager, ApiCredentialRepository $repoCredential): Response
@@ -64,37 +74,33 @@ final class ApiController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $apiCredential = $form->getData();
-            // Check if the service already exists
-            $serviceName = strtolower($apiCredential->getService());
-            $existingCredential = $repoCredential->findOneBy(['service' => $serviceName]);
+            try {
+                $apiCredential = $form->getData();
+                $serviceName = strtolower($apiCredential->getService());
 
-            if ($existingCredential) {
-                $this->addFlash('warning', $this->translator->trans("This service already exists. Please modify the existing one."));
-                return $this->redirectToRoute('app_api_credential');
+                if ($repoCredential->findOneBy(['service' => $serviceName])) {
+                    $this->addFlash('warning', $this->translator->trans("This service already exists. Please modify the existing one."));
+                    return $this->redirectToRoute('app_api_credential');
+                }
+
+                $secretKeyRaw = $form->get('secretKeyEncrypted')->getData();
+                $publicKeyRaw = $form->get('publicKeyEncrypted')->getData();
+                $webhookSecretRaw = $form->get('webhookSecretEncrypted')->getData();
+
+                $apiCredential->setSecretKeyEncrypted($encryptionService->encrypt($secretKeyRaw));
+                $apiCredential->setPublicKeyEncrypted(!empty($publicKeyRaw) ? $encryptionService->encrypt($publicKeyRaw) : '');
+                $apiCredential->setWebhookSecretEncrypted(!empty($webhookSecretRaw) ? $encryptionService->encrypt($webhookSecretRaw) : '');
+
+                $manager->persist($apiCredential);
+                $manager->flush();
+
+                $this->addFlash("success", $this->translator->trans("API key added successfully!"));
+                return $this->redirectToRoute("app_api_credential");
+
+            } catch (\Throwable $e) {
+                $this->logger->log(LogLevel::ERROR, '[ApiController::add()] Error adding API credential: ' . $e->getMessage());
+                $this->addFlash('danger', $this->translator->trans('An error occurred while adding the API key.'));
             }
-
-            // Get raw (unencrypted) keys from the form fields
-            $secretKeyRaw = $form->get('secretKeyEncrypted')->getData();
-            $publicKeyRaw = $form->get('publicKeyEncrypted')->getData();
-            $webhookSecretRaw = $form->get('webhookSecretEncrypted')->getData();
-
-
-
-            // Encrypt keys if present
-            $secretKeyEncrypted = $encryptionService->encrypt($secretKeyRaw);
-            $publicKeyEncrypted = !empty($publicKeyRaw) ? $encryptionService->encrypt($publicKeyRaw) : "";
-            $webhookSecretEncrypted = !empty($webhookSecretRaw) ? $encryptionService->encrypt($webhookSecretRaw) : "";
-
-            $apiCredential->setSecretKeyEncrypted($secretKeyEncrypted);
-            $apiCredential->setPublicKeyEncrypted($publicKeyEncrypted);
-            $apiCredential->setWebhookSecretEncrypted($webhookSecretEncrypted);
-
-            $manager->persist($apiCredential);
-            $manager->flush();
-
-            $this->addFlash("success", $this->translator->trans("Api key added successfuly!"));
-            return $this->redirectToRoute("app_api_credential");
         }
 
         return $this->render('api/add.html.twig', [
@@ -104,50 +110,48 @@ final class ApiController extends AbstractController
     }
 
     /**
-     * Handles updating an existing API credential.
-     * 
-     * Encrypts keys before saving.
+     * Updates an existing API credential and re-encrypts keys.
      *
-     * @param Request $request The HTTP request.
-     * @param EncryptionService $encryptionService Service to encrypt API keys.
-     * @param EntityManagerInterface $manager Doctrine entity manager.
-     * @param ApiCredentialRepository $repoCredential Repository for API credentials.
-     * 
-     * @return Response The rendered form or redirect after update.
+     * @param Request $request
+     * @param EncryptionService $encryptionService
+     * @param EntityManagerInterface $manager
+     * @param ApiCredentialRepository $repoCredential
+     * @return Response
      */
     #[Route('/api/update/{id}', name: 'app_api_credential_update')]
     public function update(Request $request, EncryptionService $encryptionService, EntityManagerInterface $manager, ApiCredentialRepository $repoCredential): Response
     {
-        $apiCredential = $repoCredential->findOneBy(['id' => $request->get('id')]);
+        $id = $request->get('id');
 
-        if (!$apiCredential) {
-            $this->addFlash("danger", $this->translator->trans("No Api found."));
-            return $this->redirectToRoute("app_api_credential");
-        }
+        try {
+            $apiCredential = $repoCredential->find($id);
 
-        $form = $this->createForm(ApiType::class, $apiCredential);
-        $form->handleRequest($request);
+            if (!$apiCredential) {
+                $this->addFlash("danger", $this->translator->trans("No API credential found."));
+                return $this->redirectToRoute("app_api_credential");
+            }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $apiCredential = $form->getData();
+            $form = $this->createForm(ApiType::class, $apiCredential);
+            $form->handleRequest($request);
 
-            $secretKeyRaw = $apiCredential->getSecretKeyEncrypted();
-            $publicKeyRaw = $apiCredential->getPublicKeyEncrypted();
-            $webhookSecretRaw = $apiCredential->getWebhookSecretEncrypted();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $secretKeyRaw = $apiCredential->getSecretKeyEncrypted();
+                $publicKeyRaw = $apiCredential->getPublicKeyEncrypted();
+                $webhookSecretRaw = $apiCredential->getWebhookSecretEncrypted();
 
-            $secretKeyEncrypted = $encryptionService->encrypt($secretKeyRaw);
-            $publicKeyEncrypted = !empty($publicKeyRaw) ? $encryptionService->encrypt($publicKeyRaw) : "";
-            $webhookSecretEncrypted = !empty($webhookSecretRaw) ? $encryptionService->encrypt($webhookSecretRaw) : "";
+                $apiCredential->setSecretKeyEncrypted($encryptionService->encrypt($secretKeyRaw));
+                $apiCredential->setPublicKeyEncrypted(!empty($publicKeyRaw) ? $encryptionService->encrypt($publicKeyRaw) : '');
+                $apiCredential->setWebhookSecretEncrypted(!empty($webhookSecretRaw) ? $encryptionService->encrypt($webhookSecretRaw) : '');
 
-            $apiCredential->setSecretKeyEncrypted($secretKeyEncrypted);
-            $apiCredential->setPublicKeyEncrypted($publicKeyEncrypted);
-            $apiCredential->setWebhookSecretEncrypted($webhookSecretEncrypted);
+                $manager->flush();
 
-            $manager->flush();
+                $this->addFlash("success", $this->translator->trans("API key updated successfully!"));
+                return $this->redirectToRoute("app_api_credential");
+            }
 
-            $this->addFlash("success", $this->translator->trans("Api key added successfuly!"));
-
-            return $this->redirectToRoute("app_api_credential");
+        } catch (\Throwable $e) {
+            $this->logger->log(LogLevel::ERROR, '[ApiController::update()] Error updating API credential ID '.$id.': ' . $e->getMessage());
+            $this->addFlash("danger", $this->translator->trans("An error occurred while updating the API key."));
         }
 
         return $this->render('api/add.html.twig', [
@@ -157,27 +161,24 @@ final class ApiController extends AbstractController
     }
 
     /**
-     * Tests the validity of an API credential by ID.
+     * Tests the connection or validity of a given API credential.
      *
-     * Calls the ApiTesterService to validate the API keys.
-     *
-     * @param int $id The API credential ID.
-     * @param ApiCredentialRepository $repo Repository to fetch the credential.
-     * @param ApiTesterService $apiTester Service that tests the API key validity.
-     * 
-     * @return Response Redirects back to the credentials list with flash message.
+     * @param int $id ID of the API credential to test
+     * @param ApiCredentialRepository $repo Repository to retrieve credentials
+     * @param ApiTesterService $apiTester Service to validate credentials
+     * @return Response
      */
     #[Route('/api/credential/test/{id}', name: 'app_api_credential_test')]
     public function test(int $id, ApiCredentialRepository $repo, ApiTesterService $apiTester): Response
     {
-        $credential = $repo->find($id);
-
-        if (!$credential) {
-            $this->addFlash('danger', $this->translator->trans('API credential not found.'));
-            return $this->redirectToRoute('app_api_credential');
-        }
-
         try {
+            $credential = $repo->find($id);
+
+            if (!$credential) {
+                $this->addFlash('danger', $this->translator->trans('API credential not found.'));
+                return $this->redirectToRoute('app_api_credential');
+            }
+
             $result = $apiTester->test($credential);
 
             if ($result) {
@@ -185,10 +186,12 @@ final class ApiController extends AbstractController
             } else {
                 $this->addFlash('warning', $this->translator->trans('API key is invalid or unreachable.'));
             }
-        } catch (\Exception $e) {
-            $this->addFlash('danger', $this->translator->trans('Error testing API: ') . $e->getMessage());
+
+        } catch (\Throwable $e) {
+            $this->logger->log(LogLevel::ERROR, '[ApiController::test()] : Error testing API credential ID '.$id.': ' . $e->getMessage());
+            $this->addFlash('danger', $this->translator->trans('Error testing API key: ') . $e->getMessage());
         }
 
-        return $this->redirectToRoute('app_api_credential'); 
+        return $this->redirectToRoute('app_api_credential');
     }
 }

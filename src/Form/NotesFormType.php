@@ -67,7 +67,7 @@ class NotesFormType extends AbstractType
                     ],
                 ]);
             }
-
+             if (in_array('burn_after_reading', $privileges, true)) {
              $builder->add('minutes', ChoiceType::class, [
                 'label' => $this->translator->trans('Self-destruct delay (minutes)'),
                 'required' => false,
@@ -87,6 +87,7 @@ class NotesFormType extends AbstractType
                     'class' => 'rounded-lg shadow-sm focus:border-trash focus:ring-trash text-sm text-gray-700',
                 ],
             ]);
+        }
 
 
             // Burn after reading - custom checkbox

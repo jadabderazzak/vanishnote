@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Enum\LogLevel;
 use App\Form\ClientsType;
 use App\Repository\LogsRepository;
 use App\Repository\NotesRepository;
 use App\Repository\ClientRepository;
+use App\Service\SystemLoggerService;
 use App\Repository\PaymentRepository;
-use App\Repository\SubscriptionsRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\SubscriptionsRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,42 +23,49 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted("ROLE_USER")]
 final class ClientsController extends AbstractController
 {
-    /**
-     * Translator service for translating user-facing messages.
-     */
-    public function __construct(private readonly TranslatorInterface $translator)
-    {}
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly SystemLoggerService $logger
+    ) {}
 
     /**
-     * Displays the clients dashboard page.
+     * Displays the dashboard for authenticated client user.
      *
-     * This action renders the dashboard view for the currently authenticated user (client),
-     * and includes the monthly growth rate of notes created over the last two months.
-     *
-     * The growth rate is calculated using the NotesRepository::getMonthlyGrowthRate()
-     * method and is passed to the Twig template for display.
-     *
-     * @param NotesRepository $notesRepository The repository used to fetch user note statistics.
-     *
-     * @return Response The rendered dashboard view with optional growth rate data.
+     * @param NotesRepository $repoNotes
+     * @param LogsRepository $repoLogs
+     * @param PaymentRepository $repoPayment
+     * @return Response
      */
     #[Route('/clients/dashboard', name: 'app_clients_dashboard')]
-    public function index(NotesRepository $repoNotes, LogsRepository $repoLogs,PaymentRepository $repoPayment): Response
-    {
+    public function index(
+        NotesRepository $repoNotes,
+        LogsRepository $repoLogs,
+        PaymentRepository $repoPayment
+    ): Response {
+
+        /** @var User $user */
         $user = $this->getUser();
-        $growthRate = $repoNotes->getMonthlyGrowthRate($user);
-        $logs = $repoLogs->findLastFiveUniqueNotesByUser($user);
-        $month = (new \DateTime())->format('m');
-        $year = (new \DateTime())->format('Y');
-        $currentMonthNoteCount = $repoNotes->countUserNotesByMonthAndYear($user, $year,$month);
-        $burnedNotesCurrentMonth = $repoNotes->countBurnedNotesThisMonthByUser($user);
-        $totalnotes = $repoNotes->countTotalNotesByUser($user);
-        $totalBurned = $repoNotes->countTotalBurnedNotesByUser($user);
-        $last5NotesNotBurned =  $repoNotes->findLast5NotBurned($user);
-        $payments = $repoPayment->findBy([
-            'user' => $this->getUser(),
-            'status' => "succeeded"
-        ]);
+
+        try {
+            $growthRate = $repoNotes->getMonthlyGrowthRate($user);
+            $logs = $repoLogs->findLastFiveUniqueNotesByUser($user);
+            $month = (new \DateTime())->format('m');
+            $year = (new \DateTime())->format('Y');
+            $currentMonthNoteCount = $repoNotes->countUserNotesByMonthAndYear($user, $year, $month);
+            $burnedNotesCurrentMonth = $repoNotes->countBurnedNotesThisMonthByUser($user);
+            $totalnotes = $repoNotes->countTotalNotesByUser($user);
+            $totalBurned = $repoNotes->countTotalBurnedNotesByUser($user);
+            $last5NotesNotBurned = $repoNotes->findLast5NotBurned($user);
+            $payments = $repoPayment->findBy(['user' => $user, 'status' => 'succeeded']);
+        } catch (\Throwable $e) {
+            $this->logger->log(
+                LogLevel::ERROR,
+                sprintf('[ClientsController::index()] Failed to load dashboard data for user #%d: %s', $user->getId(), $e->getMessage())
+            );
+            $this->addFlash('danger', $this->translator->trans('An error occurred while loading dashboard.'));
+            return $this->redirectToRoute('app_logout');
+        }
+
         return $this->render('clients/index.html.twig', [
             'growthRate' => $growthRate,
             'logs' => $logs,
@@ -68,109 +78,128 @@ final class ClientsController extends AbstractController
         ]);
     }
 
-#[Route('/dashboard/statistics', name: 'dashboard_notes_stats')]
-public function notesStatistics(NotesRepository $notesRepository): JsonResponse
-{
-    // Get raw statistics data from repository
-    $monthlyStats = $notesRepository->getMonthlyStats($this->getUser());
-
-    // Transform data for Chart.js
-    $chartData = [
-        'labels' => array_column($monthlyStats, 'month'),
-        'datasets' => [
-            [
-                'label' => 'Notes Created',
-                'data' => array_column($monthlyStats, 'created'),
-                'backgroundColor' => 'rgba(58, 138, 192, 0.1)',
-                'borderColor' => 'rgba(58, 138, 192, 1)',
-                'borderWidth' => 2
-            ],
-            [
-                'label' => 'Notes Burned',
-                'data' => array_column($monthlyStats, 'burned'),
-                'backgroundColor' => 'rgba(239, 68, 68, 0.1)',
-                'borderColor' => 'rgba(239, 68, 68, 1)',
-                'borderWidth' => 2
-            ]
-        ]
-    ];
-
-    return new JsonResponse($chartData);
-}
     /**
-     * Displays the profile page of the currently logged-in client.
+     * Returns JSON stats about notes per month for charts.
      *
-     * @param ClientRepository $repoClient The repository to fetch Client data.
-     * @return Response Rendered profile view with the client data.
+     * @param NotesRepository $notesRepository
+     * @return JsonResponse
+     */
+    #[Route('/dashboard/statistics', name: 'dashboard_notes_stats')]
+    public function notesStatistics(NotesRepository $notesRepository): JsonResponse
+    {
+        /** @var User $user */
+        $user =$this->getUser();
+        try {
+            $monthlyStats = $notesRepository->getMonthlyStats($this->getUser());
+        } catch (\Throwable $e) {
+            $this->logger->log(
+                LogLevel::ERROR,
+                sprintf('[ClientsController::notesStatistics()] Failed to fetch stats for user #%d: %s', $user->getId(), $e->getMessage())
+            );
+            return new JsonResponse(['error' => 'Failed to fetch statistics.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $chartData = [
+            'labels' => array_column($monthlyStats, 'month'),
+            'datasets' => [
+                [
+                    'label' => 'Notes Created',
+                    'data' => array_column($monthlyStats, 'created'),
+                    'backgroundColor' => 'rgba(58, 138, 192, 0.1)',
+                    'borderColor' => 'rgba(58, 138, 192, 1)',
+                    'borderWidth' => 2
+                ],
+                [
+                    'label' => 'Notes Burned',
+                    'data' => array_column($monthlyStats, 'burned'),
+                    'backgroundColor' => 'rgba(239, 68, 68, 0.1)',
+                    'borderColor' => 'rgba(239, 68, 68, 1)',
+                    'borderWidth' => 2
+                ]
+            ]
+        ];
+
+        return new JsonResponse($chartData);
+    }
+
+    /**
+     * Displays profile data for the logged-in client.
+     *
+     * @param ClientRepository $repoClient
+     * @param NotesRepository $repoNotes
+     * @param SubscriptionsRepository $repoSub
+     * @return Response
      */
     #[Route('/clients/profile', name: 'app_clients_profile')]
-    public function profile(ClientRepository $repoClient,NotesRepository $repoNotes,SubscriptionsRepository $repoSub): Response
-    {
-        $client = $repoClient->findOneBy([
-            'user' => $this->getUser()
-        ]);
-        $notesCreated = $repoNotes->count([
-            'user' => $this->getUser()
-        ]);
+    public function profile(
+        ClientRepository $repoClient,
+        NotesRepository $repoNotes,
+        SubscriptionsRepository $repoSub
+    ): Response {
+        /** @var User $user */
+        $user = $this->getUser();
 
-        $accountType = $repoSub->findOneBy([
-            'user' => $this->getUser(),
-            'status' => true
-        ]);
-    
+        try {
+            $client = $repoClient->findOneBy(['user' => $user]);
+            $notesCreated = $repoNotes->count(['user' => $user]);
+            $accountType = $repoSub->findOneBy(['user' => $user, 'status' => true]);
+        } catch (\Throwable $e) {
+            $this->logger->log(
+                LogLevel::ERROR,
+                sprintf('[ClientsController::profile()] Failed to load profile for user #%d: %s', $user->getId(), $e->getMessage())
+            );
+            $this->addFlash('danger', $this->translator->trans('An error occurred while loading your profile.'));
+            return $this->redirectToRoute('app_clients_dashboard');
+        }
+
         return $this->render('clients/profile.html.twig', [
             'client' => $client,
             'notesCreated' => $notesCreated,
-            'accountType' => $accountType->getSubscriptionPlan()->getName()
+            'accountType' => $accountType?->getSubscriptionPlan()?->getName(),
         ]);
     }
 
     /**
-     * Handles the update of a client's profile identified by the slug.
-     * 
-     * - Retrieves the client entity by its slug.
-     * - Displays and processes a form for editing client data.
-     * - Validates the submitted data.
-     * - Persists changes to the database.
-     * - Adds flash messages to inform the user of success or failure.
-     * - Redirects appropriately after a successful update.
-     * 
-     * Note: Input sanitization is expected to be handled globally (e.g., via a form event subscriber).
+     * Updates a client profile based on slug.
      *
-     * @param Request $request The current HTTP request.
-     * @param EntityManagerInterface $manager Doctrine entity manager used for database operations.
-     * @param ClientRepository $repoClient Repository service to find the Client entity by slug.
-     * 
-     * @return Response Returns the form view if not submitted or invalid, or redirects after successful update.
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param ClientRepository $repoClient
+     * @return Response
      */
     #[Route('/clients/profile/update/{slug}', name: 'app_clients_profile_update')]
     public function profile_update(
         Request $request,
         EntityManagerInterface $manager,
         ClientRepository $repoClient
-    ): Response
-    {
-        $client = $repoClient->findOneBy([
-            'slug' => $request->get('slug')
-        ]);
+    ): Response {
+        $slug = $request->get('slug');
 
-        if (!$client) {
-            $this->addFlash("danger", $this->translator->trans("Client not found!"));
-            return $this->redirectToRoute("app_clients_dashboard");
+        try {
+            $client = $repoClient->findOneBy(['slug' => $slug]);
+            if (!$client) {
+                $this->logger->log(LogLevel::WARNING, sprintf('[ClientsController::profile_update()] No client found with slug "%s"', $slug));
+                $this->addFlash("danger", $this->translator->trans("Client not found!"));
+                return $this->redirectToRoute("app_clients_dashboard");
+            }
+
+            $form = $this->createForm(ClientsType::class, $client);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $manager->flush();
+                $this->addFlash('success', $this->translator->trans('Profile updated successfully.'));
+                return $this->redirectToRoute('app_clients_profile');
+            }
+
+        } catch (\Throwable $e) {
+            $this->logger->log(
+                LogLevel::ERROR,
+                sprintf('[ClientsController::profile_update()] Failed to update profile for client slug "%s": %s', $slug, $e->getMessage())
+            );
+            $this->addFlash('danger', $this->translator->trans('An error occurred while updating your profile.'));
+            return $this->redirectToRoute('app_clients_dashboard');
         }
-
-        $form = $this->createForm(ClientsType::class, $client);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Get updated client data from form
-            $client = $form->getData();
-            $manager->flush();
-
-            $this->addFlash('success', $this->translator->trans('Profile updated successfully.'));
-            return $this->redirectToRoute('app_clients_profile');
-        }
-
 
         return $this->render('clients/update.html.twig', [
             'form' => $form->createView(),

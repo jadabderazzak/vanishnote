@@ -5,6 +5,7 @@ namespace App\Controller;
 use DateTime;
 use App\Entity\Logs;
 use App\Entity\Notes;
+use App\Enum\LogLevel;
 use App\Form\NotesFormType;
 use App\Entity\Attachements;
 use App\Entity\Subscriptions;
@@ -12,6 +13,7 @@ use App\Service\HtmlSanitizer;
 use Symfony\Component\Uid\Uuid;
 use App\Repository\LogsRepository;
 use App\Repository\NotesRepository;
+use App\Service\SystemLoggerService;
 use App\Repository\LogsIpsRepository;
 use App\Service\SecureEncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,12 +40,14 @@ final class NotesController extends AbstractController
      * @param EntityManagerInterface $manager Doctrine entity manager for database operations.
      * @param Filesystem $filesystem Service for filesystem operations.
      * @param AttachementsRepository $repoAttachment Repository for managing attachments.
+     * @param SystemLoggerService $logger System logging service
      */
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly EntityManagerInterface $manager,
         private readonly Filesystem $filesystem,
-        private readonly AttachementsRepository $repoAttachment
+        private readonly AttachementsRepository $repoAttachment,
+        private readonly SystemLoggerService $logger
     ) {}
 
 
@@ -66,9 +70,7 @@ final class NotesController extends AbstractController
     #[Route('/notes', name: 'app_notes')]
     public function index(NotesRepository $repoNotes, SecureEncryptionService $encryptionService, Request $request, PaginatorInterface $paginator): Response
     {
-        $notes = $repoNotes->findBy([
-            'user' => $this->getUser()
-        ]);
+        $notes = $repoNotes->findClientsNotBurnedNotes($this->getUser());
         
         
         $decryptedNotes = [];
@@ -92,7 +94,15 @@ final class NotesController extends AbstractController
                     'readAt' => $note->getReadAt(),
                 ];
             } catch (\Exception $e) {
-                // Skip notes that cannot be decrypted
+              $this->logger->log(
+                LogLevel::ERROR,
+                sprintf(
+                    '[NotesController::index()] Note ID %d, Slug "%s": Unable to decrypt note: %s',
+                    $note->getId(),
+                    $note->getSlug(),
+                    $e->getMessage()
+                )
+            );
                 continue;
             }
         }
@@ -179,7 +189,13 @@ public function view(
         $decryptedTitle = $encryptionService->decrypt($note->getTitle(), $aad);
         $decryptedContent = $encryptionService->decrypt($note->getContent(), $aad);
     } catch (\Exception $e) {
-        $this->addFlash('danger', 'Unable to decrypt note.');
+    $this->logger->log(
+            LogLevel::ERROR,
+            sprintf(
+                '[NotesController::view()]: Unable to decrypt note: %s',
+                $e->getMessage()
+            )
+        );
         return $this->redirectToRoute('app_notes');
     }
 
@@ -197,7 +213,14 @@ public function view(
                 'uploadedAt' => $attachment->getUploadedAt(),
             ];
         } catch (\Exception $e) {
-            // Ignore individual attachment errors and continue
+            $this->logger->log(
+                LogLevel::ERROR,
+                sprintf(
+                    '[NotesController::view()]: Failed to process attachment "%s": %s',
+                    $attachment->getFilename(),
+                    $e->getMessage()
+                )
+            );
             continue;
         }
     }
@@ -281,6 +304,14 @@ public function view(
                 'Content-Disposition' => 'attachment; filename="' . $attachment->getFilename() . '"',
             ]);
         } catch (\Exception $e) {
+             $this->logger->log(
+                LogLevel::ERROR,
+                sprintf(
+                    '[NotesController::download()]: Failed to decrypt the file. Please contact support. "%s": %s',
+                    $attachment->getFilename(),
+                    $e->getMessage()
+                )
+            );
             $this->addFlash('danger', $this->translator->trans('Failed to decrypt the file. Please contact support.'));
             return $this->redirectToRoute('app_notes');
         }
@@ -355,7 +386,7 @@ public function new(
     $numberOfNotes = $subscription->getSubscriptionPlan()->getNumberNotes();
 
     if ($numberOfNotes !== 0) {
-        if ($notesbymounth > $numberOfNotes) {
+        if ($notesbymounth >= $numberOfNotes) {
             $this->addFlash('danger', $this->translator->trans('You have reached the limit of notes that can be created this month.'));
             return $this->redirectToRoute('app_client_subscription');
         }
@@ -416,6 +447,13 @@ public function new(
             $encryptedTitle = $encryptionService->encrypt($sanitizedTitle, $aad);
             $encryptedContent = $encryptionService->encrypt($sanitizedContent, $aad);
         } catch (\Exception $e) {
+              $this->logger->log(
+                LogLevel::ERROR,
+                sprintf(
+                    '[NotesController::new()]: Encryption failed. Please try again. "%s"',
+                    $e->getMessage()
+                )
+            );
             $this->addFlash('danger', $this->translator->trans('Encryption failed. Please try again.'));
             return $this->redirectToRoute('notes_new');
         }
@@ -523,6 +561,13 @@ public function new(
                                         $entityManager->persist($attachment);
                                     } catch (\Exception $e) {
                                     $this->addFlash('danger', $this->translator->trans('Failed to upload and encrypt attachment.'));
+                                    $this->logger->log(
+                                            LogLevel::ERROR,
+                                            sprintf(
+                                                '[NotesController::new()]: Failed to upload and encrypt attachment. "%s"',
+                                                $e->getMessage()
+                                            )
+                                        );
                                     return $this->redirectToRoute("app_notes_new");
                                         }
                                     }
@@ -598,6 +643,13 @@ public function update(
         $note->setTitle($decryptedTitle);
         $note->setContent($decryptedContent);
     } catch (\Exception $e) {
+          $this->logger->log(
+            LogLevel::ERROR,
+            sprintf(
+                '[NotesController::update()]: Decryption error. Cannot edit this note. "%s"',
+                $e->getMessage()
+            )
+        );
         $this->addFlash('danger', $this->translator->trans('Decryption error. Cannot edit this note.'));
         return $this->redirectToRoute('app_notes');
     }
@@ -621,7 +673,13 @@ public function update(
                
             ];
         } catch (\Exception $e) {
-            // Ne bloque pas la note entière si un fichier échoue
+            $this->logger->log(
+                LogLevel::ERROR,
+                sprintf(
+                    '[NotesController::update()]: Decryption error."%s"',
+                    $e->getMessage()
+                )
+            );
             continue;
         }
     }
@@ -727,6 +785,13 @@ public function update(
                                 $entityManager->persist($attachment);
                             } catch (\Exception $e) {
                                 $this->addFlash('danger', $this->translator->trans('Failed to encrypt and upload attachment.'));
+                                 $this->logger->log(
+                                        LogLevel::ERROR,
+                                        sprintf(
+                                            '[NotesController::update()]: Failed to encrypt and upload attachment."%s"',
+                                            $e->getMessage()
+                                        )
+                                    );
                                 return $this->redirectToRoute('app_notes_update', ['slug' => $slug]);
                             }
                         }
@@ -760,6 +825,13 @@ public function update(
              return $this->redirectToRoute('app_notes');
         } catch (\Exception $e) {
             $this->addFlash('danger', $this->translator->trans('Update failed. Please try again.'));
+              $this->logger->log(
+                LogLevel::ERROR,
+                sprintf(
+                    '[NotesController::update()]: Update failed. Please try again."%s"',
+                    $e->getMessage()
+                )
+            );
             return $this->redirectToRoute('app_notes_update', ['slug' => $slug]);
         }
     }
@@ -922,7 +994,7 @@ private function deleteAllAttachmentsForNote(?Notes $note): void
         /***************** delete Attachments */
 
         $this->deleteAllAttachmentsForNote($note);
-
+        $this->addFlash("success", $this->translator->trans("The note has been permanently destroyed"));
         return $this->redirectToRoute('app_notes');
         }
 

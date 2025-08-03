@@ -2,19 +2,21 @@
 
 namespace App\Controller;
 
-use App\Entity\AdminEntreprise;
 use Exception;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use App\Enum\LogLevel;
 use App\Entity\Payment;
-use App\Repository\AdminEntrepriseRepository;
+use App\Entity\AdminEntreprise;
 use App\Repository\ClientRepository;
+use App\Service\SystemLoggerService;
 use App\Repository\PaymentRepository;
 use App\Service\StripePaymentService;
 use App\Repository\CurrencyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ApiCredentialRepository;
 use App\Repository\SubscriptionsRepository;
+use App\Repository\AdminEntrepriseRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\SubscriptionPlanRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,9 +30,12 @@ final class ClientSubscriptionController extends AbstractController
 {
     /**
      * Translator service for translating user-facing messages.
+     * Logger service to log errors or warnings.
      */
-    public function __construct(private readonly TranslatorInterface $translator)
-    {}
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly SystemLoggerService $logger
+    ) {}
     /**
      * Display the current authenticated user's active subscription along with all available subscription plans and the primary currency.
      *
@@ -256,41 +261,25 @@ final class ClientSubscriptionController extends AbstractController
 
             // Redirect user to Stripe checkout URL
             return $this->redirect($checkoutSession->url);
-        } catch (\Exception $e) {
-            $this->addFlash('danger', $this->translator->trans('An error occurred while creating the payment. Please try again later.'));
+        } catch (\Throwable $e) {
+          
+            $this->logger->log(
+                LogLevel::ERROR,
+                        sprintf(
+                    '[ClientSubscriptionController::checkout()] Stripe checkout session failed for user ID %d, client ID %d, plan ID %d: %s',
+                    $user->getId(),
+                    $client->getId(),
+                    $plan->getId(),
+                    $e->getMessage()
+                ),
+            );
+             $this->addFlash('danger', $this->translator->trans('An error occurred while creating the payment. Please try again later.'));
             return $this->redirectToRoute('app_client_subscription_recap', ['slug' => $slug]);
         }
     }
 
-        /**
-         * Handles successful payment completion.
-         * 
-         * Adds a success flash message and redirects to subscription page.
-         * 
-         * @return Response Redirect response.
-         */
-        #[Route('/payment/success', name: 'payment_success')]
-        public function paymentSuccess(): Response
-        {
-            $this->addFlash('success', 'Payment successful! Thank you for your purchase.');
-            return $this->redirectToRoute('app_client_subscription');
-        }
-
-        /**
-         * Handles payment cancellation by user.
-         * 
-         * Adds a warning flash message and redirects to subscription page.
-         * 
-         * @return Response Redirect response.
-         */
-        #[Route('/payment/cancel', name: 'payment_cancel')]
-        public function paymentCancel(): Response
-        {
-            $this->addFlash('warning', 'Payment cancelled. You can retry your purchase.');
-            return $this->redirectToRoute('app_client_subscription');
-        }
-
-        /**
+      
+    /**
      * Display a thank you page that polls payment status.
      *
      * @param Request $request
@@ -406,25 +395,45 @@ final class ClientSubscriptionController extends AbstractController
         }
 
 
-          #[Route('/client/payments', name: 'app_client_payments')]
+    /**
+     * Displays a list of all payments made by the currently authenticated client.
+     *
+     * This action retrieves all Payment entities linked to the authenticated user
+     * and renders them in a Twig view for user consultation.
+     *
+     * Route: /client/payments
+     * Method: GET
+     *
+     * @param PaymentRepository $repoPayment Repository used to retrieve the client's payments
+     *
+     * @return Response The HTTP response with the rendered payments list
+     */
+    #[Route('/client/payments', name: 'app_client_payments')]
     public function payments(
         PaymentRepository $repoPayment, 
-     
     ): Response
     {
-      
-        
         $payments = $repoPayment->findBy([
             'user' => $this->getUser()
         ]);
 
-      
-        
         return $this->render('client_subscription/payments.html.twig', [
             'payments' => $payments,
-        
         ]);
     }
 
+        /**
+         * Handles payment cancellation by user.
+         * 
+         * Adds a warning flash message and redirects to subscription page.
+         * 
+         * @return Response Redirect response.
+         */
+        #[Route('/payment/cancel', name: 'payment_cancel')]
+        public function paymentCancel(): Response
+        {
+            $this->addFlash('warning', 'Payment cancelled. You can retry your purchase.');
+            return $this->redirectToRoute('app_client_subscription');
+        }
 
 }

@@ -3,15 +3,14 @@
 namespace App\Controller;
 
 use Stripe\Webhook;
-use App\Entity\Client;
+use App\Enum\LogLevel;
 use App\Entity\Payment;
-use App\Entity\ApiCredential;
 use App\Entity\Subscriptions;
-use App\Entity\SubscriptionPlan;
 use App\Service\EncryptionService;
+use App\Service\SystemLoggerService;
+use App\Repository\PaymentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ApiCredentialRepository;
-use App\Repository\PaymentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,7 +35,8 @@ class StripeWebhookController extends AbstractController
         private EntityManagerInterface $entityManager,
         private EncryptionService $encrypt,
         private ApiCredentialRepository $apiCredentialRepository,
-        private PaymentRepository $repoPayment
+        private PaymentRepository $repoPayment,
+        private readonly SystemLoggerService $logger
     ) {
         // Constructor to inject dependencies
     }
@@ -69,9 +69,17 @@ class StripeWebhookController extends AbstractController
             $event = Webhook::constructEvent($payload, $sigHeader, $this->endpointSecret);
         } catch (\UnexpectedValueException $e) {
             // Invalid payload
+             $this->logger->log(
+                LogLevel::ERROR,
+                sprintf('[StripeWebhookController::__invoke()] Invalid payload: %s', $e->getMessage())
+            );
             return new Response('Invalid payload', Response::HTTP_BAD_REQUEST);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
             // Invalid signature
+            $this->logger->log(
+                LogLevel::ERROR,
+                sprintf('[StripeWebhookController::__invoke()] Invalid signature: %s', $e->getMessage())
+            );
             return new Response('Invalid signature', Response::HTTP_BAD_REQUEST);
         }
 
@@ -90,6 +98,10 @@ class StripeWebhookController extends AbstractController
             }
         } catch (\Throwable $e) {
             // General catch for any processing errors
+             $this->logger->log(
+                LogLevel::CRITICAL,
+                sprintf('[StripeWebhookController::__invoke()] Webhook processing error: %s', $e->getMessage())
+            );
             return new Response('Webhook processing error', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -167,6 +179,10 @@ class StripeWebhookController extends AbstractController
         } catch (\Throwable $e) {
             // Rollback transaction on error
             $this->entityManager->rollback();
+            $this->logger->log(
+                LogLevel::CRITICAL,
+                sprintf('[StripeWebhookController::handleCheckoutSessionCompleted()] Transaction failed: %s', $e->getMessage())
+            );
             return new Response('Transaction failed', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -218,6 +234,10 @@ class StripeWebhookController extends AbstractController
         } catch (\Throwable $e) {
             // Rollback on failure
             $this->entityManager->getConnection()->rollBack();
+              $this->logger->log(
+                    LogLevel::CRITICAL,
+                    sprintf('[StripeWebhookController::handlePaymentIntentFailed()] Failed to process payment failure: %s', $e->getMessage())
+                );
             return new Response('Failed to process payment failure', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -57,13 +57,13 @@
 
 		<script>
 			document.addEventListener("DOMContentLoaded", function () {
-{% for message in app.flashes('success') %}
-toastr.success({{ message|json_encode|raw }});{% endfor %}
-{% for message in app.flashes('danger') %}
-toastr.error({{ message|json_encode|raw }});{% endfor %}
-{% for message in app.flashes('warning') %}
-toastr.warning({{ message|json_encode|raw }});{% endfor %}
-});
+				{% for message in app.flashes('success') %}
+				toastr.success({{ message|json_encode|raw }});{% endfor %}
+				{% for message in app.flashes('danger') %}
+				toastr.error({{ message|json_encode|raw }});{% endfor %}
+				{% for message in app.flashes('warning') %}
+				toastr.warning({{ message|json_encode|raw }});{% endfor %}
+				});
 		</script>
 		{% block body %}{% endblock %}
 	</body>

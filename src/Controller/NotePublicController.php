@@ -6,18 +6,20 @@ use DateTime;
 use Exception;
 use DateTimeZone;
 use App\Entity\Notes;
+use App\Enum\LogLevel;
 use DateTimeInterface;
 use App\Entity\LogsIps;
+use Psr\Log\LoggerInterface;
 use App\Message\sendReadNote;
 use App\Repository\LogsRepository;
 use App\Repository\NotesRepository;
 use App\Repository\ClientRepository;
+use App\Service\SystemLoggerService;
 use App\Service\SecureEncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AttachementsRepository;
 use Symfony\Component\Filesystem\Filesystem;
 use App\Repository\AdminEntrepriseRepository;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -37,14 +39,14 @@ final class NotePublicController extends AbstractController
      * @param EntityManagerInterface $manager Doctrine entity manager for database operations.
      * @param Filesystem $filesystem Filesystem service for file handling operations.
      * @param AttachementsRepository $repoAttachment Repository for managing attachments.
-     * @param LoggerInterface $logger Logger service for logging application messages.
+     * @param SystemLoggerService $logger System logging service
      */
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly EntityManagerInterface $manager,
         private readonly Filesystem $filesystem,
         private readonly AttachementsRepository $repoAttachment,
-        private readonly LoggerInterface $logger
+        private readonly SystemLoggerService $logger
     ) {}
 
     #[Route('/note/public', name: 'app_note_public')]
@@ -203,7 +205,13 @@ public function view(
         $decryptedContent = trim($encryptionService->decrypt($note->getContent(), $aad));
     } catch (\Exception $e) {
         $this->addFlash('danger', 'Unable to decrypt note.');
-        $this->logger->error('Unable to decrypt note: ' . $e->getMessage());
+         $this->logger->log(
+            LogLevel::ERROR,
+            sprintf(
+                '[NotePublicController::view()] Unable to decrypt note: %s',
+                $e->getMessage()
+            )
+        );
         return $this->redirectToRoute('app_home');
     }
 
@@ -242,7 +250,13 @@ public function view(
                 $messageBus->dispatch($message);
 
             } catch (TransportExceptionInterface $e) {
-                $this->logger->error('Email sending failed: ' . $e->getMessage());
+               $this->logger->log(
+                    LogLevel::ERROR,
+                    sprintf(
+                        '[NoteController::view()] Email sending failed: %s',
+                        $e->getMessage()
+                    )
+                );
             }
 
     // Decrypt attachments metadata (not contents)

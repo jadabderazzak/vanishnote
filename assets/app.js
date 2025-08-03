@@ -20,7 +20,7 @@ toastr.options = {
     "hideDuration": 0,            // Duration of hide animation in ms (0 = instant)
     "timeOut": 5000,              // Time in ms before toast disappears automatically
     "extendedTimeOut": 1000,      // Time in ms toast remains visible after hover
-    "positionClass": "toast-bottom-right", // Position of the toast notifications
+    "positionClass": "toast-bottom-center", // Position of the toast notifications
     "closeButton": true,          // Show close button on toasts
     "progressBar": true,          // Show progress bar indicating timeout
     "preventDuplicates": true,    // Prevent duplicate toasts
