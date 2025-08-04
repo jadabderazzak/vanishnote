@@ -1,0 +1,231 @@
+{# templates/secure_files/upload.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Upload Secure File'|trans }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+   <style>
+        .upload-container {
+            background: linear-gradient(135deg, #f5f7fa 0%, #fcfcfd33 100%);
+        }
+        .upload-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .upload-card:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        .dropzone {
+            border: 3px dashed #4f46e5;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .dropzone.active {
+            border-color: #10b981;
+            background-color: rgba(16, 185, 129, 0.05);
+        }
+        .upload-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            transition: all 0.3s;
+        }
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+        }
+        .file-info {
+            background-color: #f0fdf4;
+            border-left: 4px solid #10b981;
+        }
+        /* Fix for file input */
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="min-h-screen upload-container flex items-center justify-center p-6">
+    <div class="upload-card w-full max-w-2xl p-8">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">
+                <span class="text-indigo-600">{{ 'Secure'|trans }}</span> {{ 'File Upload'|trans }}
+            </h1>
+            <p class="text-gray-600">
+                {{ 'Protect your sensitive documents'|trans }}
+            </p>
+        </div>
+        <div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+            <span class="font-bold mr-2">{{"Important!" | trans}}</span>{{"Before decrypting your file, please be aware that a premium account is required at the time of decryption. Kindly consider upgrading to access this feature." | trans}}
+        </div>
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+        <div class="space-y-2">
+							<label class="block text-sm font-medium text-gray-700">{{ 'Filename'|trans }}
+								<span class="text-red-500">*</span>
+							</label>
+							{{ form_widget(form.filename, {'attr': {
+              'class': 'block w-full px-4 py-3 rounded-lg placeholder:text-xs border border-trash  focus:border-trash_bold focus:ring-trash min-h-[40px]',
+
+              }}) }}
+
+							<span class="text-red-500 text-sm">{{ form_errors(form.filename) }}</span>
+							<p class="text-xs text-gray-500">{{ 'All content is encrypted before storage, except the file name.'|trans }}</p>
+						</div>
+        <div id="dropzone" class="dropzone rounded-xl p-10 text-center cursor-pointer mb-6">
+            <div class="flex flex-col items-center justify-center space-y-4">
+                <div class="bg-indigo-100 p-4 rounded-full">
+                    <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                </div>
+                
+                <div>
+                    <p class="text-md font-medium text-gray-700 mb-1">{{ 'Drag & drop your file here'|trans }}</p>
+                    <p class="text-sm text-gray-500">{{ 'or'|trans }}</p>
+                </div>
+                
+                <label for="{{ form.attachement.vars.id }}" class="cursor-pointer">
+                    <span class="upload-btn inline-flex items-center px-6 py-3 rounded-lg text-white font-medium shadow-sm">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        {{ 'Browse Files'|trans }}
+                    </span>
+                    {{ form_widget(form.attachement, {'attr': {'class': 'hidden'}}) }}
+                </label>
+                
+                <div id="file-info" class="file-info hidden w-full p-4 rounded-lg text-left mt-4">
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <p id="file-name" class="font-medium text-gray-800"></p>
+                            <p id="file-size" class="text-sm text-gray-500"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-xs text-gray-500 mt-4">
+                    <p>{{ 'Supported formats: PDF, DOCX, TXT, JPG, PNG'|trans }}</p>
+                    <p>{{ 'Max file size: 10MB'|trans }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center">
+            <button type="submit" class="upload-btn px-8 py-3 rounded-lg text-white font-medium shadow-sm w-full max-w-xs">
+                {{ 'Encrypt & Upload'|trans }}
+                <svg class="w-5 h-5 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                </svg>
+            </button>
+        </div>
+        {{ form_end(form) }}
+
+        {% for message in app.flashes('success') %}
+        <div class="mt-6 p-4 bg-green-50 border-l-4 border-green-500 rounded">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <p class="text-green-700">{{ message }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('{{ form.attachement.vars.id }}');
+    const fileInfo = document.getElementById('file-info');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
+
+    // Prevent default behavior
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // Highlight drop zone
+    function highlight() {
+        dropzone.classList.add('active');
+    }
+
+    // Unhighlight drop zone
+    function unhighlight() {
+        dropzone.classList.remove('active');
+    }
+
+    // Handle dropped files
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+    }
+
+    // Handle selected files
+    function handleFiles(files) {
+        if (files.length > 0) {
+            fileInput.files = files;
+            displayFileInfo(files[0]);
+        }
+    }
+
+    // Display file information
+    function displayFileInfo(file) {
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        fileInfo.classList.remove('hidden');
+    }
+
+    // Format file size
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Event listeners
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, unhighlight, false);
+    });
+
+    dropzone.addEventListener('drop', handleDrop, false);
+
+    fileInput.addEventListener('change', function(e) {
+        handleFiles(e.target.files);
+    });
+});
+</script>
+{% endblock %}

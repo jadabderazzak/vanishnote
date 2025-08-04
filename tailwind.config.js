@@ -10,8 +10,8 @@ module.exports = {
         sans: ['jakarta', 'sans-serif'],
       },
      colors: {
-        trash: '#4baddb', /* Global blue color */
-        trash_bold: '#3a8ac0',
+        trash: '#4f46e5', /* Global blue color */
+        trash_bold: '#7c3aed',
       },
      keyframes: {
       'gentle-ping': {

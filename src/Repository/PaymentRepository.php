@@ -58,7 +58,10 @@ class PaymentRepository extends ServiceEntityRepository
     public function findLastFivePayments(): array
     {
         return $this->createQueryBuilder('p')
+            ->andWhere('p.status = :status')
+            ->setParameter('status', 'succeeded')
             ->orderBy('p.createdAt', 'DESC')
+
             ->setMaxResults(5)
             ->getQuery()
             ->getResult();
@@ -93,8 +96,10 @@ public function getWeeklyAmountAndPercentageGain(): array
     $currentWeekAmount = $this->createQueryBuilder('p')
         ->select('COALESCE(SUM(p.amount), 0)')
         ->where('p.createdAt BETWEEN :currentWeekStart AND :currentWeekEnd')
+        ->andWhere('p.status = :status')
         ->setParameter('currentWeekStart', $currentWeekStart)
         ->setParameter('currentWeekEnd', $currentWeekEnd)
+        ->setParameter('status', 'succeeded')
         ->getQuery()
         ->getSingleScalarResult();
 
@@ -102,8 +107,10 @@ public function getWeeklyAmountAndPercentageGain(): array
     $previousWeekAmount = $this->createQueryBuilder('p')
         ->select('COALESCE(SUM(p.amount), 0)')
         ->where('p.createdAt BETWEEN :previousWeekStart AND :previousWeekEnd')
+        ->andWhere('p.status = :status')
         ->setParameter('previousWeekStart', $previousWeekStart)
         ->setParameter('previousWeekEnd', $previousWeekEnd)
+        ->setParameter('status', 'succeeded')
         ->getQuery()
         ->getSingleScalarResult();
 
@@ -150,8 +157,10 @@ public function getMonthlyAmountAndPercentageGain(): array
     $currentMonthAmount = $this->createQueryBuilder('p')
         ->select('COALESCE(SUM(p.amount), 0)')
         ->where('p.createdAt BETWEEN :currentMonthStart AND :currentMonthEnd')
+        ->andWhere('p.status = :status')
         ->setParameter('currentMonthStart', $currentMonthStart)
         ->setParameter('currentMonthEnd', $currentMonthEnd)
+        ->setParameter('status', 'succeeded')
         ->getQuery()
         ->getSingleScalarResult();
 
@@ -159,8 +168,10 @@ public function getMonthlyAmountAndPercentageGain(): array
     $previousMonthAmount = $this->createQueryBuilder('p')
         ->select('COALESCE(SUM(p.amount), 0)')
         ->where('p.createdAt BETWEEN :previousMonthStart AND :previousMonthEnd')
+        ->andWhere('p.status = :status')
         ->setParameter('previousMonthStart', $previousMonthStart)
         ->setParameter('previousMonthEnd', $previousMonthEnd)
+        ->setParameter('status', 'succeeded')
         ->getQuery()
         ->getSingleScalarResult();
 
@@ -180,19 +191,42 @@ public function getMonthlyAmountAndPercentageGain(): array
 }
 
 
-
+/**
+ * Retrieves the total payment amounts for each month of a given year.
+ *
+ * This method queries all Payment records within the specified year and aggregates 
+ * the total amount per calendar month. Months with no payments will have a total of 0.
+ *
+ * @param int $year The year for which to calculate monthly payment totals.
+ *
+ * @return array An associative array where the keys are month names
+ *               ('January' to 'December') and the values are the total
+ *               payment amounts for each corresponding month.
+ *
+ * Example:
+ * [
+ *     'January' => 1500.00,
+ *     'February' => 0.00,
+ *     'March' => 420.50,
+ *     ...
+ *     'December' => 89.99,
+ * ]
+ */
 public function getMonthlyPaymentsByYear(int $year): array
 {
-    $entityManager = $this->getEntityManager();
+   
 
-    $payments = $entityManager->createQuery(
-        'SELECT p.amount, p.createdAt
-         FROM App\Entity\Payment p
-         WHERE p.createdAt BETWEEN :start AND :end'
-    )
+    $payments = $this->createQueryBuilder('p')
+    ->select('p.amount, p.createdAt')
+    ->where('p.createdAt >= :start')
+    ->andWhere('p.createdAt <= :end')
+    ->andWhere('p.status = :status')
     ->setParameter('start', new \DateTime("$year-01-01 00:00:00"))
     ->setParameter('end', new \DateTime("$year-12-31 23:59:59"))
+    ->setParameter('status', 'succeeded')
+    ->getQuery()
     ->getResult();
+
 
     $months = [
         'January' => 0,
@@ -218,7 +252,7 @@ public function getMonthlyPaymentsByYear(int $year): array
     return $months;
 }
 
-/**
+    /**
      * Returns the total revenue (chiffre d'affaires global)
      *
      * @return float

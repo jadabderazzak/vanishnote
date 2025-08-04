@@ -68,7 +68,7 @@
                                 }}) }}
 
 							<span class="text-red-500 text-sm">{{ form_errors(form.content) }}</span>
-							<p class="text-xs text-gray-500">{{ 'All content is encrypted before storage'|trans }}</p>
+							<p class="text-xs text-gray-500">{{ 'All content is encrypted before storage, except the title.'|trans }}</p>
 						</div>
 					</div>
 
@@ -99,6 +99,7 @@
 								</div>
 								<span class="text-red-500 text-sm">{{ form_errors(form.attachements) }}</span>
 								<div id="file-preview" class="grid grid-cols-1 gap-2 mt-3 hidden"></div>
+								<p class="text-xs text-red-600">{{ 'Supported file types: JPEG, PNG, DOCX, PDF, and TXT.'|trans }}</p>
 								<p class="text-xs text-gray-500">{{ 'All attachments are encrypted before storage'|trans }}</p>
 							</div>
 						{% endif %}

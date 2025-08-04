@@ -7,6 +7,7 @@ use App\Entity\Notes;
 use App\Entity\Payment;
 use Doctrine\ORM\Events;
 use App\Entity\Attachements;
+use App\Entity\SecureFiles;
 use App\Entity\Subscriptions;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\PrePersistEventArgs;
@@ -95,6 +96,13 @@ class SlugGenerationSubscriber implements EventSubscriber
         }
 
         if ($entity instanceof Logs) {
+            // Generate a slug if not already set
+            if (!$entity->getSlug()) {
+                $entity->generateRandomSlug();
+            }
+        }
+
+         if ($entity instanceof SecureFiles) {
             // Generate a slug if not already set
             if (!$entity->getSlug()) {
                 $entity->generateRandomSlug();

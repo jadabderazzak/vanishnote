@@ -6,6 +6,7 @@
 parameters:
     logos_directory : '%kernel.project_dir%/public/template/logo'
     notes_attachments_directory : '%kernel.project_dir%/public/template/notes'
+    secure_files_attachments_directory : '%kernel.project_dir%/public/template/secureFiles'
     app.locales : ['en', 'fr', 'es', 'de']
     default_locale: '%app.locales%'
     app.timezone: 'GMT'
@@ -23,6 +24,9 @@ services:
         bind:
             $key: '%env(APP_ENCRYPTION_KEY_DOCS)%'
     App\Service\PdfGeneratorService: ~
+    App\Controller\SecureFilesController:
+        bind:
+            $encryptionKeyAad: '%env(APP_ENCRYPTION_KEY_AAD)%'
     App\Service\EncryptionService:
         bind:
             $key: '%env(APP_ENCRYPTION_KEY)%'
