@@ -6,35 +6,36 @@
 {% endblock %}
 
 {% block body %}
-	<div class="w-full bg-white ">
+	<div class="w-full bg-white p-2">
 		<!-- Header -->
 			<div class="text-center mb-4  p-8">
-				<h1 class="text-3xl font-bold text-gray-900 tracking-tight">
-				{{ 'Activity Logs'|trans }}
+		
+				<h1 class="text-2xl font-bold text-gray-900">
+				<span class="text-trash">{{ 'Activity'|trans }}</span> {{ 'Logs'|trans }}
 				</h1>
-				<p class="mt-4 text-md text-gray-600 max-w-3xl mx-auto">
+				<p class="mt-2 text-xs text-gray-600 max-w-3xl mx-auto">
 				{{ 'Detailed history of all burned notes'|trans }}
 				</p>
 			</div>
 
 			<!-- Notes Table -->
-			<div class="bg-white  shadow-sm border border-gray-200 overflow-hidden">
+			<div class="bg-white  shadow-sm border border-gray-200 overflow-hidden rounded-[15px] shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out">
 				<div class="px-6 py-5 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
 					<h2 class="text-lg font-medium text-gray-900">
 						{{ 'Logs'|trans }}
 					</h2>
 					 <a href="{{ path('app_notes_new') }}" 
-					class="flex items-center space-x-2 px-5 py-2 bg-trash hover:bg-trash_bold  font-thin text-white rounded-sm transition-all">
+					class="flex items-center space-x-2 btn-general text-xs">
 
-						<svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+						<svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
 						</svg>
 
-						<span class="text-sm">{{ 'Create New Note'|trans }}</span>
+						<span>{{ 'Create New Note'|trans }}</span>
 					</a>
 				</div>
 
-				<div class="overflow-x-auto">
+				<div class="overflow-x-auto ">
 					<table class="min-w-full divide-y divide-gray-200">
 						<thead class="bg-gray-50">
 							<tr>
@@ -160,7 +161,7 @@
 														<div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
 															<button type="button" 
 																	onclick="closeIpModal{{ log.note.id }}()" 
-																	class="w-full inline-flex justify-center border border-transparent shadow-sm px-4 py-2 bg-trash text-base font-medium text-white hover:bg-trash_bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
+																	class=" inline-flex justify-center btn-general ">
 																{{ 'Close'|trans }}
 															</button>
 														</div>

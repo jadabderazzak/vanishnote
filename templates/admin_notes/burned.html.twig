@@ -48,12 +48,12 @@
 						</thead>
 						<tbody class="bg-white divide-y divide-gray-200">
 							{% for log in logs %}
-								
+								{% if log.note is not null %}
 								<tr >
 									
 									<td class="px-6 py-4 whitespace-nowrap">
 										<div class="text-sm text-gray-900">
-											{{ "#"~ log.note.id }}
+											{{ "#"~ log.note is not null ? log.note.id : 'N/A' }}
 										</div>
 									</td>
 									<td class="px-6 py-4 whitespace-nowrap">
@@ -188,6 +188,7 @@
 									</td>
 									
 								</tr>
+								{% endif %}
 							{% else %}
 								<tr>
 									<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">

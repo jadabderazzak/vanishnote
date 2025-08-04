@@ -32,12 +32,12 @@
 			margin-right: 0.5rem;
 		}
 	</style>
-	<div class="w-full ">
-		<div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-4 p-2">
-			<div class="bg-gray-50 shadow p-4 ">
+	<div class="w-full p-2 ">
+		<div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
+			<div class="bg-gray-50 border border-gray-200 shadow-[0_5px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out p-4 ">
 				<div class="flex items-center">
 					<div class="flex-shrink-0  space-y-2">
-						<span class="text-2xl leading-none font-bold text-gray-900">
+						<span class="text-2xl leading-none font-bold text-trash">
 							{{ currency }}{{ weeklyPaymentStats.currentWeekAmount|format_number(locale=app.request.locale) }}
 						</span>
 						<h3 class="text-xs font-normal text-gray-500 ">{{"Total payments received this week" | trans}}</h3>
@@ -72,10 +72,10 @@
 				</div>
 			</div>
 
-			<div class="bg-gray-50 shadow p-4 ">
+			<div class="bg-gray-50  border border-gray-200 shadow-[0_5px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out p-4 ">
 				<div class="flex items-center">
 					<div class="flex-shrink-0  space-y-2">
-						<span class="text-2xl leading-none font-bold text-gray-900">
+						<span class="text-2xl leading-none font-bold text-trash">
 							{{ currency }}{{ monthlyPaymentStats.currentMonthAmount|format_number(locale=app.request.locale) }}
 						</span>
 						<h3 class="text-xs font-normal text-gray-500">{{"Total payments received this month" | trans}}</h3>
@@ -110,10 +110,10 @@
 				</div>
 			</div>
 
-			<div class="bg-gray-50 shadow p-4 ">
+			<div class="bg-gray-50 border border-gray-200 shadow-[0_5px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out p-4 ">
 				<div class="flex items-center">
 					<div class="flex-shrink-0  space-y-2">
-						<span class="text-2xl leading-none font-bold text-gray-900">
+						<span class="text-2xl leading-none font-bold text-trash">
 							{{ weeklyUserInscription.currentWeekCount|format_number(locale=app.request.locale) }}
 							<span class="text-xs text-gray-500">{{"Client(s)" | trans}}</span>
 						</span>
@@ -149,26 +149,26 @@
 				</div>
 			</div>
 
-			<div class="bg-gray-50 shadow p-4 ">
+			<div class="bg-gray-50 border border-gray-200 shadow-[0_5px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out  p-4 ">
 				<div class="flex items-center">
 					<div class="flex-shrink-0  space-y-2">
-						<span class="text-2xl leading-none font-bold text-gray-900">
+						<span class="text-2xl leading-none font-bold text-trash">
 							{{ monthlyUserInscription.currentMonthCount|format_number(locale=app.request.locale) }}
 							<span class="text-xs text-gray-500">{{"Client(s)" | trans}}</span>
 						</span>
 						<h3 class="text-xs font-normal text-gray-500">{{"Total new clients acquired this month" | trans}}</h3>
 					</div>
 					<div class="ml-5 w-0 flex items-center justify-end flex-1 text-sm font-bold
-							                  {% if monthlyUserInscription.percentageGain is not null %}
-							                        {% if monthlyUserInscription.percentageGain >= 0 %}
-							                           text-green-500
-							                        {% else %}
-							                           text-red-500
-							                        {% endif %}
-							                  {% else %}
-							                        text-gray-400
-							                  {% endif %}
-							               ">
+							{% if monthlyUserInscription.percentageGain is not null %}
+								{% if monthlyUserInscription.percentageGain >= 0 %}
+									text-green-500
+								{% else %}
+									text-red-500
+								{% endif %}
+							{% else %}
+								text-gray-400
+							{% endif %}
+						">
 						{% if monthlyUserInscription.percentageGain is not null %}
 							{{ monthlyUserInscription.percentageGain|number_format(2, '.', ',') }}%
 
@@ -190,10 +190,10 @@
 
 		</div>
 		<div class="w-full grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
-			<div class="bg-white p-4 sm:p-6 xl:p-8 2xl:col-span-2" id="chartElementAdmin">
+			<div class="bg-white p-4 sm:p-6 xl:p-8 2xl:col-span-2 border border-gray-200 shadow-[0_5px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out" id="chartElementAdmin">
 				<div class="flex flex-col md:flex-row items-center justify-start md:justify-between mb-4 gap-4">
 					<div class="flex-shrink-0">
-						<span class="text-xl leading-none font-bold text-gray-900">{{ "Payments Analytics" | trans }}</span>
+						<span class="text-xl leading-none font-bold text-gray-900">{{ "Payments" | trans }} <span class="text-trash">{{ 'Analytics'|trans }}</span></span>
 						<h3 class="text-md font-normal text-gray-500">{{ "Monthly payments by year" | trans }}</h3>
 					</div>
 					<div class="flex-shrink-0">
@@ -201,7 +201,7 @@
 						<div>
 							<p class="text-sm text-gray-500">{{ 'Total Revenue' | trans }}</p>
 							<p class="mt-1 text-4xl font-semibold text-gray-900">
-								{{ totalRevenue|number_format(2, '.', ',') }} <span class="text-green-600">{{ currency|default('USD') }}</span>
+								<span class="text-trash">{{ currency|default('USD') }}</span>{{ totalRevenue|number_format(2, '.', ',') }} 
 							</p>
 						</div>
 					
@@ -225,14 +225,14 @@
 
 				</div>
 			</div>
-			<div class="bg-gray-50 shadow p-4 sm:p-2 xl:p-4 ">
+			<div class="bg-gray-50 border border-gray-200 shadow-[0_5px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out p-4 sm:p-2 xl:p-4 ">
 				<div class="mb-4 flex items-center justify-between">
 					<div>
-						<h3 class="text-lg font-bold text-gray-900 mb-2">{{"Latest Transactions" | trans}}</h3>
+						<h3 class="text-lg font-bold text-gray-900 mb-2">{{"Latest" | trans}} <span class="text-trash">{{ 'Transactions'|trans }}</span></h3>
 						<span class="text-sm font-normal text-gray-500">{{"This is a list of latest transactions" | trans}}</span>
 					</div>
 					<div class="flex-shrink-0">
-						<a href="{{path('app_admin_payment')}}" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 p-2">{{"View all" | trans}}</a>
+						<a href="{{path('app_admin_payment')}}" class="btn-secondary text-xs">{{"View all" | trans}}</a>
 					</div>
 				</div>
 				<div class="flex flex-col mt-8">
@@ -280,10 +280,10 @@
 		</div>
 
 		<div class="grid grid-cols-1 2xl:grid-cols-2 xl:gap-4 my-4">
-			<div class="bg-white shadow mb-4 p-4 sm:p-6 h-full">
+			<div class="bg-white border border-gray-200 shadow-[0_5px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out  mb-4 p-4 sm:p-6 h-full">
 				<div class="flex items-center justify-between mb-4">
-					<h3 class="text-xl font-bold leading-none text-gray-900">{{"Latest 5 Clients" | trans}}</h3>
-					<a href="{{path('app_admin_clients')}}" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 inline-flex items-center p-2">
+					<h3 class="text-xl font-bold leading-none text-gray-900">{{"Latest 5" | trans}} <span class="text-trash">{{ 'Clients'|trans }}</span></h3>
+					<a href="{{path('app_admin_clients')}}" class="btn-secondary text-xs">
 						{{"View all" |trans}}
 					</a>
 				</div>
@@ -306,7 +306,7 @@
 										</p>
 									</div>
 									<div class="inline-flex items-center text-base font-semibold text-gray-900">
-										<a href="{{ path('app_admin_clients_view',{slug :client.slug})}}" class="inline-flex items-center px-3 py-1.5  bg-trash text-white hover:bg-trash_bold transition-all duration-200 group text-xs font-medium shadow-xs border border-emerald-100">
+										<a href="{{ path('app_admin_clients_view',{slug :client.slug})}}" class="btn-general text-xs">
 											<svg class="w-4 h-4 mr-1.5 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
 												<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 5V4a1 1 0 0 0-1-1H8.914a1 1 0 0 0-.707.293L4.293 7.207A1 1 0 0 0 4 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5M9 3v4a1 1 0 0 1-1 1H4m11.383.772 2.745 2.746m1.215-3.906a2.089 2.089 0 0 1 0 2.953l-6.65 6.646L9 17.95l.739-3.692 6.646-6.646a2.087 2.087 0 0 1 2.958 0Z"/>
 											</svg>
@@ -320,11 +320,11 @@
 					</ul>
 				</div>
 			</div>
-			<div class="bg-white shadow p-4 sm:p-6 xl:p-8">
+			<div class="bg-white border border-gray-200 shadow-[0_5px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out p-4 sm:p-6 xl:p-8">
 
 				<div class="flex items-center justify-between mb-4">
-					<h3 class="text-xl font-bold leading-none text-gray-900">{{"System Logs" | trans}}</h3>
-					<a href="{{path('app_system_logs')}}" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 inline-flex items-center p-2">
+					<h3 class="text-xl font-bold leading-none text-gray-900">{{"System" | trans}} <span class="text-trash">{{ 'Logs'|trans }}</span></h3>
+					<a href="{{path('app_system_logs')}}" class="btn-secondary text-xs">
 						{{"View all" |trans}}
 					</a>
 				</div>

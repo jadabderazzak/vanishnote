@@ -6,20 +6,21 @@
 {% endblock %}
 
 {% block body %}
-    <div class="bg-white mb-6">
+    <div class="bg-white mb-6 p-2">
         <div class="w-full mx-auto">
             <!-- Header -->
             <div class="text-center mb-4 p-8">
-                <h1 class="text-3xl font-bold text-gray-900 tracking-tight">
-                    {{ 'My Secure Files'|trans }}
-                </h1>
-                <p class="mt-4 text-md text-gray-600 max-w-3xl mx-auto">
+          
+                <h1 class="text-2xl font-bold text-gray-900">
+            <span class="text-trash">{{ 'My Secure'|trans }}</span> {{ 'Files'|trans }}
+            </h1>
+                <p class="mt-2 text-xs text-gray-600 max-w-3xl mx-auto">
                     {{ 'Manage all your secure files in one place'|trans }}
                 </p>
             </div>
 
             <!-- Files Table -->
-            <div class="bg-white border border-gray-200 overflow-hidden w-full">
+            <div class="bg-white border border-gray-200 overflow-hidden w-full rounded-[15px] shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out">
                 <div class="px-6 py-5 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
                     <h2 class="text-lg font-medium text-gray-900">
                         {{ 'Files List'|trans }}
@@ -146,7 +147,7 @@
                                             <svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
                                             </svg>
-                                            <span>{{ 'Delete'|trans }}</span>
+                                            <span>{{ 'Delete'| trans }}</span>
                                         </button>
                                     </td>
                                 </tr>

@@ -56,7 +56,7 @@ final class ClientsController extends AbstractController
             $totalnotes = $repoNotes->countTotalNotesByUser($user);
             $totalBurned = $repoNotes->countTotalBurnedNotesByUser($user);
             $last5NotesNotBurned = $repoNotes->findLast5NotBurned($user);
-            $payments = $repoPayment->findBy(['user' => $user, 'status' => 'succeeded']);
+            $payments = $repoPayment->findLastFivePaymentsByUser($user);
         } catch (\Throwable $e) {
             $this->logger->log(
                 LogLevel::ERROR,

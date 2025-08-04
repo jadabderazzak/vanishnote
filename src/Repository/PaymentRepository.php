@@ -50,7 +50,7 @@ class PaymentRepository extends ServiceEntityRepository
     return $result !== null ? (float) $result : 0.0;
 }
 
-/**
+    /**
      * Returns the last 5 payments ordered by creation date descending.
      *
      * @return Payment[] Returns an array of Payment objects
@@ -60,6 +60,26 @@ class PaymentRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')
             ->andWhere('p.status = :status')
             ->setParameter('status', 'succeeded')
+            ->orderBy('p.createdAt', 'DESC')
+
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
+
+    
+    /**
+     * Returns the last 5 payments ordered by creation date descending.
+     *
+     * @return Payment[] Returns an array of Payment objects
+     */
+    public function findLastFivePaymentsByUser(User $user): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.status = :status')
+            ->setParameter('status', 'succeeded')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
             ->orderBy('p.createdAt', 'DESC')
 
             ->setMaxResults(5)

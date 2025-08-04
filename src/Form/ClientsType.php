@@ -73,7 +73,7 @@ class ClientsType extends AbstractType
 
             // VAT number (optional)
             ->add('vatNumber', TextType::class, [
-                'label' => $this->translator->trans('VAT number'),
+                'label' => $this->translator->trans('VAT Number'),
                 'required' => false,
                 'empty_data' => '',
             ])

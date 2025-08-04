@@ -1,6 +1,6 @@
 <!-- Mobile Header (visible only on mobile) -->
 <div
-	class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-600 z-40 md:hidden flex justify-between items-center p-4">
+	class="fixed top-0 left-0 right-0 bg-white  border-b border-gray-200  z-40 md:hidden flex justify-between items-center p-4 ">
 	<!-- Mobile Logo -->
 	<a href="{{ path('app_home')}}" class="flex items-start md:hidden">
 		<img src="{{ asset('template/logo/logo.png')}}" class="w-[100px] sm:w-[120px]" alt="Vanish Note"/>
@@ -14,7 +14,7 @@
 </div>
 
 <!-- Sidebar Navigation -->
-<aside id="sidebar" class="fixed top-0 left-0 z-40 w-[280px] h-screen border-r border-gray-100 transition-transform -translate-x-full md:translate-x-0 bg-gray-50  pt-0 md:pt-0">
+<aside id="sidebar" class="fixed top-0 left-0 z-40 w-[280px] h-screen border-r border-gray-100 transition-transform -translate-x-full md:translate-x-0 bg-gray-50  pt-0 md:pt-0  shadow-[0_5px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out">
 	<div class="h-full px-3 py-4 overflow-y-auto flex flex-col">
 		<div
 			class="flex-grow">
@@ -199,8 +199,15 @@
 				</li>
 
 
-				<!-- Language Selector -->
-				<li>
+				
+			</div>
+			<div class="relative inline-flex items-center justify-center w-full">
+					<hr class="w-64 h-px my-6 bg-gray-200 border-0 dark:bg-gray-700">
+					<span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-gray-50  left-1/2 text-sm">
+						{{"Actions" | trans}}</span>
+				</div>
+			<!-- Language Selector -->
+				<div class="mb-4">
 					<button
 						type="button" class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="language-dropdown" data-collapse-toggle="language-dropdown">
 						<!-- Icône de langue -->
@@ -226,7 +233,7 @@
 							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
 						</svg>
 					</button>
-					<ul id="language-dropdown" class="hidden py-2 space-y-2 bg-white p-2 mt-2 shadow-sm rounded-xl ">
+					<ul id="language-dropdown" class="hidden py-2 space-y-2 bg-white p-2 mt-2 shadow-sm rounded-xl text-sm">
 						<li>
 							<a href="javascript:;" onclick="onChangeLanguage('fr')" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 rounded-full me-2" viewbox="0 0 32 32">
@@ -267,17 +274,17 @@
 							</a>
 						</li>
 					</ul>
-				</li>
-			</div>
+				</div>
 			<!-- Logout Link -->
 			<div>
 
-				<a
-					href="{{ path('app_logout')}}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+				<a href="{{ path('app_logout')}}" class="flex items-center justify-between btn-general-black w-full text-xs">
 					<!-- Icône SVG Dashboard -->
-					<svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
-						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/>
-					</svg>
+
+					<svg class="w-4 h-4 text-white transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+						</svg>
+
 					<span class="ms-1">{{"Logout" | trans}}</span>
 				</a>
 			</div>

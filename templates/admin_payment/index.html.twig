@@ -91,11 +91,11 @@
 									<td class="px-6 py-4 whitespace-nowrap text-right">
 										<div class="flex flex-row justify-end w-full items-center gap-2 ">
 											{% if payment.status == 'succeeded' %}
-												<a href="{{ path('admin_payment_invoice', {slug: payment.slug}) }}" target="_blank" class="px-3 py-2 text-xs font-medium text-center text-white bg-trash hover:bg-trash_bold focus:ring-4 focus:outline-none focus:ring-blue-300">
+												<a href="{{ path('admin_payment_invoice', {slug: payment.slug}) }}" target="_blank" class="flex items-center  btn-general text-xs">
 													{{ 'Show Invoice' | trans }}
 												</a>
 											{% endif %}
-											<button data-modal-target="payment-details-modal{{payment.id}}" data-modal-toggle="payment-details-modal{{payment.id}}" class="px-3 py-2 text-xs font-medium text-center text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-blue-300">
+											<button data-modal-target="payment-details-modal{{payment.id}}" data-modal-toggle="payment-details-modal{{payment.id}}" class="flex items-center text-xs  btn-general-black">
 												{{ 'View Transaction Details' | trans }}
 											</button>
 										</div>
@@ -168,15 +168,15 @@
 														<label class="block text-sm font-medium text-gray-500 mb-1">{{ 'Status' | trans }}</label>
 														<div class="h-[72px] p-3 bg-gray-50 rounded-lg border border-gray-200 flex items-center">
 															<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-																	                {% if payment.status == 'succeeded' %}
-																	                    bg-green-100 text-green-800
-																	                {% elseif payment.status == 'pending' %}
-																	                    bg-yellow-100 text-yellow-800
-																	                {% elseif payment.status == 'failed' %}
-																	                    bg-red-100 text-red-800
-																	                {% else %}
-																	                    bg-gray-100 text-gray-800
-																	                {% endif %}">
+														{% if payment.status == 'succeeded' %}
+															bg-green-100 text-green-800
+														{% elseif payment.status == 'pending' %}
+															bg-yellow-100 text-yellow-800
+														{% elseif payment.status == 'failed' %}
+															bg-red-100 text-red-800
+														{% else %}
+															bg-gray-100 text-gray-800
+														{% endif %}">
 																{{ payment.status|capitalize }}
 															</span>
 														</div>
@@ -217,7 +217,7 @@
 
 											<!-- Modal Footer -->
 											<div class="flex items-center justify-end p-6 border-t border-gray-200">
-												<button data-modal-hide="payment-details-modal{{payment.id}}" type="button" class="px-3 py-2 text-xs font-medium text-center text-white bg-trash hover:bg-trash_bold focus:ring-4 focus:outline-none focus:ring-blue-300">
+												<button data-modal-hide="payment-details-modal{{payment.id}}" type="button" class="btn-general text-xs">
 													{{ 'Close' | trans }}
 												</button>
 

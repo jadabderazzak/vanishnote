@@ -18,11 +18,11 @@
         </div>
 
         {{ form_start(form) }}
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
+        <div class="flex flex-col md:flex-row justify-center md:justify-between items-stretch gap-4">
             <!-- Left Column -->
-            <div class="space-y-6">
+            <div class="bg-gray-50  border border-gray-200 rounded-[15px] shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out">
                 <!-- Basic Info Card -->
-                <div class="bg-gray-50 p-6 rounded-lg">
+                <div class="p-6">
                     <h2 class="text-lg font-medium text-gray-800 mb-4">{{ 'Plan Information' | trans }}</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -84,7 +84,7 @@
             </div>
 
             <!-- Right Column -->
-            <div class="space-y-6">
+            <div class="space-y-6 border border-gray-200 rounded-[15px] shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out">
                 <!-- Features Card -->
                 <div class="bg-gray-50 p-6 rounded-lg">
                     <h2 class="text-lg font-medium text-gray-800 mb-4">{{ 'Plan Features' | trans }}</h2>
@@ -128,10 +128,10 @@
 
         <!-- Actions -->
         <div class="flex items-center justify-between pt-8 mt-8 border-t border-gray-200">
-            <a href="{{ path('app_subscription_plan') }}" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <a href="{{ path('app_subscription_plan') }}" class="btn-general-black text-xs">
                 {{ 'Cancel' | trans }}
             </a>
-            <button type="submit" class="px-6 py-2.5 bg-trash text-white font-medium  shadow-sm hover:bg-trash_bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out flex items-center">
+            <button type="submit" class="btn-general text-xs">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewbox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                 </svg>

@@ -3,17 +3,18 @@
 {% block title %}{{ 'Payments' | trans }}{% endblock %}
 
 {% block body %}
-<div class="w-full  mx-auto ">
+<div class="w-full  mx-auto p-2 ">
 <!-- Header -->
-        <div class="text-center mb-4  p-8">
-            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">
-                {{ 'Payment history'|trans }}
+        <div class="text-center mb-4 p-8">
+          
+            <h1 class="text-2xl font-bold text-gray-900">
+            <span class="text-trash">{{ 'Payment'|trans }}</span> {{ 'history'|trans }}
             </h1>
-            <p class="mt-4 text-md text-gray-600 max-w-3xl mx-auto">
+            <p class="mt-2 text-xs text-gray-600 max-w-3xl mx-auto">
                 {{ 'Here are your completed payments.'|trans }}
             </p>
         </div>
-    <div class="bg-gray-50 shadow-md  overflow-hidden">
+    <div class="bg-gray-50 overflow-hidden border border-gray-200 rounded-[15px] shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out">
         <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-start md:justify-between items-start md:items-center gap-4">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800">{{ 'Payments' | trans }}</h1>
@@ -93,7 +94,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right">
                             {% if payment.status == 'succeeded' %}
-                                <a href="{{ path('payment_invoice', {slug: payment.slug}) }}" target="_blank" class="px-3 py-2 text-xs font-medium text-center text-white bg-trash hover:bg-trash_bold focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                <a href="{{ path('payment_invoice', {slug: payment.slug}) }}" target="_blank" class="px-3 py-2 text-xs btn-general">
                                     {{ 'Show Invoice' | trans }}
                                 </a>
                             {% endif %}
@@ -105,6 +106,22 @@
             </div>
            
         {% endif %}
+       
     </div>
+      <!-- Additional Info -->
+            <div class="mt-16 text-center">
+                <h3 class="text-lg font-medium text-gray-900">{{ 'Need help?'|trans }}</h3>
+                <p class="mt-2 text-gray-600 max-w-2xl mx-auto">
+                    {{ 'Contact our support team if you have any questions about your files.'|trans }}
+                </p>
+                <div class="mt-6">
+                    <a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-500 font-medium">
+                        {{ 'Contact Support'|trans }}
+                        <svg class="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
 </div>
 {% endblock %}

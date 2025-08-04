@@ -135,10 +135,15 @@
 						{% endfor %}
 					</select>
 				</div>
-
-				<button type="submit" class="w-full py-3 bg-gray-800 hover:bg-gray-900 text-white font-medium rounded">
-					{{ 'Proceed to Payment'|trans }}
-				</button>
+				<div class="w-full flex justify-center">
+				   <button  type="submit" class="px-8 py-3 btn-general-black">
+						{{ 'Proceed to Payment'|trans }}
+						<svg class="w-5 h-5 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+								d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+						</svg>
+					</button>
+				</div>
 			</form>
 		</div>
 

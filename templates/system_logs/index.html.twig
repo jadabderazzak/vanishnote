@@ -13,14 +13,7 @@
                     <h1 class="text-xl font-bold text-gray-800">{{ 'System Logs'|trans }}</h1>
                     <p class="text-gray-600 mt-1 text-sm">{{ 'View and manage system logs'|trans }}</p>
                 </div>
-                <div class="flex flex-row justify-between md:justify-end items-center gap-2 w-full">
-                    <button class="flex items-center space-x-2 px-5 py-2 bg-trash hover:bg-trash_bold font-thin text-white rounded-sm transition-all">
-                        <svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v9m-5 0H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2M8 9l4-5 4 5m1 8h0"/>
-                        </svg>
-                        <span class="text-sm">{{ 'Export Logs'|trans }}</span>
-                    </button>
-                </div>
+               
             </div>
 
             {% if logs is empty %}
@@ -110,7 +103,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex justify-end space-x-2">
                                             {% if not log.isHandled %}
-                                                <button data-modal-target="handle-log-modal-{{ log.id }}" data-modal-toggle="handle-log-modal-{{ log.id }}" class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all duration-200 text-xs font-medium shadow-xs border border-blue-100">
+                                                <button data-modal-target="handle-log-modal-{{ log.id }}" data-modal-toggle="handle-log-modal-{{ log.id }}" class="btn-general text-xs">
                                                     <svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
                                                     </svg>
@@ -118,7 +111,7 @@
                                                 </button>
                                             {% endif %}
                                             
-                                            <a href="{{ path('app_admin_logs_details',{id : log.id})}}" class="inline-flex items-center px-3 py-1.5 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-all duration-200 text-xs font-medium shadow-xs border border-gray-200">
+                                            <a href="{{ path('app_admin_logs_details',{id : log.id})}}" class="btn-general text-xs">
                                                 <svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a28.076 28.076 0 0 1-1.091 9M7.231 4.37a8.994 8.994 0 0 1 12.88 3.73M2.958 15S3 14.577 3 12a8.949 8.949 0 0 1 1.735-5.307m12.84 3.088A5.98 5.98 0 0 1 18 12a30 30 0 0 1-.464 6.232M6 12a6 6 0 0 1 9.352-4.974M4 21a5.964 5.964 0 0 1 1.01-3.328 5.15 5.15 0 0 0 .786-1.926m8.66 2.486a13.96 13.96 0 0 1-.962 2.683M7.5 19.336C9 17.092 9 14.845 9 12a3 3 0 1 1 6 0c0 .749 0 1.521-.031 2.311M12 12c0 3 0 6-2 9"/>
                                                 </svg>

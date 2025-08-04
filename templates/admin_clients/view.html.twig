@@ -86,13 +86,13 @@
 
 		<!-- Main Content -->
 		<div
-			class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+			class="grid grid-cols-1 lg:grid-cols-3 gap-6 ">
 			<!-- Left Column -->
 			<div
-				class="lg:col-span-2 space-y-6">
+				class="lg:col-span-2 space-y-6 ">
 				<!-- Company Details Card -->
 				{% if client.isCompany %}
-					<div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+					<div class="bg-white border border-gray-200 rounded-[15px] shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out  overflow-hidden">
 						<div class="px-5 py-4 border-b border-gray-200">
 							<h2 class="text-lg font-medium text-gray-900 flex items-center">
 								<svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
@@ -113,8 +113,8 @@
 				{% endif %}
 
 				<!-- Subscription Card -->
-				<div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-					<div class="px-5 py-4 border-b border-gray-200">
+				<div class="bg-white border border-gray-200 rounded-[15px] shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out  overflow-hidden">
+					<div class="px-5 py-4 border-b border-gray-200 ">
 						<div class="flex items-center justify-between">
 							<h2 class="text-lg font-medium text-gray-900 flex items-center">
 								<svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
@@ -125,15 +125,15 @@
 
 							{% if subscriptions|length > 0 %}
 								{% set subscription = subscriptions|first %}
-								<span class="px-2.5 py-0.5 rounded-full text-xs font-medium
-																				                    {{ subscription.status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+								<span class="px-2.5 py-0.5  text-xs font-medium
+									{{ subscription.status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
 									{{ subscription.status ? 'Active' | trans : 'Inactive' | trans }}
 								</span>
 							{% endif %}
 						</div>
 					</div>
 
-					<div class="px-5 py-4">
+					<div class="px-5 py-4 ">
 						{% if subscriptions|length > 0 %}
 							{% set subscription = subscriptions|first %}
 							<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -176,7 +176,7 @@
 			<div
 				class="space-y-6">
 				<!-- Recent Payments -->
-				<div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+				<div class="bg-white border border-gray-200 rounded-[15px] shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out overflow-hidden">
 					<div class="px-5 py-4 border-b border-gray-200">
 						<h2 class="text-lg font-medium text-gray-900 flex items-center">
 							<svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
@@ -235,7 +235,7 @@
 				<div class="w-full text-center">
 
                     {% if client.user.hasAccess %}
-					<button data-modal-target="block-client-modal" data-modal-toggle="block-client-modal" class="inline-flex justify-center items-center px-3 py-2.5 w-full bg-red-500 text-white hover:bg-red-600 transition-all duration-200 group text-md font-semibol shadow-xs border border-red-100">
+					<button data-modal-target="block-client-modal" data-modal-toggle="block-client-modal" class="inline-flex justify-center items-center btn-danger w-full">
 
 						<svg class="w-4 h-4 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
 							<path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m6 6 12 12m3-6a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
@@ -245,7 +245,7 @@
 					</button>
 
                      {% else %}
-                    <button data-modal-target="allow-client-modal" data-modal-toggle="allow-client-modal" class="inline-flex justify-center items-center px-3 py-2.5 w-full bg-trash text-white hover:bg-trash_bold transition-all duration-200 group text-md font-semibol shadow-xs border border-trash">
+                    <button data-modal-target="allow-client-modal" data-modal-toggle="allow-client-modal" class="inline-flex justify-center items-center btn-general w-full">
                     
                         <svg class="w-54 h-5 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8.032 12 1.984 1.984 4.96-4.96m4.55 5.272.893-.893a1.984 1.984 0 0 0 0-2.806l-.893-.893a1.984 1.984 0 0 1-.581-1.403V7.04a1.984 1.984 0 0 0-1.984-1.984h-1.262a1.983 1.983 0 0 1-1.403-.581l-.893-.893a1.984 1.984 0 0 0-2.806 0l-.893.893a1.984 1.984 0 0 1-1.403.581H7.04A1.984 1.984 0 0 0 5.055 7.04v1.262c0 .527-.209 1.031-.581 1.403l-.893.893a1.984 1.984 0 0 0 0 2.806l.893.893c.372.372.581.876.581 1.403v1.262a1.984 1.984 0 0 0 1.984 1.984h1.262c.527 0 1.031.209 1.403.581l.893.893a1.984 1.984 0 0 0 2.806 0l.893-.893a1.985 1.985 0 0 1 1.403-.581h1.262a1.984 1.984 0 0 0 1.984-1.984V15.7c0-.527.209-1.031.581-1.403Z"/>
@@ -328,7 +328,7 @@
 </div>
 </div>
 <div class="bg-gray-50   overflow-hidden px-4 sm:px-6 lg:px-8 ">
-			<div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-start md:justify-between items-start md:items-center gap-4">
+			<div class="px-6 py-4  flex flex-col md:flex-row justify-start md:justify-between items-start md:items-center gap-4">
 				<div>
 					<h1 class="text-2xl font-bold text-gray-800">{{ 'Payments' | trans }}</h1>
 					<p class="text-gray-600 mt-1">{{ 'View payment history' | trans }}</p>
@@ -342,10 +342,10 @@
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 					</svg>
 					<h3 class="mt-2 text-lg font-medium text-gray-900">{{ 'No payments found' | trans }}</h3>
-					<p class="mt-1 text-gray-500">{{ 'Your payments will appear here.' | trans }}</p>
+					<p class="mt-1 text-gray-500">{{ 'Payments will appear here.' | trans }}</p>
 				</div>
 			{% else %}
-				<div class="overflow-x-auto shadow-md">
+				<div class="overflow-x-auto border border-gray-200 rounded-[15px] shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out">
 					<table class="min-w-full divide-y divide-gray-200">
 						<thead class="bg-gray-50">
 							<tr>

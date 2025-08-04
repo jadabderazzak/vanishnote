@@ -3,167 +3,149 @@
 {% block title %}{{ 'Thank You for Your Purchase' | trans }}{% endblock %}
 
 {% block body %}
-<div class="  flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-24">
-  <div class="max-w-md w-full bg-trash rounded-xl shadow-md overflow-hidden p-6 space-y-6">
-    <div class="text-center">
-      {% if paymentStatus == 'succeeded' %}
-      <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100">
-        <!-- Success Icon -->
-        <svg class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-      </div>
-      {% else %}
-      <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100">
-        <!-- Processing Icon -->
-        <svg class="h-10 w-10 text-yellow-600 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      </div>
-      {% endif %}
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-50/30 flex items-center justify-center p-6">
+    <div class="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden p-8 transition-all duration-300 hover:shadow-xl">
+        <div class="text-center mb-8">
+            {% if paymentStatus == 'succeeded' %}
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+                <svg class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            {% else %}
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100 mb-4">
+                <svg class="h-10 w-10 text-yellow-600 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            {% endif %}
 
-      <h2 class="mt-4 text-2xl font-extrabold text-white">
-        {{ 'Thank You for Your Purchase!' | trans }}
-      </h2>
-    </div>
-
-    <div id="status-message">
-      {% if paymentStatus == 'succeeded' %}
-      <div class="rounded-md bg-green-50 p-4">
-        <div class="flex">
-          <div class="flex-shrink-0">
-            <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <div class="ml-3">
-            <p class="text-sm font-medium text-green-800">
-              {{ 'Your payment was successful! Your subscription is now active.' | trans }}
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">
+                <span class="text-indigo-600">{{ 'Thank You' | trans }}</span> {{ 'for Your Purchase!' | trans }}
+            </h1>
+            <p class="text-gray-600">
+                {{ 'Your payment details are shown below' | trans }}
             </p>
-          </div>
         </div>
-        <div class="mt-4 border-t border-green-100 pt-4">
-          <div class="text-sm text-gray-700">
-            <p><span class="font-medium">{{ 'Transaction ID:' | trans }}</span> {{ slug }}</p>
-            <p class="mt-1"><span class="font-medium">{{ 'Date:' | trans }}</span> {{ "now"|date("F j, Y") }}</p>
-          </div>
-        </div>
-      </div>
-      {% else %}
-      <div class="rounded-md bg-yellow-50 p-4">
-        <div class="flex">
-          <div class="flex-shrink-0">
-            <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <div class="ml-3">
-            <p class="text-sm font-medium text-yellow-800">
-              {{ "We're processing your payment. This may take a moment..." | trans }}
-            </p>
-          </div>
-        </div>
-      </div>
-      {% endif %}
-    </div>
 
-    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 justify-center">
-      <a href="{{ path('app_client_subscription') }}" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-900 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-       {{ "Dashboard" | trans }}
-      </a>
-      {% if paymentStatus == 'succeeded' %}
-      <a href="{{ path('payment_invoice',{slug : slug}) }}" target="_BLANK"class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        {{ "Download invoice" | trans }}
-      </a>
-      {% endif %}
+        <div id="status-message" class="mb-6">
+            {% if paymentStatus == 'succeeded' %}
+            <div class="rounded-lg bg-green-50 p-4 border-l-4 border-green-500">
+                <div class="flex items-start">
+                    <svg class="h-5 w-5 text-green-500 mt-0.5 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    <div>
+                        <p class="text-sm font-medium text-green-800">
+                            {{ 'Your payment was successful! Your subscription is now active.' | trans }}
+                        </p>
+                        <div class="mt-3 pt-3 border-t border-green-100">
+                            <div class="text-sm text-gray-700">
+                                <p><span class="font-medium">{{ 'Transaction ID:' | trans }}</span> {{ slug }}</p>
+                                <p class="mt-1"><span class="font-medium">{{ 'Date:' | trans }}</span> {{ "now"|date("F j, Y") }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="rounded-lg bg-yellow-50 p-4 border-l-4 border-yellow-500">
+                <div class="flex items-start">
+                    <svg class="h-5 w-5 text-yellow-500 mt-0.5 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <div>
+                        <p class="text-sm font-medium text-yellow-800">
+                            {{ "We're processing your payment. This may take a moment..." | trans }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="flex flex-col space-y-3">
+            <a href="{{ path('app_clients_dashboard') }}" class="btn-general px-6 py-3 rounded-lg text-white text-center font-medium flex items-center justify-center">
+                {{ "Go to Dashboard" | trans }}
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
+            </a>
+            
+            {% if paymentStatus == 'succeeded' %}
+            <a href="{{ path('payment_invoice',{slug : slug}) }}" target="_BLANK" class="btn-general px-6 py-3 rounded-lg text-white text-center font-medium flex items-center justify-center">
+                {{ "Download Invoice" | trans }}
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+            </a>
+            {% endif %}
+        </div>
     </div>
-  </div>
 </div>
 
 <script>
-  (function() {
+document.addEventListener('DOMContentLoaded', function() {
     const slug = '{{ slug|e('js') }}';
     const statusMessage = document.getElementById('status-message');
 
     if ("{{ paymentStatus }}" === 'succeeded') {
-      return; // Pas besoin de polling si déjà réussi
+        return;
     }
 
     const interval = setInterval(() => {
-      fetch('{{ path('payment_status', {'slug': 'REPLACE_SLUG'}) }}'.replace('REPLACE_SLUG', slug))
-        .then(response => response.json())
-        .then(data => {
-          if (data.status === 'succeeded') {
-            statusMessage.innerHTML = `
-              <div class="rounded-md bg-green-50 p-4">
-                <div class="flex">
-                  <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                    </svg>
-                  </div>
-                  <div class="ml-3">
-                    <p class="text-sm font-medium text-green-800">
-                      {{ 'Your payment was successful! Your subscription is now active.' | trans }}
-                    </p>
-                  </div>
-                </div>
-                <div class="mt-4 border-t border-green-100 pt-4">
-                  <div class="text-sm text-gray-700">
-                    <p><span class="font-medium">{{ 'Transaction ID:' | trans }}</span> ${slug}</p>
-                    <p class="mt-1"><span class="font-medium">{{ 'Date:' | trans }}</span> ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                  </div>
-                </div>
-              </div>
-            `;
-            clearInterval(interval);
-          } else if (data.status === 'failed') {
-            statusMessage.innerHTML = `
-              <div class="rounded-md bg-red-50 p-4">
-                <div class="flex">
-                  <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                    </svg>
-                  </div>
-                  <div class="ml-3">
-                    <p class="text-sm font-medium text-red-800">
-                      {{ 'Unfortunately, your payment failed. Please try again or contact support.' | trans }}
-                    </p>
-                  </div>
-                </div>
-                <div class="mt-4 flex space-x-3">
-                  <a href="{{ path('app_client_subscription') }}" class="flex-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 text-center">
-                    {{ 'Try Again' | trans }}
-                  </a>
-                  <a href="{{ path('app_clients_dashboard') }}" class="flex-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-center">
-                    {{ 'Contact Support' | trans }}
-                  </a>
-                </div>
-              </div>
-            `;
-            clearInterval(interval);
-          }
-        })
-        .catch(() => {
-          statusMessage.innerHTML = `
-            <div class="rounded-md bg-yellow-50 p-4">
-              <div class="flex">
-                <div class="flex-shrink-0">
-                  <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                  </svg>
-                </div>
-                <div class="ml-3">
-                  <p class="text-sm font-medium text-yellow-800">
-                    {{ 'Unable to verify payment status at this time. Please check back later.' | trans }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          `;
-        });
+        fetch('{{ path('payment_status', {'slug': 'REPLACE_SLUG'}) }}'.replace('REPLACE_SLUG', slug))
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'succeeded') {
+                    statusMessage.innerHTML = `
+                        <div class="rounded-lg bg-green-50 p-4 border-l-4 border-green-500">
+                            <div class="flex items-start">
+                                <svg class="h-5 w-5 text-green-500 mt-0.5 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                                <div>
+                                    <p class="text-sm font-medium text-green-800">
+                                        {{ 'Your payment was successful! Your subscription is now active.' | trans }}
+                                    </p>
+                                    <div class="mt-3 pt-3 border-t border-green-100">
+                                        <div class="text-sm text-gray-700">
+                                            <p><span class="font-medium">{{ 'Transaction ID:' | trans }}</span> ${slug}</p>
+                                            <p class="mt-1"><span class="font-medium">{{ 'Date:' | trans }}</span> ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    clearInterval(interval);
+                } else if (data.status === 'failed') {
+                    statusMessage.innerHTML = `
+                        <div class="rounded-lg bg-red-50 p-4 border-l-4 border-red-500">
+                            <div class="flex items-start">
+                                <svg class="h-5 w-5 text-red-500 mt-0.5 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                                <div>
+                                    <p class="text-sm font-medium text-red-800">
+                                        {{ 'Unfortunately, your payment failed. Please try again or contact support.' | trans }}
+                                    </p>
+                                    <div class="mt-3 flex space-x-3">
+                                        <a href="{{ path('app_client_subscription') }}" class="flex-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 text-center">
+                                            {{ 'Try Again' | trans }}
+                                        </a>
+                                        <a href="{{ path('app_clients_dashboard') }}" class="flex-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-center">
+                                            {{ 'Contact Support' | trans }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    clearInterval(interval);
+                }
+            });
     }, 5000);
-  })();
+});
 </script>
 {% endblock %}

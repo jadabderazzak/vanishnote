@@ -18,7 +18,9 @@
 						</svg>
 					</div>
 					<div>
-						<h1 class="text-2xl font-bold text-gray-900">{{ 'Secure Note Creation'|trans }}</h1>
+						<h1 class="text-2xl font-bold text-gray-900">
+						 <span class="text-trash">{{ 'Secure'|trans }}</span> {{ 'Note Creation'|trans }}
+						 </h1>
 						<p class="text-sm text-gray-600">{{ 'End-to-end encrypted content protection'|trans }}</p>
 					</div>
 				</div>
@@ -192,8 +194,8 @@
 				</div>
 
 				{# Submit Button #}
-				<div class="pt-8">
-					<button type="submit" id="submit-btn" class="w-full flex justify-center items-center py-3 px-6  bg-trash hover:bg-trash_bold text-white font-medium shadow-sm transition-all duration-200 transform hover:-translate-y-0.5">
+				<div class="pt-8 flex justify-center">
+					<button type="submit" id="submit-btn" class="flex justify-center items-center  btn-general ">
 						<span id="btn-text">{{ 'Generate Secure Link'|trans }}</span>
 						<svg id="loading-spinner" class="hidden ml-3 h-5 w-5 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24">
 							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

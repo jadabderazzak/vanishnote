@@ -18,10 +18,9 @@
 		</div>
 
 		{{ form_start(form) }}
-		<div
-			class="space-y-8">
+		<div class="flex flex-col md:flex-row justify-center md:justify-between items-stretch gap-4">
 			<!-- Basic Info Card -->
-			<div class="bg-gray-50 p-6 rounded-lg">
+			<div class="bg-gray-50 p-6 rounded-[15px] border w-full shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out ">
 				<h2 class="text-lg font-medium text-gray-800 mb-4">{{ 'Basic Information' | trans }}</h2>
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<div>
@@ -69,7 +68,7 @@
 			</div>
 
 			<!-- Company Info Card (Conditional) -->
-			<div id="company-info-section" class="bg-gray-50 p-6 rounded-lg {% if not form.vars.data.isCompany %}hidden{% endif %}">
+			<div id="company-info-section" class="bg-gray-50 p-6 rounded-[15px] border w-full  shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out {% if not form.vars.data.isCompany %}hidden{% endif %}">
 				<h2 class="text-lg font-medium text-gray-800 mb-4">{{ 'Company Information' | trans }}</h2>
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<div>
@@ -102,19 +101,20 @@
 				</div>
 			</div>
 
-			<!-- Actions -->
+			
+		</div>
+		<!-- Actions -->
 			<div class="flex items-center justify-between pt-6">
-				<a href="{{ path('app_clients_profile') }}" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+				<a href="{{ path('app_clients_profile') }}" class="px-5 py-2.5 text-xs btn-general-black">
 					{{ 'Cancel' | trans }}
 				</a>
-				<button type="submit" class="px-6 py-2.5 bg-trash text-sm text-white font-medium  shadow-sm hover:bg-trash_bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out flex items-center">
+				<button type="submit" class="px-6 py-2.5 btn-general flex items-center text-xs">
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewbox="0 0 20 20" fill="currentColor">
 						<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
 					</svg>
 					{{ (update ? 'Update' : 'Create') | trans }}
 				</button>
 			</div>
-		</div>
 		{{ form_end(form) }}
 	</div>
 

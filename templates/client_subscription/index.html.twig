@@ -6,22 +6,22 @@
 {% endblock %}
 
 {% block body %}
-	<div class="w-full">
+	<div class="w-full p-2">
 		<div
 			class=" mx-auto">
 			<!-- Header -->
 				<div class="text-center mb-4 p-8">
-				<h1 class="text-3xl font-bold text-gray-900 tracking-tight ">
-					{{ 'Choose Your Plan'|trans }}
-				</h1>
-				<p class="mt-4 text-md text-gray-600 max-w-3xl mx-auto">
+				<h1 class="text-2xl font-bold text-gray-900">
+						 <span class="text-trash">{{ 'Choose'|trans }}</span> {{ 'Your Plan'|trans }}
+						 </h1>
+				<p class="mt-2 text-xs text-gray-600 max-w-3xl mx-auto">
 					{{ 'Select the perfect plan for your needs'|trans }}
 				</p>
 			</div>
 
 			<!-- Current Plan Status -->
 			{% if currentPlan %}
-				<div class="mb-12 bg-white  shadow-sm border border-gray-200 overflow-hidden">
+				<div class="mb-12 bg-white border border-gray-200 overflow-hidden rounded-[15px] shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out">
 					<div class="px-6 py-5 bg-gray-50 border-b border-gray-200">
 						<h2 class="text-lg font-medium text-gray-900">
 							{{ 'Your Current Plan'|trans }}
@@ -110,12 +110,12 @@
 
 						<div class="p-8 bg-gray-50 border-t border-gray-200">
 							{% if currentPlan and plan.id == currentPlan.subscriptionPlan.id %}
-								<button class="w-full bg-gray-200 text-gray-700 py-3 px-4  font-medium cursor-not-allowed" disabled>
+								<button class="w-full btn-secondary cursor-not-allowed flex justify-center" disabled>
 									{{ 'Current Plan'|trans }}
 								</button>
 							{% else %}
 								<a href="{{ path('app_client_subscription_recap', { slug: plan.slug }) }}"
-									class="block w-full bg-trash hover:bg-trash_bold text-white py-3 px-4  font-medium text-center transition-colors duration-200">
+									class="block w-full btn-general flex justify-center">
 										{{ 'Get Started'|trans }}
 									</a>
 							{% endif %}

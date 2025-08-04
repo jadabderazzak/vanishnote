@@ -73,7 +73,7 @@ final class AdminNotesController extends AbstractController
         }
 
  
-        $paginatedNotes = $paginator->paginate($decryptedNotes, $request->query->getInt('page', 1), 1); 
+        $paginatedNotes = $paginator->paginate($decryptedNotes, $request->query->getInt('page', 1), 15); 
 
         return $this->render('admin_notes/index.html.twig', [
             'notes' => $paginatedNotes,
@@ -303,7 +303,7 @@ private function deleteAllAttachmentsForNote(?Notes $note): void
      *
      * @return Response Rendered HTML response containing paginated logs.
      */
-    #[Route('/admin/notes/logs', name: 'app_admin_notes_logs')]
+    #[Route('/admin/view/notes/logs', name: 'app_admin_notes_logs')]
     public function logs(LogsRepository $repoLog, Request $request, PaginatorInterface $paginator): Response
     {
         $logs = $repoLog->getAllLogs();
