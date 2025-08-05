@@ -106,4 +106,17 @@ public function findLatestClients(int $limit = 5): array
         ->getResult();
 }
 
+    public function searchByQuery(string $query): array
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.user', 'u')
+            ->where('c.name LIKE :q')
+            ->orWhere('c.phone LIKE :q')
+            ->orWhere('c.vatNumber LIKE :q')
+            ->orWhere('u.email LIKE :q')
+            ->setParameter('q', '%' . $query . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
 }

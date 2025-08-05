@@ -255,3 +255,4 @@ The VAT rate must be between {{ min }} and {{ max }}.: "Le taux de TVA doit êtr
 "Your message cannot exceed {{ limit }} characters.": "Votre message ne peut pas dépasser {{ limit }} caractères."
 "Please choose a recipient.": "Veuillez choisir un destinataire."
 "Recipient email is not valid.": "L’adresse e-mail du destinataire n’est pas valide."
+"Please enter your search query": "Veuillez saisir votre requête de recherche"

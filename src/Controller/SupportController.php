@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Form\SupportType;
 use App\Service\HtmlSanitizer;
-use App\Entity\AdminEntreprise;
 use App\Message\supportMessage;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;

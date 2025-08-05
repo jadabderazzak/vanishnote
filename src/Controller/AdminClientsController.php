@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Enum\LogLevel;
+use App\Form\SearchClientType;
+use App\Service\HtmlSanitizer;
 use App\Repository\NotesRepository;
 use App\Repository\ClientRepository;
 use App\Service\SystemLoggerService;
@@ -32,71 +34,123 @@ final class AdminClientsController extends AbstractController
         private readonly SystemLoggerService $logger
     ) {}
 
-    /**
-     * Displays a paginated list of all clients in the admin panel.
-     *
-     * @param ClientRepository $repoClient Repository to fetch clients.
-     * @param PaginatorInterface $paginator Paginator for paginating results.
-     * @param Request $request HTTP request to get current page number.
-     *
-     * @return Response Rendered HTML response with paginated clients.
-     */
-    #[Route('/admin/clients', name: 'app_admin_clients')]
-    public function index(ClientRepository $repoClient, PaginatorInterface $paginator, Request $request): Response
-    {
-        $clients = $repoClient->findAllWithLastActiveSubscription();
+   /**
+ * Displays a paginated list of all clients in the admin panel.
+ *
+ * @param ClientRepository $repoClient Repository to fetch clients.
+ * @param HtmlSanitizer $sanitizer Sanitizer service to purify user input.
+ * @param PaginatorInterface $paginator Service to paginate results.
+ * @param Request $request HTTP request object to handle pagination and form data.
+ *
+ * @return Response Rendered HTML response with paginated clients.
+ */
+#[Route('/admin/clients', name: 'app_admin_clients')]
+public function index(ClientRepository $repoClient, HtmlSanitizer $sanitizer, PaginatorInterface $paginator, Request $request): Response
+{
+    return $this->renderClientList(
+        $repoClient,
+        $sanitizer,
+        $paginator,
+        $request,
+        $repoClient->findAllWithLastActiveSubscription(),
+        'All'
+    );
+}
 
-        $paginatedClients = $paginator->paginate($clients, $request->query->getInt('page', 1), 15);
+/**
+ * Displays a paginated list of company clients.
+ *
+ * @param ClientRepository $repoClient Repository to fetch clients.
+ * @param HtmlSanitizer $sanitizer Sanitizer service to purify user input.
+ * @param PaginatorInterface $paginator Service to paginate results.
+ * @param Request $request HTTP request object to handle pagination and form data.
+ *
+ * @return Response Rendered HTML response with paginated company clients.
+ */
+#[Route('/admin/clients/companies', name: 'app_admin_clients_companies')]
+public function companies(ClientRepository $repoClient, HtmlSanitizer $sanitizer, PaginatorInterface $paginator, Request $request): Response
+{
+    return $this->renderClientList(
+        $repoClient,
+        $sanitizer,
+        $paginator,
+        $request,
+        $repoClient->findAllWithLastActiveSubscriptionByType(true),
+        'Companies'
+    );
+}
 
-        return $this->render('admin_clients/index.html.twig', [
-            'clients' => $paginatedClients,
-            'type' => 'All',
-        ]);
+/**
+ * Displays a paginated list of individual clients.
+ *
+ * @param ClientRepository $repoClient Repository to fetch clients.
+ * @param HtmlSanitizer $sanitizer Sanitizer service to purify user input.
+ * @param PaginatorInterface $paginator Service to paginate results.
+ * @param Request $request HTTP request object to handle pagination and form data.
+ *
+ * @return Response Rendered HTML response with paginated individual clients.
+ */
+#[Route('/admin/clients/individuals', name: 'app_admin_clients_individuals')]
+public function individuals(ClientRepository $repoClient, HtmlSanitizer $sanitizer, PaginatorInterface $paginator, Request $request): Response
+{
+    return $this->renderClientList(
+        $repoClient,
+        $sanitizer,
+        $paginator,
+        $request,
+        $repoClient->findAllWithLastActiveSubscriptionByType(false),
+        'Individuals'
+    );
+}
+
+/**
+ * Handles common logic for rendering paginated client lists with optional search functionality.
+ *
+ * @param ClientRepository $repoClient Repository to fetch clients and perform searches.
+ * @param HtmlSanitizer $sanitizer Sanitizer service to purify user search input.
+ * @param PaginatorInterface $paginator Service to paginate results.
+ * @param Request $request HTTP request object to process form submissions and pagination.
+ * @param array $initialClients Initial list of clients before filtering/searching.
+ * @param string $type Label describing the client type (e.g., 'All', 'Companies', 'Individuals').
+ *
+ * @return Response Rendered HTML response with paginated, optionally filtered client list.
+ */
+private function renderClientList(
+    ClientRepository $repoClient,
+    HtmlSanitizer $sanitizer,
+    PaginatorInterface $paginator,
+    Request $request,
+    array $initialClients,
+    string $type
+): Response {
+    $clients = $initialClients;
+    $form = $this->createForm(SearchClientType::class);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted()) {
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $sanitizedQuery = $sanitizer->purify($data['request']);
+
+            if (trim($sanitizedQuery) === '' || $sanitizedQuery === null) {
+                $this->addFlash('danger', $this->translator->trans('Please correct the form errors.'));
+            } else {
+                $clients = $repoClient->searchByQuery($sanitizedQuery);
+            }
+        } else {
+            $this->addFlash('error', $this->translator->trans('Please correct the form errors.'));
+        }
     }
 
-    /**
-     * Displays paginated list of company clients.
-     *
-     * @param ClientRepository $repoClient
-     * @param PaginatorInterface $paginator
-     * @param Request $request
-     *
-     * @return Response
-     */
-    #[Route('/admin/clients/companies', name: 'app_admin_clients_companies')]
-    public function companies(ClientRepository $repoClient, PaginatorInterface $paginator, Request $request): Response
-    {
-        $clients = $repoClient->findAllWithLastActiveSubscriptionByType(true);
+    $paginatedClients = $paginator->paginate($clients, $request->query->getInt('page', 1), 15);
 
-        $paginatedClients = $paginator->paginate($clients, $request->query->getInt('page', 1), 15);
+    return $this->render('admin_clients/index.html.twig', [
+        'clients' => $paginatedClients,
+        'type' => $type,
+        'form' => $form->createView(),
+    ]);
+}
 
-        return $this->render('admin_clients/index.html.twig', [
-            'clients' => $paginatedClients,
-            'type' => 'Companies',
-        ]);
-    }
-
-    /**
-     * Displays paginated list of individual clients.
-     *
-     * @param ClientRepository $repoClient
-     * @param PaginatorInterface $paginator
-     * @param Request $request
-     *
-     * @return Response
-     */
-    #[Route('/admin/clients/individuals', name: 'app_admin_clients_individuals')]
-    public function individuals(ClientRepository $repoClient, PaginatorInterface $paginator, Request $request): Response
-    {
-        $clients = $repoClient->findAllWithLastActiveSubscriptionByType(false);
-
-        $paginatedClients = $paginator->paginate($clients, $request->query->getInt('page', 1), 15);
-
-        return $this->render('admin_clients/index.html.twig', [
-            'clients' => $paginatedClients,
-            'type' => 'Individuals',
-        ]);
-    }
 
     /**
      * Displays detailed information about a client.
@@ -296,4 +350,7 @@ final class AdminClientsController extends AbstractController
 
         return $clientsByUserId;
     }
+
+
+       
 }

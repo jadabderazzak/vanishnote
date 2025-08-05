@@ -33,7 +33,48 @@
 					</a>
 				</div>
 			</div>
+			{# Search Bar Section #}
+					<section class="bg-white w-full ">
+						<div class=" w-full ">
+							<div class="flex flex-col  md:flex-row md:items-center md:justify-between gap-4 ">
+								<!-- Search Form -->
+								<div class="w-full">
+									{{ form_start(form, {
+    attr: {
+        role: 'search',
+        class: 'relative'
+    }
+}) }}
+    <label for="client-search" class="sr-only">{{ 'Search clients'|trans }}</label>
 
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+        </svg>
+    </div>
+
+    {{ form_widget(form.request, {
+        attr: {
+            id: 'client-search',
+            class: 'w-full pl-10 bg-white pr-24 py-4 text-sm text-gray-900 border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200',
+            placeholder: 'Search clients by name, email, phone or VAT Number...' | trans,
+            'aria-label': 'Search clients by name, email, phone or VAT Number...'
+        }
+    }) }}
+
+    <button type="submit" 
+        class="absolute right-2 top-[7px] btn-general text-xs h-10 px-4 flex items-center justify-center">
+        {{ 'Search'|trans }}
+    </button>
+
+{{ form_end(form) }}
+
+								</div>
+								
+							</div>
+						</div>
+					</section>
 			{% if clients is empty %}
 				<div class="px-6 py-12 text-center border border-gray-200 shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out ">
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewbox="0 0 24 24" stroke="currentColor">

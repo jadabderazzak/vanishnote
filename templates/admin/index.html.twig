@@ -66,7 +66,7 @@
 								</svg>
 							{% endif %}
 						{% else %}
-							<span class="text-gray-500">N/A</span>
+							<span class="text-gray-500 text-xs whitespace-nowrap">{{"N/A"}}</span>
 						{% endif %}
 					</div>
 				</div>
@@ -104,7 +104,7 @@
 								</svg>
 							{% endif %}
 						{% else %}
-							<span class="text-gray-500">N/A</span>
+							<span class="text-gray-500 text-xs whitespace-nowrap">{{"N/A"}}</span>
 						{% endif %}
 					</div>
 				</div>
@@ -143,7 +143,7 @@
 								</svg>
 							{% endif %}
 						{% else %}
-							<span class="text-gray-500">N/A</span>
+							<span class="text-gray-500 text-xs whitespace-nowrap">{{"N/A"}}</span>
 						{% endif %}
 					</div>
 				</div>
@@ -182,7 +182,7 @@
 								</svg>
 							{% endif %}
 						{% else %}
-							<span class="text-gray-500">N/A</span>
+							<span class="text-gray-500 text-xs whitespace-nowrap">{{"N/A"}}</span>
 						{% endif %}
 					</div>
 				</div>
@@ -239,6 +239,7 @@
 					<div class="overflow-x-auto">
 						<div class="align-middle inline-block min-w-full">
 							<div class="shadow overflow-hidden ">
+							{% if payments is not empty %}
 								<table class="min-w-full divide-y divide-gray-200 shadow-md border border-gray-100">
 									<thead class="bg-gradient-to-r from-gray-200/10 to-gray-400/10 ">
 										<tr>
@@ -272,6 +273,21 @@
 
 									</tbody>
 								</table>
+							{% else %}
+								<div class="flex flex-col h-full items-center justify-center py-12 text-center text-gray-400 ">
+
+								<svg class="mx-auto w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5"
+									viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+									<path stroke-linecap="round" stroke-linejoin="round"
+										d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5z" />
+								</svg>
+
+								<h3 class="text-lg font-semibold text-gray-600 mb-2">{{ "No Transaction found" | trans }}</h3>
+								<p class="text-sm font-medium">
+									{{ 'No transaction records found' | trans }}
+								</p>
+							</div>
+							{% endif %}
 							</div>
 						</div>
 					</div>
@@ -287,6 +303,7 @@
 						{{"View all" |trans}}
 					</a>
 				</div>
+				{% if last5Clients is not empty %}
 				<div class="flow-root">
 					<ul role="list" class="divide-y divide-gray-200">
 						{% for client in  last5Clients %}
@@ -319,6 +336,20 @@
 
 					</ul>
 				</div>
+				{% else %}
+					<div class="flex flex-col h-full items-center justify-center py-6 text-center text-gray-400 ">
+
+					<svg class="mx-auto w-16 h-16 mb-4 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+					<path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M4.5 17H4a1 1 0 0 1-1-1 3 3 0 0 1 3-3h1m0-3.05A2.5 2.5 0 1 1 9 5.5M19.5 17h.5a1 1 0 0 0 1-1 3 3 0 0 0-3-3h-1m0-3.05a2.5 2.5 0 1 0-2-4.45m.5 13.5h-7a1 1 0 0 1-1-1 3 3 0 0 1 3-3h3a3 3 0 0 1 3 3 1 1 0 0 1-1 1Zm-1-9.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"/>
+					</svg>
+
+
+					<h3 class="text-lg font-semibold text-gray-600 mb-2">{{ "No Client found" | trans }}</h3>
+					<p class="text-sm font-medium">
+						{{ 'There are no registered clients' | trans }}
+					</p>
+				</div>
+				{% endif %}
 			</div>
 			<div class="bg-white border border-gray-200 shadow-[0_5px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out p-4 sm:p-6 xl:p-8">
 
@@ -329,45 +360,62 @@
 					</a>
 				</div>
 				<div class="block w-full overflow-x-auto">
+					{% if systemLogs is not empty %}
 					<table class="w-full border-collapse">
-    <thead class="bg-gray-100">
-        <tr>
-            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{{ 'Level'|trans }}</th>
-            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{{ 'Message'|trans }}</th>
-            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{{ 'Date'|trans }}</th>
-        </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200">
-        {% for log in systemLogs %}
-        <tr class="hover:bg-gradient-to-r from-gray-200/10 to-gray-400/10  text-xs">
-            <td class="px-4 py-3 whitespace-nowrap text-xs " >
-                <span class="px-2 py-1 rounded-full text-xs font-bold 
-                    {% if log.level == 500 %}bg-red-100 text-red-800
-                    {% elseif log.level == 400 %}bg-amber-100 text-amber-800
-                    {% elseif log.level == 300 %}bg-yellow-100 text-yellow-800
-                    {% else %}bg-gray-100 text-gray-800{% endif %}">
-                    {% if log.level == 300 %}{{ 'WARNING'|trans }}
-                    {% elseif log.level == 400 %}{{ 'ERROR'|trans }}
-                    {% elseif log.level == 500 %}{{ 'CRITICAL'|trans }}
-                    {% else %}{{ 'UNKNOWN'|trans }}{% endif %}
-                </span>
-            </td>
-            <td class="px-4 py-3 max-w-xs truncate" title="{{ log.message }}">
-                {{ log.message|length > 50 ? log.message|slice(0, 50) ~ '...' : log.message }}
-            </td>
-            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-xs">
-                {{ log.loggedAt|date('Y-m-d H:i') }}
-            </td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="3" class="px-4 py-4 text-center text-sm text-gray-500">
-                {{ 'No logs available'|trans }}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+						<thead class="bg-gray-100">
+							<tr>
+								<th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{{ 'Level'|trans }}</th>
+								<th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{{ 'Message'|trans }}</th>
+								<th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{{ 'Date'|trans }}</th>
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-gray-200">
+							{% for log in systemLogs %}
+							<tr class="hover:bg-gradient-to-r from-gray-200/10 to-gray-400/10  text-xs">
+								<td class="px-4 py-3 whitespace-nowrap text-xs " >
+									<span class="px-2 py-1 rounded-full text-xs font-bold 
+										{% if log.level == 500 %}bg-red-100 text-red-800
+										{% elseif log.level == 400 %}bg-amber-100 text-amber-800
+										{% elseif log.level == 300 %}bg-yellow-100 text-yellow-800
+										{% else %}bg-gray-100 text-gray-800{% endif %}">
+										{% if log.level == 300 %}{{ 'WARNING'|trans }}
+										{% elseif log.level == 400 %}{{ 'ERROR'|trans }}
+										{% elseif log.level == 500 %}{{ 'CRITICAL'|trans }}
+										{% else %}{{ 'UNKNOWN'|trans }}{% endif %}
+									</span>
+								</td>
+								<td class="px-4 py-3 max-w-xs truncate" title="{{ log.message }}">
+									{{ log.message|length > 50 ? log.message|slice(0, 50) ~ '...' : log.message }}
+								</td>
+								<td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-xs">
+									{{ log.loggedAt|date('Y-m-d H:i') }}
+								</td>
+							</tr>
+							{% else %}
+							<tr>
+								<td colspan="3" class="px-4 py-4 text-center text-sm text-gray-500">
+									{{ 'No logs available'|trans }}
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					{% else %}
+					<div class="flex flex-col h-full items-center justify-center py-6 text-center text-gray-400 ">
+
+				
+					<svg class="mx-auto w-16 h-16 mb-4 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+							<path d="M6 2c-1.10457 0-2 .89543-2 2v4c0 .55228.44772 1 1 1s1-.44772 1-1V4h12v7h-2c-.5523 0-1 .4477-1 1v2h-1c-.5523 0-1 .4477-1 1s.4477 1 1 1h5c.5523 0 1-.4477 1-1V3.85714C20 2.98529 19.3667 2 18.268 2H6Z"/>
+							<path d="M6 11.5C6 9.567 7.567 8 9.5 8S13 9.567 13 11.5 11.433 15 9.5 15 6 13.433 6 11.5ZM4 20c0-2.2091 1.79086-4 4-4h3c2.2091 0 4 1.7909 4 4 0 1.1046-.8954 2-2 2H6c-1.10457 0-2-.8954-2-2Z"/>
+							</svg>
+
+
+					<h3 class="text-lg font-semibold text-gray-600 mb-2">{{ "No system errors." | trans }}</h3>
+					<p class="text-sm font-medium">
+						{{ 'No system-related errors found' | trans }}
+					</p>
+				</div>
+				{% endif %}
 				</div>
 			</div>
 
