@@ -41,7 +41,7 @@ final class AdminNotesController extends AbstractController
     public function index(PaginatorInterface $paginator, ClientRepository $repoClient, SecureEncryptionService $encryptionService, Request $request, NotesRepository $repoNotes): Response
     {
         $notes = $repoNotes->findNotBurnedNotes();
-         $decryptedNotes = [];
+        $decryptedNotes = [];
 
         foreach ($notes as $note) {
             $aad = $note->getEncryptionMetadata();

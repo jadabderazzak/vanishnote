@@ -1,6 +1,6 @@
 <!-- Mobile Header (visible only on mobile) -->
 <div
-	class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-600 z-40 md:hidden flex justify-between items-center p-4">
+	class="fixed top-0 left-0 right-0 bg-white   border-b border-gray-200  z-40 md:hidden flex justify-between items-center p-4">
 	<!-- Mobile Logo -->
 	<a href="{{ path('app_home')}}" class="flex items-start md:hidden">
 		<img src="{{ asset('template/logo/logo.png')}}" class="w-[100px] sm:w-[120px]" alt="Vanish Note"/>
@@ -15,7 +15,7 @@
 
 
 <!-- Sidebar -->
-<aside id="sidebar" class="fixed top-0 left-0 z-40 w-[280px] h-screen border-r border-gray-100 transition-transform -translate-x-full md:translate-x-0 bg-gray-50  pt-0 md:pt-0 shadow-[0_5px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out">
+<aside id="sidebar" class="bg-gradient-to-r from-gray-200/10 to-gray-400/10 fixed top-0 left-0 z-40 w-[280px] h-screen border-r border-gray-200 transition-transform -translate-x-full md:translate-x-0  pt-0 md:pt-0 shadow-[0_5px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out">
 	<div class="h-full px-3 py-4 overflow-y-auto flex flex-col">
 		<div
 			class="flex-grow">
@@ -30,10 +30,9 @@
 			<ul class="space-y-2 mt-0 md:mt-0">
 				<li>
 
-					<a
-						href="{{ path('app_home')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+					<a href="{{ path('app_home')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
 						<!-- Icône SVG Dashboard -->
-						<svg class="w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 22 21">
+						<svg class="w-4 h-4 text-gray-500 transition duration-75  group-hover:text-gray-900 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 22 21">
 							<path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
 							<path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
 						</svg>
@@ -45,7 +44,7 @@
 					<a
 						href="{{ path('app_admin_clients')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
 						<!-- Icône SVG Dashboard -->
-						<svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewbox="0 0 24 24">
+						<svg class="w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewbox="0 0 24 24">
 							<path fill-rule="evenodd" d="M12 6a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm-1.5 8a4 4 0 0 0-4 4 2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-3Zm6.82-3.096a5.51 5.51 0 0 0-2.797-6.293 3.5 3.5 0 1 1 2.796 6.292ZM19.5 18h.5a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-1.1a5.503 5.503 0 0 1-.471.762A5.998 5.998 0 0 1 19.5 18ZM4 7.5a3.5 3.5 0 0 1 5.477-2.889 5.5 5.5 0 0 0-2.796 6.293A3.501 3.501 0 0 1 4 7.5ZM7.1 12H6a4 4 0 0 0-4 4 2 2 0 0 0 2 2h.5a5.998 5.998 0 0 1 3.071-5.238A5.505 5.505 0 0 1 7.1 12Z" clip-rule="evenodd"/>
 						</svg>
 
@@ -53,13 +52,13 @@
 					</a>
 				</li>
 
+			
 				<li>
-
 					<a
 						href="{{ path('app_admin_notes')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
 						<!-- Icône SVG Dashboard -->
 
-						<svg class="w-5 h-5 text-gray-500 transition " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+						<svg class="w-5 h-5  text-gray-500 transition duration-75  group-hover:text-gray-900 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
 							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11H4m15.5 5a.5.5 0 0 0 .5-.5V8a1 1 0 0 0-1-1h-3.75a1 1 0 0 1-.829-.44l-1.436-2.12a1 1 0 0 0-.828-.44H8a1 1 0 0 0-1 1M4 9v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-3.75a1 1 0 0 1-.829-.44L9.985 8.44A1 1 0 0 0 9.157 8H5a1 1 0 0 0-1 1Z"/>
 						</svg>
 
@@ -68,12 +67,24 @@
 					</a>
 				</li>
 				<li>
+					<a
+						href="{{ path('app_admin_secure_file')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+						<!-- Icône SVG Dashboard -->
+
+						<svg class="w-5 h-5  text-gray-500 transition duration-75  group-hover:text-gray-900 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+						<path fill-rule="evenodd" d="M9 7V2.221a2 2 0 0 0-.5.365L4.586 6.5a2 2 0 0 0-.365.5H9Zm2 0V2h7a2 2 0 0 1 2 2v5.703l-4.311-1.58a2 2 0 0 0-1.377 0l-5 1.832A2 2 0 0 0 8 11.861c.03 2.134.582 4.228 1.607 6.106.848 1.555 2 2.924 3.382 4.033H6a2 2 0 0 1-2-2V9h5a2 2 0 0 0 2-2Z" clip-rule="evenodd"/>
+						<path fill-rule="evenodd" d="M15.345 9.061a1 1 0 0 0-.689 0l-5 1.833a1 1 0 0 0-.656.953c.028 1.97.538 3.905 1.485 5.641a12.425 12.425 0 0 0 3.956 4.34 1 1 0 0 0 1.12 0 12.426 12.426 0 0 0 3.954-4.34A12.14 12.14 0 0 0 21 11.848a1 1 0 0 0-.656-.954l-5-1.833ZM15 19.765a10.401 10.401 0 0 0 2.76-3.235 10.15 10.15 0 0 0 1.206-4.011L15 11.065v8.7Z" clip-rule="evenodd"/>
+						</svg>
+						<span class="flex-1 ms-1 text-left rtl:text-right whitespace-nowrap">{{"Secure Files" | trans}}</span>
+					</a>
+				</li>
+				<li>
 
 					<a
 						href="{{ path('app_admin_payment')}}" class="flex items-center p-2 text-sm text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
 						<!-- Icône SVG Dashboard -->
 
-						<svg class="w-5 h-5 text-gray-500 transition" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+						<svg class="w-5 h-5  text-gray-500 transition duration-75  group-hover:text-gray-900 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
 							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M6 14h2m3 0h5M3 7v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Z"/>
 						</svg>
 						<span class="ms-1">{{"Payments" | trans}}</span>
@@ -81,8 +92,8 @@
 				</li>
 
 				<div class="relative inline-flex items-center justify-center w-full">
-					<hr class="w-64 h-px my-6 bg-gray-200 border-0 dark:bg-gray-700">
-					<span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-gray-50  left-1/2 text-sm">
+					<hr class="w-64 h-px my-6 bg-gray-300 border-0 ">
+					<span class="absolute px-3 py-1  font-thin rounded-full text-gray-900 -translate-x-1/2 bg-gray-50  left-1/2 text-xs">
 						{{"Parameters" | trans}}</span>
 				</div>
 				<!-- Subscription Plans Dropdown -->
@@ -205,8 +216,8 @@
 				
 			</div>
 			<div class="relative inline-flex items-center justify-center w-full">
-					<hr class="w-64 h-px my-6 bg-gray-200 border-0 dark:bg-gray-700">
-					<span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-gray-50  left-1/2 text-sm">
+					<hr class="w-64 h-px my-6 bg-gray-300 border-0 dark:bg-gray-700">
+					<span class="absolute px-3 py-1 font-thin  rounded-full text-gray-900 -translate-x-1/2 bg-gray-50  left-1/2 text-xs">
 						{{"Actions" | trans}}</span>
 				</div>
 			<!-- Language Selector -->

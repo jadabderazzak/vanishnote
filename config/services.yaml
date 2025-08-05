@@ -27,6 +27,9 @@ services:
     App\Controller\SecureFilesController:
         bind:
             $encryptionKeyAad: '%env(APP_ENCRYPTION_KEY_AAD)%'
+    App\Controller\AdminSecureFileController:
+        bind:
+            $encryptionKeyAad: '%env(APP_ENCRYPTION_KEY_AAD)%'
     App\Service\EncryptionService:
         bind:
             $key: '%env(APP_ENCRYPTION_KEY)%'

@@ -24,6 +24,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class SecureFilesController extends AbstractController
 {
+    // $encryptionKeyAad Additional Authenticated Data (AAD) key used in encryption/decryption.
+     private readonly string $encryptionKeyAad;
     /**
      * Constructor.
      *
@@ -39,7 +41,7 @@ final class SecureFilesController extends AbstractController
      * 
      * NOTE: Changing this key will make all previously encrypted documents undecryptable.
      */
-    private readonly string $encryptionKeyAad;
+   
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly EntityManagerInterface $manager,
@@ -419,7 +421,7 @@ final class SecureFilesController extends AbstractController
                 )
             );
                 $this->addFlash('danger', $this->translator->trans('Failed to decrypt the uploaded file.'));
-                return $this->redirectToRoute('app_secure_files_public_decrypt');
+                return $this->redirectToRoute('app_secure_files_lists');
             }
         }
 
