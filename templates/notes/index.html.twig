@@ -22,7 +22,7 @@
 
 			<!-- Notes Table -->
 			<div class="bg-white  overflow-hidden w-full rounded-[15px] border border-gray-200 shadow-[0_5px_12px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out">
-				<div class="px-6 py-5 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+				<div class="px-6 py-5 bg-gradient-to-r from-gray-200/10 to-gray-400/10 border-b border-gray-200 flex justify-between items-center">
 					<h2 class="text-lg font-medium text-gray-900">
 						{{ 'Notes List'|trans }}
 					</h2>
@@ -220,9 +220,23 @@
 								</div>
 							</div>
 							{% else %}
-								<tr>
-									<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
-										{{ 'No notes found'|trans }}
+								<tr >
+									<td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+										
+										   <div class="px-6 py-12 text-center  ">
+                                       		<svg class="h-12 w-12 mx-auto text-gray-400/50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewbox="0 0 24 24">
+												<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11H4m15.5 5a.5.5 0 0 0 .5-.5V8a1 1 0 0 0-1-1h-3.75a1 1 0 0 1-.829-.44l-1.436-2.12a1 1 0 0 0-.828-.44H8a1 1 0 0 0-1 1M4 9v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-3.75a1 1 0 0 1-.829-.44L9.985 8.44A1 1 0 0 0 9.157 8H5a1 1 0 0 0-1 1Z"/>
+											</svg>
+                                            <h3 class="mt-2 text-sm font-medium text-gray-900 ">{{ 'No notes found'|trans }}</h3>
+											 <a href="{{ path('app_notes_new') }}"  class="flex items-center space-x-2 btn-general mt-4 ">
+
+												<svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+													<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+												</svg>
+
+												<span class="text-xs">{{ 'Create Your First Note'|trans }}</span>
+											</a>
+                                        </div>
 									</td>
 								</tr>
 							{% endfor %}
@@ -241,7 +255,7 @@
 					{{ 'Contact our support team if you have any questions about your notes.'|trans }}
 				</p>
 				<div class="mt-6">
-					<a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-500 font-medium">
+					<a href="{{ path('app_support')}}" class="inline-flex items-center text-blue-600 hover:text-blue-500 font-medium">
 						{{ 'Contact Support'|trans }}
 						<svg class="ml-2 h-5 w-5" fill="none" viewbox="0 0 24 24" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>

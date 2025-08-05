@@ -10,6 +10,7 @@ use App\Repository\NotesRepository;
 use App\Repository\ClientRepository;
 use App\Service\SystemLoggerService;
 use App\Repository\PaymentRepository;
+use App\Repository\SubscriptionPlanRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SubscriptionsRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -205,5 +206,58 @@ final class ClientsController extends AbstractController
             'form' => $form->createView(),
             'update' => true
         ]);
+    }
+
+
+    #[Route('/clients/delete-account', name: 'app_clients_delete_account', methods: ['POST','GET'])]
+    public function deleteAccount(
+        ClientRepository $repoClient,
+        EntityManagerInterface $manager,
+        SubscriptionPlanRepository $repoPlan,
+        SubscriptionsRepository $repoSubscription
+    ): Response {
+        /** @var User $user */
+        $user = $this->getUser();
+
+     
+        try {
+            $client = $repoClient->findOneBy(['user' => $user]);
+
+            if ($client) {
+                $client->setName('Deleted Client #' . $client->getId());
+                $client->setCompany(null);
+                $client->setCompanyAdress(null);
+                $client->setVatNumber(null);
+                $client->setPhone(null);
+            }
+
+            $user->setEmail('deleted_' . $user->getId() . '@deletedAccount.com');
+            $user->setPassword('deleted');
+            $user->setHasAccess(false);
+            /******************* Set Subscription Plan to Standard plan */
+            $subscription = $repoSubscription->findOneBy([
+                'user' => $user
+            ]);
+            $plan = $repoPlan->findOneBy([
+                'id' => 1
+            ]);
+
+            $subscription->setSubscriptionPlan($plan);
+
+            $manager->flush();
+
+           
+            $this->addFlash('success', $this->translator->trans('Your account has been deleted.'));
+            return $this->redirectToRoute("app_logout");
+
+        } catch (\Throwable $e) {
+            $this->logger->log(
+                LogLevel::WARNING,
+                sprintf('[ClientsController::deleteAccount()] Failed to anonymize account for user #%d: %s', $user->getId(), $e->getMessage())
+            );
+           
+            $this->addFlash('danger', $this->translator->trans('An error occurred while deleting your account.'));
+            return $this->redirectToRoute('app_clients_profile');
+        }
     }
 }
